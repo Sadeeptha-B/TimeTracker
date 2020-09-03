@@ -8,11 +8,10 @@ Further, it must also provide an intuitive interface for the students to input d
 
 **Deliverables**
 
-Sep 4 : Project Plan
-
-            Analysis of Alternatives
-
-            Risk Register
+Sep 4 : 
+* Project Plan
+* Analysis of Alternatives
+* Risk Register
 
 We plan to deliver working features after each sprint, the exact nature of which will be decided according to the sprint backlog of the relevant sprint.
 
@@ -118,20 +117,30 @@ Joseph Loo
   <tr>
    <td><span style="text-decoration:underline;">Development</span>
 <p>
-	JavaScript    :  Sadeeptha
+	JavaScript  :  
+<p>    
+             
+* Sadeeptha
+* Chuang
+* Jacqueline
+* Joseph
+
 <p>
-			Chuang
+ Main Logic   : 
 <p>
-			Jacqueline
+
+* Sadeeptha
+
 <p>
-			Joseph
+	UI                 :  
 <p>
-            Main Logic   :  Sadeeptha
-<p>
-	UI                 :  Zhe Sheng
+
+* Zhe Sheng
+
    </td>
   </tr>
 </table>
+
 
 
 
