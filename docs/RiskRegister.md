@@ -77,7 +77,7 @@ Feeling ill
    </td>
    <td>Team members can check for any news/updates on the official websites regarding the issue. Team members also need to backup repository from time to time
    </td>
-   <td>Prioritization is placed on transferring code/work onto another platform/machine, or recovering the 
+   <td>Prioritization is placed on transferring code/work onto another platform/machine, or recovering the repository files from backups.
    </td>
   </tr>
   <tr>
