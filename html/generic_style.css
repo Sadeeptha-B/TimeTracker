@@ -64,6 +64,11 @@ div.form{
     margin-top: 16px;
 }
 
+div.form_centered{
+    float: center;
+    margin-top: 16px;
+}
+
 div.form_header{
     margin-left: 5%;
     margin-right: 5%;
@@ -77,25 +82,23 @@ h2.form_header{
     margin-bottom: 8px;
 }
 
+div.form_centered_container{
+    margin: auto;
+    background-color: #ccccff;
+}
+
 div.form_submit_action_container{
+    text-align: center;
     margin-left: 5%;
     margin-right: 5%;
     padding: 16px;
 }
 
-div.form_container{
-    background-color: #9999cc;
-    margin-left: 5%;
-    margin-right: 5%;
-    padding: 16px;
-    margin-top: 8px;
-    margin-bottom: 8px;
-    border: solid
-}
-
-table.form_body{
+table.form_login_body{
+    text-align: center;
+    margin: auto;
     padding: 4px;
-    font: 16px "Arial";
+    font: 18px "Arial";
 }
 
 th{
