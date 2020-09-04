@@ -1,0 +1,109 @@
+div.header{
+    width: 100%;
+    background-color: #ccccff;
+    height: 96px;
+}
+
+div.header_content_wrapper{
+    margin-left: 32px; 
+    margin-right: 32px;
+    margin-bottom: 4px;
+    margin-top: 4px;
+    /* border: solid; */
+}
+
+div.header_word_wrapper{
+    display: inline-block;
+    width: 60%;
+    margin-bottom: 4px;
+    margin-top: 4px;
+    margin-left: 16px;
+    padding-left: 32px;
+    padding-right: 16px;
+    padding-bottom: 0px;
+    padding-top: 0px;
+    /* border: solid; */
+}
+
+div.header_links_wrapper{
+    text-align: right;
+    display: inline-block;
+    width: 20%;
+    margin-left: 8%;
+    margin-bottom: 8px;
+    margin-top: 8px;
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-bottom: 16px;
+    padding-top: 16px;
+    /* border: solid; */
+}
+
+button{
+    background-color: #9999cc;
+    border: none;
+    padding: 8px;
+    font: 16px "Arial";
+    color: #ffffff;
+}
+button:hover{
+    background-color: #666699;
+}
+button.header_links_button{
+    font: 20px "Arial";
+}
+
+h1{
+    font: 32px "Arial";
+}
+
+div.form{
+    background-color: #ccccff;
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-top: 16px;
+}
+
+div.form_header{
+    margin-left: 5%;
+    margin-right: 5%;
+    padding: 8px;
+    font: 20px "Arial";
+}
+
+h2.form_header{
+    text-align: center;
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
+div.form_submit_action_container{
+    margin-left: 5%;
+    margin-right: 5%;
+    padding: 16px;
+}
+
+div.form_container{
+    background-color: #9999cc;
+    margin-left: 5%;
+    margin-right: 5%;
+    padding: 16px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    border: solid
+}
+
+table.form_body{
+    padding: 4px;
+    font: 16px "Arial";
+}
+
+th{
+    padding: 8px;
+    margin: 4px;
+}
+
+td{
+    padding: 8px;
+    margin: 4px;
+}
