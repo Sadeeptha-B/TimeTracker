@@ -57,6 +57,42 @@ h1{
     font: 32px "Arial";
 }
 
+div.dashboard{
+    background-color: #ccccff;
+    margin-left: 5%;
+    margin-right: 5%;
+    margin-top: 16px;
+}
+
+div.dashboard_header{
+    margin-left: 5%;
+    margin-right: 5%;
+    padding: 8px;
+    font: 20px "Arial";
+}
+
+h2.form_header{
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
+div.dash_container{
+    margin-left: 1%;
+    margin-right: 1%;
+}
+
+div.dash_project{
+    margin-left: 1%;
+    margin-right: 1%;
+    background-color: #9999cc;
+    padding: 8px;
+}
+
+h2.dash_project_head{
+    color: black;
+    font: 22px "Arial";
+}
+
 div.form{
     background-color: #ccccff;
     margin-left: 10%;
