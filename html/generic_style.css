@@ -9,12 +9,13 @@ div.header_content_wrapper{
     margin-right: 32px;
     margin-bottom: 4px;
     margin-top: 4px;
+    display: inline-block;
     /* border: solid; */
 }
 
 div.header_word_wrapper{
     display: inline-block;
-    width: 60%;
+    width: auto;
     margin-bottom: 4px;
     margin-top: 4px;
     margin-left: 16px;
@@ -26,10 +27,7 @@ div.header_word_wrapper{
 }
 
 div.header_links_wrapper{
-    text-align: right;
     display: inline-block;
-    width: 20%;
-    margin-left: 8%;
     margin-bottom: 8px;
     margin-top: 8px;
     padding-left: 16px;
@@ -81,16 +79,32 @@ div.dash_container{
     margin-right: 1%;
 }
 
+a.dash_project{
+    text-decoration: none;
+}
+
 div.dash_project{
     margin-left: 1%;
     margin-right: 1%;
+    margin-top: 1%;
+    margin-bottom: 1%;
     background-color: #9999cc;
     padding: 8px;
+    font: "Arial";
 }
 
 h2.dash_project_head{
-    color: black;
-    font: 22px "Arial";
+    color: white;
+    font: bold 22px "Arial";
+}
+
+p.project_summary{
+    color: white;
+    font: 14px "Arial";
+}
+
+button.body_button_generic{
+    font: 24px "Arial";
 }
 
 div.form{

@@ -34,6 +34,16 @@
                         <th>Confirm Password</th>
                         <td><input type="password" class="confirm_pword_input" name="ConfirmPassword" required></td>
                     </tr>
+                    <tr>
+                        <th>Type</th>
+                        <td>
+                            <select name="user_type" class="user_type">
+                                <option value="teacher">Teacher</option> <!--need extra steps for this?-->
+                                <option value="student">Student</option>
+                                <option hidden value="sysadmin">Admin</option>
+                              </select>
+                        </td>
+                    </tr>
                 </table>
                 <div class="form_submit_action_container">
                     <button class="form_signup_button">Signup</button>
