@@ -128,6 +128,14 @@ div.form{
 }
 
 div.form_centered{
+    background-color: #ccccff;
+    float: center;
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-top: 16px;
+}
+
+div.form_login_signup{
     float: center;
     margin-top: 16px;
 }
@@ -157,16 +165,24 @@ div.form_submit_action_container{
     padding: 16px;
 }
 
-table.form_login_body{
-    text-align: center;
+table.form_body{
+    text-align: left;
     margin: auto;
     padding: 4px;
-    font: 18px "Arial";
+    font: 16px "Arial";
+}
+
+table.form_login_body{
+    text-align: left;
+    margin: auto;
+    padding: 4px;
+    font: 16px "Arial";
 }
 
 th{
     padding: 8px;
     margin: 4px;
+    font-weight: bold;
 }
 
 td{
