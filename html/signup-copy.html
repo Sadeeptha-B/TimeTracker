@@ -2,6 +2,7 @@
 <head>
     <title>TimeTracker - Login</title>
     <link rel="stylesheet" href="generic_style.css"></link>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="header">
@@ -12,7 +13,7 @@
         </div>
     </div>
     <div class="body">
-        <div class="form_centered">
+        <div class="form_login_signup">
             <div class="form_header">
                 <h2 class="form_header">Signup</h2>
             </div>
@@ -26,6 +27,12 @@
                         <th>Email</th>
                         <td><input type="email" class="email_input" id="Email" name="Email" required></td>
                     </tr>
+                    <!--
+                    <tr>
+                        <th>Student/Teacher ID</th>
+                        <td><input type="text" class="id_input" name="ID" required></td>
+                    </tr>
+                    -->
                     <tr>
                         <th>Password</th>
                         <td><input type="password" class="password_input" id="Password" name="Password" required></td>
@@ -33,6 +40,16 @@
                     <tr>
                         <th>Confirm Password</th>
                         <td><input type="password" class="confirm_pword_input" id="ConfirmPassword" name="ConfirmPassword" required></td>
+                    </tr>
+                    <tr>
+                        <th>Type</th>
+                        <td>
+                            <select name="user_type" class="user_type">
+                                <option value="teacher">Teacher</option> <!--need extra id verification for this?-->
+                                <option value="student">Student</option>
+                                <option hidden value="sysadmin">Admin</option>
+                              </select>
+                        </td>
                     </tr>
                 </table>
                 <div class="form_submit_action_container">
