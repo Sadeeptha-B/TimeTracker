@@ -12,7 +12,7 @@
         </div>
     </div>
     <div class="body">
-        <div class="form_centered">
+        <div class="form_login_signup">
             <div class="form_header">
                 <h2 class="form_header">Signup</h2>
             </div>
@@ -26,6 +26,12 @@
                         <th>Email</th>
                         <td><input type="text" class="email_input" name="Email" required></td>
                     </tr>
+                    <!--
+                    <tr>
+                        <th>Student/Teacher ID</th>
+                        <td><input type="text" class="id_input" name="ID" required></td>
+                    </tr>
+                    -->
                     <tr>
                         <th>Password</th>
                         <td><input type="password" class="password_input" name="Password" required></td>
@@ -38,7 +44,7 @@
                         <th>Type</th>
                         <td>
                             <select name="user_type" class="user_type">
-                                <option value="teacher">Teacher</option> <!--need extra steps for this?-->
+                                <option value="teacher">Teacher</option> <!--need extra id verification for this?-->
                                 <option value="student">Student</option>
                                 <option hidden value="sysadmin">Admin</option>
                               </select>

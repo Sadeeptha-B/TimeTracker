@@ -1,0 +1,113 @@
+<html>
+<head>
+    <title>TimeTracker - Create Project</title>
+    <link rel="stylesheet" href="generic_style.css"></link>
+</head>
+<body>
+    <div class="header">
+        <div class="header_content_wrapper">
+            <div class="header_word_wrapper">
+                <h1>TimeTracker</h1>
+            </div>
+            <div class="header_links_wrapper">
+                <a href="dashboard.html"><button class="header_links_button">Homepage</button></a>
+                <a href="login.html"><button class="header_links_button">Log Out</button></a>  
+            </div>
+        </div>
+    </div>
+    <div class="body">
+        <div class="form_centered">
+            <div class="form_header">
+                <h2 class="form_header">New Project</h2>
+            </div>
+            <div class="form_centered_container">
+                <table class="form_body">
+                    <tr>
+                        <th>Project Name</th>
+                        <td><input type="text" class="project_name" name="Project Name" required></td>
+                    </tr>
+                    <tr>
+                        <th>Description</th>
+                        <td><input type="text" class="project_description" name="Description"></td>
+                    </tr>
+                    <tr>
+                        <th>Students</th>
+                        <td><input type="text" class="students_list" name="Students" required></td>
+                    </tr>
+                    <!-- FORMAT FOR NEW STUDENT ROW:
+                    <tr>
+                        <th></th>
+                        <td><input type="text" class="students_list" name="Students"></td>
+                    </tr>
+                    -->               
+                    <tr>
+                        <th></th>
+                        <td><button>Add Student</button></td>
+                    </tr>
+                    <!--
+                    <tr>
+                        <th>Start Date</th>
+                        <td><input type="date" class="start_date" name="Start Date" required></td>
+                    </tr>
+                    <tr>
+                        <th>End Date</th>
+                        <td><input type="date" class="end_date" name="End Date" required></td>
+
+                    </tr>
+                    DEPRECATED: date input type not supported on Safari and Internet Explorer
+                    - may need to use separate inputs for dd/mm/yyyy - see below
+                    -->
+                    <tr>
+                        <th>Start Date</th>
+                        <td><input type="number" width="20px" class="start_day" name="Start Day" 
+                            min="1" max="31" value="1" required>
+                            <select name="start_month" class="start_month">
+                                <option value="1">January</option>
+                                <option value="2">February</option>
+                                <option value="3">March</option>
+                                <option value="4">April</option>
+                                <option value="5">May</option>
+                                <option value="6">June</option>
+                                <option value="7">July</option>
+                                <option value="8">August</option>
+                                <option value="9">September</option>
+                                <option value="10">October</option>
+                                <option value="11">November</option>
+                                <option value="12">December</option>
+                            </select>
+                            <input type="number" width="40px" class="start_year" name="Start Year" 
+                            min="2020" max="2099" value="2020" required>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>End Date</th>
+                        <td><input type="number" width="20px" class="end_day" name="End Day" 
+                            min="1" max="31" value="1" required>
+                            <select name="end_month" class="end_month">
+                                <option value="1">January</option>
+                                <option value="2">February</option>
+                                <option value="3">March</option>
+                                <option value="4">April</option>
+                                <option value="5">May</option>
+                                <option value="6">June</option>
+                                <option value="7">July</option>
+                                <option value="8">August</option>
+                                <option value="9">September</option>
+                                <option value="10">October</option>
+                                <option value="11">November</option>
+                                <option value="12">December</option>
+                            </select>
+                            <input type="number" width="40px" class="end_year" name="End Year" 
+                            min="2020" max="2099" value="2020" required>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="form_submit_action_container">
+                <button class="form_submit_button">Create</button>
+                <a href="home.html"><button>Cancel</button></a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
