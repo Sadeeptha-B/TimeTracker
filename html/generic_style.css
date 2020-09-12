@@ -1,7 +1,14 @@
+/* || General styles    */
+html{
+    background-color: #fff;
+}
+
 div.header{
     width: 100%;
     background-color: #ccccff;
     height: 96px;
+    border-radius: .8rem; 
+    
 }
 
 div.header_content_wrapper{
@@ -10,7 +17,7 @@ div.header_content_wrapper{
     margin-bottom: 4px;
     margin-top: 4px;
     display: inline-block;
-    /* border: solid; */
+    /* border: solid;*/
 }
 
 div.header_word_wrapper{
@@ -52,9 +59,15 @@ button.header_links_button{
 }
 
 h1{
-    font: 32px "Arial";
+    font-family: 'Roboto', sans-serif;
 }
 
+div.body{
+    font-family: 'Poppins', sans-serif;     
+}
+
+
+/*Dashboard page */
 div.dashboard{
     background-color: #ccccff;
     margin-left: 5%;
@@ -159,4 +172,46 @@ th{
 td{
     padding: 8px;
     margin: 4px;
+}
+
+/* Project Plan page */
+div.description {
+    background-color:#fff;
+    padding: 2rem;
+    box-shadow: 0 1.4rem 3rem #908f8f33;
+    font-family: 'Poppins', sans-serif;
+    border-radius: .8rem; 
+    text-align: left;
+    transform: translateY(3rem);
+    position:relative; 
+    border: azure;
+}
+
+div.description_content{
+    height: 6rem;
+}
+
+a.edit_prompt {
+    display: block;
+    text-align: right;
+    text-decoration: none;
+    color: #999;
+    font-size: 0.9rem;
+    transition: .3s;
+}
+
+a.edit_prompt:hover{
+    color: #696969
+}
+
+div.charts{
+    transform: translateY(5rem);
+    background-color:#fff;
+    margin: 0 auto;
+    text-align: center;
+    border-radius: 2rem; 
+    width: 70%;
+    height: 512px;
+    padding: 1rem;
+    box-shadow: 0 1.4rem 8rem #908f8f33;
 }
