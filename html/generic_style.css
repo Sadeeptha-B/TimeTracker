@@ -120,6 +120,7 @@ button.body_button_generic{
     font: 24px "Arial";
 }
 
+/*Log in*/
 div.form{
     background-color: #ccccff;
     margin-left: 10%;
@@ -190,6 +191,8 @@ td{
     margin: 4px;
 }
 
+
+
 /* Project Plan page */
 div.description {
     background-color:#fff;
@@ -230,4 +233,66 @@ div.charts{
     height: 512px;
     padding: 1rem;
     box-shadow: 0 1.4rem 8rem #908f8f33;
+}
+
+#timeCont {
+    text-align: left;
+    padding: 1rem;
+}
+
+.field_elements {
+    display:inline-block;
+    margin: 15px auto;
+    /* padding: 2rem; */
+}
+
+.desc_edit_form {
+    width: 75%;
+    position: relative;
+    height:50px;
+    padding:2rem;
+}
+
+
+.input {
+    width: 100%;
+    opacity: 0.9;
+}
+
+#name_field{
+    border: 0px none;
+    border-bottom: 1px solid black;
+    outline-width: 0;
+}
+
+
+
+.bg-modal {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0, 0.7);
+    position: absolute;
+    top: 0;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    display:none;
+}
+
+.modal-content {
+    width: 500px;
+    height:500px;
+    background-color: white;
+    border-radius: 4px;
+    padding: 20px;
+    position: relative;
+}
+
+.close{
+    position: absolute;
+    top: 0;
+    right:14px;
+    font-size:39px;
+    transform: rotate(45deg);
+    cursor:pointer;
 }
