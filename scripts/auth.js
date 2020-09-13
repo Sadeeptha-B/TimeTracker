@@ -1,24 +1,53 @@
-// signup
-function signup() {
-    var signupForm = document.getElementById("signup_form"),
+const firebaseRef = firebase.database().ref()
 
-        username = document.getElementById("Username").value,
-        userEmail = document.getElementById("Email").value,
+function signup() {
+	var	userEmail = String(document.getElementById("Email").value),
         userPass = String(document.getElementById("Password").value),
-        userConfirmPass = String(document.getElementById("ConfirmPassword").value);
+		userConfirmPass = String(document.getElementById("ConfirmPassword").value),
+		userRole = String(document.getElementById("user_type").value)
     
 	// sign up the user
 	if (userPass === userConfirmPass && userPass.length >= 6) {
-		firebase.auth().createUserWithEmailAndPassword(userEmail, userPass).then(cred=> {
-			window.alert("Sign Up successful!")
-			// Bring the user to the log in page to log in after successful sign up
-			window.location.href = "../html/login.html";
+		var result = firebase.auth().createUserWithEmailAndPassword(userEmail, userPass),
+			errorFound = false
+
+		result.catch(function(error) {
+			var errorCode = error.code
+			var errorMessage = error.message
+			
+			console.log(errorCode)
+			window.alert(errorMessage)
+			errorFound = true
 		})
-	}
-	else if (userPass !== userConfirmPass) {
-		window.alert("Password does not match Confirm Password")
+		
+		if (!errorFound) {
+			result.then(() => {
+				writeUserData(userEmail, userRole)
+
+				window.alert("Sign Up successful!")
+				// Bring the user to the home page after successful sign up
+				window.location.href = "../html/home.html";
+			})
+		}
 	}
 	else if (userPass.length < 6) {
 		window.alert("Password needs to be at least 6 characters long")
 	}
+	else if (userPass !== userConfirmPass) {
+		window.alert("Password does not match Confirm Password")
+	}
+}
+
+function writeUserData(email, userRole) {
+	var username;
+	for (i = 0; i < email.length; i++) {
+		if (email[i] === "@") {
+			username = email.slice(0, i)
+			break
+		}
+	}
+	firebaseRef.child(`User/${userRole}/${username}`).set({
+		Username: username,
+		Email: email,
+	})
 }
