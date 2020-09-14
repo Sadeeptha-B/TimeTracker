@@ -82,5 +82,10 @@ function login() {
 }
 
 function logout(){
-	firebase.auth().signOut();
+	firebase.auth().signOut().then(function() {
+		window.alert('Signed Out')
+		window.location.href = "../html/login.html";
+	}, function(error) {
+		window.alert('Sign Out Error', error)
+	});
 }
