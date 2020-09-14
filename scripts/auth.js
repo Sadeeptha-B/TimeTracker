@@ -57,7 +57,7 @@ firebase.auth().onAuthStateChanged(function(user) {
     // User is signed in.
 		window.alert("User signed in.");
 		//bring the user to the home page
-		window.location.href = "../html/home.html";
+		//window.location.href = "../html/home.html";
 
 
   } else {
