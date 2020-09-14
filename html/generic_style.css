@@ -7,12 +7,12 @@ div.header{
     width: 100%;
     background-color: #ccccff;
     height: 96px;
-    border-radius: .8rem; 
-    
+    border-radius: .8rem;
+
 }
 
 div.header_content_wrapper{
-    margin-left: 32px; 
+    margin-left: 32px;
     margin-right: 32px;
     margin-bottom: 4px;
     margin-top: 4px;
@@ -63,7 +63,7 @@ h1{
 }
 
 div.body{
-    font-family: 'Poppins', sans-serif;     
+    font-family: 'Poppins', sans-serif;
 }
 
 
@@ -199,10 +199,10 @@ div.description {
     padding: 2rem;
     box-shadow: 0 1.4rem 3rem #908f8f33;
     font-family: 'Poppins', sans-serif;
-    border-radius: .8rem; 
+    border-radius: .8rem;
     text-align: left;
     transform: translateY(3rem);
-    position:relative; 
+    position:relative;
     border: azure;
 }
 
@@ -228,7 +228,7 @@ div.charts{
     background-color:#fff;
     margin: 0 auto;
     text-align: center;
-    border-radius: 2rem; 
+    border-radius: 2rem;
     width: 70%;
     height: auto;
     padding: 1rem;
@@ -277,7 +277,7 @@ div.charts{
     display:flex;
     justify-content: center;
     align-items: center;
-    display:flex;
+    display:none;
 }
 
 .modal-content {
@@ -318,4 +318,3 @@ button.blue_curve_button{
 button.blue_curve_button:hover{
     background-color:#4095c6;
 }
-
