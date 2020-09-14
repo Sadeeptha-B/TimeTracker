@@ -5,7 +5,7 @@ function signup() {
         userPass = String(document.getElementById("Password").value),
 		userConfirmPass = String(document.getElementById("ConfirmPassword").value),
 		userRole = String(document.getElementById("user_type").value)
-    
+
 	// sign up the user
 	if (userPass === userConfirmPass && userPass.length >= 6) {
 		var result = firebase.auth().createUserWithEmailAndPassword(userEmail, userPass),
@@ -14,12 +14,12 @@ function signup() {
 		result.catch(function(error) {
 			var errorCode = error.code
 			var errorMessage = error.message
-			
+
 			console.log(errorCode)
 			window.alert(errorMessage)
 			errorFound = true
 		})
-		
+
 		if (!errorFound) {
 			result.then(() => {
 				writeUserData(userEmail, userRole)
@@ -50,4 +50,37 @@ function writeUserData(email, userRole) {
 		Username: username,
 		Email: email,
 	})
+}
+//login page
+firebase.auth().onAuthStateChanged(function(user) {
+  if (user) {
+    // User is signed in.
+		window.alert("User signed in.");
+		//bring the user to the home page
+		window.location.href = "../html/home.html";
+
+
+  } else {
+    // No user is signed in.
+		//window.alert("No user is signed in.");
+
+  }
+});
+
+function login() {
+	var userEmail = String(document.getElementById("userEmail").value);
+	var userPass = String(document.getElementById("userPass").value);
+
+	firebase.auth().signInWithEmailAndPassword(userEmail, userPass).catch(function(error) {
+  // Handle Errors here.
+  var errorCode = error.code;
+  var errorMessage = error.message;
+  // ...
+	window.alert("Error :" + errorMessage);
+});
+
+}
+
+function logout(){
+	firebase.auth().signOut();
 }
