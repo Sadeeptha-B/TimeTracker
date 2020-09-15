@@ -7,12 +7,12 @@ div.header{
     width: 100%;
     background-color: #ccccff;
     height: 96px;
-    border-radius: .8rem; 
-    
+    border-radius: .8rem;
+
 }
 
 div.header_content_wrapper{
-    margin-left: 32px; 
+    margin-left: 32px;
     margin-right: 32px;
     margin-bottom: 4px;
     margin-top: 4px;
@@ -67,6 +67,17 @@ button.header_links_button{
     font: 20px "Arial";
 }
 
+<<<<<<< HEAD
+=======
+h1{
+    font-family: 'Roboto', sans-serif;
+}
+
+div.body{
+    font-family: 'Poppins', sans-serif;
+}
+
+>>>>>>> refs/remotes/origin/develop
 
 /*Dashboard page */
 div.dashboard{
@@ -200,7 +211,7 @@ div.description_card {
     padding: 2rem;
     box-shadow: 0 1.4rem 3rem #908f8f33;
     font-family: 'Poppins', sans-serif;
-    border-radius: .8rem; 
+    border-radius: .8rem;
     text-align: left;
     transform: translateY(3rem);
     border: azure;
@@ -228,7 +239,7 @@ div.charts{
     background-color:#fff;
     margin: 0 auto;
     text-align: center;
-    border-radius: 2rem; 
+    border-radius: 2rem;
     width: 70%;
     height: auto;
     padding: 1rem;
@@ -311,4 +322,3 @@ button.blue_curve_button{
 button.blue_curve_button:hover{
     background-color:#4095c6;
 }
-
