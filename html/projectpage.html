@@ -11,30 +11,26 @@
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
     </head>
     
-    <body>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
-        
+    <body>        
         <div class="header">
             <div class="header_content_wrapper">
                 <div class="header_word_wrapper">
                     <h1 id="projectName">Project Name</h1>
-                     
                 </div>
             </div>
         </div>
 
         <div class="body">
-            <!-- <div class="projectpage"> -->
-           <div class="description">
+           <div class="description_card">
                     <div class="description_header">
                         <h3> Description <h3>
                             <hr class="thin">
                     </div>
                     <div class="description_content">
-                         <p id= "description"> Project Description content</p>
+                         <p id= "description">Project Description content</p>
                     </div>
                     <div class="description_footer">
-                     <a href="#" id ="edit_desc" class="edit_prompt" >Edit description </a>
+                     <a href="#" id ="edit_desc" class="edit_prompt">Edit description </a>
                     </div>
             </div>
             <div class="charts">
@@ -49,14 +45,17 @@
             <div class="bg-modal">
                 <div class="modal-content">
                     <div class="close">+</div>
-                    <form class = "desc_edit_form">
+                    <div class = "desc_edit_form">
                         <h3>Edit description</h3>
                         <label class= "field_elements" for="name_field">Project Name :</label> 
                         <input id = "name_field" class="input"><br>
                         <label class="field_elements" for="desc_field">Description : </label><br>
                         <textarea id = "desc_field" rows="14" cols="120" class="input"></textarea>
-                        <button href="#" class="blue_curve_button"> Save </button>
-                    </form>
+                        
+                    </div>
+                    <div class= "desc_footer">
+                        <button href="#" class="blue_curve_button" id="save_desc"> Save </button>
+                    </div>
                        
                 </div>
             </div>
