@@ -308,16 +308,27 @@ Sprint Retrospective will be done on the second Saturday of every sprint via vid
 
 We will allocate tasks from our sprint backlog during the Sprint planning meeting at the beginning of each sprint, but tasks will not be fixed; team members have the freedom to cooperate on certain tasks.
 
-Further, the team mates who are responsible for a particular type of task, can ensure that help is provided to members.
+Once the tasks are allocated, in Trello, the names are assigned at the bottom of the tasks they are assigned to indicate that they are the ones responsible for its completion.
+
+Furthermore, the team mates who are responsible for a particular type of task, can ensure that help is provided to members.
+
 
 **Progress Tracking**
 
 Project progress will be tracked using GitLab, and will be updated from time to time by our team members.
 
+We are also using a tool called Trello which keeps track of what needs to be done for the specific sprint.
+
+Once it is completed, the task is moved to the ‘Done’ section to indicate that the team member has completed their task.
+
 **Backlog Management**
 
-Our backlogs will be managed through a document available online. Members will update this document based on their progress throughout each sprint.
+Our backlogs will be managed through Trello. Members will update this document based on their progress throughout each sprint.
 
 **Time Tracking**
 
-Members will keep track of the time they spent on tasks via log files, preferably in the form of a spreadsheet available via Google Drive. 
+Members will keep track of the time they spent on tasks via Trello. 
+
+There will be a list specific to time logging. 
+
+In the list there will be names of each of the members, and descriptions within them that state the tasks they’ve worked on or working on and the specific start and end times of said task.
