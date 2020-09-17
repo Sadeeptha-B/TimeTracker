@@ -1,12 +1,9 @@
-//Edit description
-document.getElementById("edit_desc").addEventListener('click', function(){
-    document.querySelector('.bg-modal').style.display = 'flex';
-});
+var projectName = document.getElementById("projectName");
+var description = document.getElementById("description");
+var editNameField = document.getElementById("name_field");
+var editDescField = document.getElementById("desc_field");
 
-//Close
-document.querySelector('.close').addEventListener('click', function(){
-    document.querySelector('.bg-modal').style.display = 'none';
-})
+
 
 
 //Chart
@@ -32,9 +29,33 @@ var myChart = new Chart(ctx, {
 });
 
 
-//Edit description placeholders
-var name = document.getElementById("projectName").innerHTML;
-document.getElementById("name_field").setAttribute("placeholder", name);
+/*Click Event Listeners */
+    //Edit description
+    document.getElementById("edit_desc").addEventListener('click', function(){
+        editNameField.value = "";
+        editDescField.value = "";
+        
+        editNameField.setAttribute("placeholder", projectName.innerHTML);
+        editDescField.setAttribute("placeholder", description.innerHTML);
+        document.querySelector('.bg-modal').style.display = 'flex';
+    });
 
-var description = document.getElementById("description").innerText;
-document.getElementById("desc_field").setAttribute("placeholder", description);
+    
+    //Close Edit desciption modal
+    document.querySelector('.close').addEventListener('click', function(){
+        document.querySelector('.bg-modal').style.display = 'none';
+    })
+
+    //Modify Project Name, Description
+    document.getElementById("save_desc").addEventListener("click",function(){
+        newName = editNameField.value;
+        newDesc = editDescField.value;
+
+        if (newName.length != 0)
+            projectName.innerText = newName;
+
+        if (newDesc.length != 0)
+            description.innerText = newDesc;
+
+        document.querySelector('.bg-modal').style.display = 'none';
+    });
