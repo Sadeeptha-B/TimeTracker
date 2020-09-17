@@ -67,17 +67,6 @@ button.header_links_button{
     font: 20px "Arial";
 }
 
-<<<<<<< HEAD
-=======
-h1{
-    font-family: 'Roboto', sans-serif;
-}
-
-div.body{
-    font-family: 'Poppins', sans-serif;
-}
-
->>>>>>> refs/remotes/origin/develop
 
 /*Dashboard page */
 div.dashboard{
@@ -215,10 +204,11 @@ div.description_card {
     text-align: left;
     transform: translateY(3rem);
     border: azure;
+    position: relative;
 }
 
 div.description_content{
-    height: 6rem;
+   padding: 0;
 }
 
 a.edit_prompt {

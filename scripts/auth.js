@@ -56,7 +56,10 @@ firebase.auth().onAuthStateChanged(function(user) {
   if (user) {
     // User is signed in.
 		window.alert("User signed in.");
-		
+		//Change this: HACK
+		if (document.title == "TimeTracker - Login"){
+			window.location.href = "../html/home.html";
+		}
   } else {
     // No user is signed in.
 
