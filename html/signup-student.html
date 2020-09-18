@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>TimeTracker - Login</title>
+    <title>TimeTracker - Signup</title>
     <link rel="stylesheet" href="generic_style.css"></link>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
 </head>
@@ -43,16 +43,18 @@
                         <th>Confirm Password</th>
                         <td><input type="password" class="confirm_pword_input" id="ConfirmPassword" name="ConfirmPassword" required></td>
                     </tr>
+                    <!-- DEPRECATED
                     <tr>
                         <th>Type</th>
                         <td>
                             <select name="user_type" id="user_type" class="user_type">
-                                <option value="Teacher">Teacher</option> <!--need extra id verification for this?-->
+                                <option value="Teacher">Teacher</option>
                                 <option value="Student">Student</option>
                                 <option hidden value="sysadmin">Admin</option>
                               </select>
                         </td>
                     </tr>
+                    -->
                 </table>
                 <div class="form_submit_action_container">
                     <button id="signup_button" class="form_signup_button" onclick="signup()">Signup</button>
