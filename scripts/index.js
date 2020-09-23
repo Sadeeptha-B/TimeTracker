@@ -1,6 +1,6 @@
 const firebaseReference = firebase.database().ref()
 
-function create(){
+function createProject(){
     var projectName = String(document.getElementById("Project Name").value),
         description = String(document.getElementById("Description").value),
         //students =  String(document.getElementById("Students").value),
@@ -9,28 +9,40 @@ function create(){
         startDay =  String(document.getElementById("Start Day").value),
         startMonth = String(document.getElementById("start_month").value),
         startYear = String(document.getElementById("Start Year").value),
-        //temporary
-        startDate = String(document.getElementById("Start Day").value + "/" + document.getElementById("start_month").value + "/" + document.getElementById("Start Year").value),
+        
+        // Putting into DD/MM/YYYY format
+        startDate = startDay + "/" + startMonth + "/" + startYear,
 
         //project end
         endDay = String(document.getElementById("End Day").value),
         endMonth = String(document.getElementById("end_month").value),
         endYear = String(document.getElementById("End Year").value),
-        //temporary
-        endDate = String(document.getElementById("End Day").value + "/" + document.getElementById("end_month").value + "/" + document.getElementById("End Year").value)
+
+        // Putting into DD/MM/YYYY format
+        endDate = endDay + "/" + endMonth + "/" + endYear
 
     if (description.length == 0){
         description = "N/A";
     }
 
+    firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+            window.alert(user)
+        }
+    })
     firebaseReference.child(`Projects/${projectName}`).set({
 		ProjectName: projectName,
         Description: description,
         StartDate: startDate,
         EndDate: endDate,
-	})
-
+    })
+    
     window.alert("Project Created!")
+    window.alert(user)
     // Bring the user to the home page after successful sign up
     window.location.href = "../html/home.html";
+}
+
+function addProject() {
+
 }
