@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+        <meta name="mobile-web-app-capable" content="yes" />
+        <title>Task Page</title>  
+        <link rel="stylesheet" href="generic_style.css"></link>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
+    </head>
+    
+    <body>        
+        <div class="header">
+            <div class="header_content_wrapper">
+                <div class="header_word_wrapper">
+                    <h1 id="projectName">Task Name</h1>
+                </div>
+            </div>
+        </div>
+
+        <div class="body">
+           <div class="description_card">
+                    <div class="description_header">
+                        <h3> Description <h3>
+                            <hr class="thin">
+                    </div>
+                    <div class="description_content">
+                         <p id= "description">Task Description content</p>
+                    </div>
+                    <div class="description_footer">
+                     <a href="#" id ="edit_desc" class="edit_prompt">Edit description </a>
+                    </div>
+            </div>
+<!-- 
+            <div class="card" id="team">
+                <h3>Team</h3>
+                 <hr class="thin">
+
+            </div> -->
+
+            <!--Charts-->
+            <div class="task_card">
+                <div class="task_header">
+                    <h3> Tasks </h3>
+                        <hr class="thin">
+                </div>
+                <div class="task_body">
+                <!-- Zhe Sheng: section for (preferably) task overview (in table) -->
+                </div>
+                <div class="task_footer">
+                    <!-- Zhe Sheng: section for task time input -->
+                    <!-- HIDDEN from teacher -->
+                    <a href="timeinput.html"><button>Time Input</button></a>
+                    <table>
+                        <!-- and then maybe a table which shows the time contributed? -->
+                    </table>
+                </div>
+            </div>
+            
+            <div class="card" id =charts>
+                    <h3> Progress Charts </h3>
+                    <div class="time_contribution">
+                        <h4 id ="timeCont"> Time Contribution</h4>
+                        <canvas id="myChart"></canvas>
+                    </div>
+                    
+            </div>
+            
+            <!--Modal -->
+            <div class="bg-modal">
+                <div class="modal-content">
+                    <div class="close">+</div>
+                    <div class = "desc_edit_form">
+                        <h3>Edit description</h3>
+                        <label class= "field_elements" for="name_field">Project Name :</label> 
+                        <input id = "name_field" class="input"><br>
+                        <label class="field_elements" for="desc_field">Description : </label><br>
+                        <textarea id = "desc_field" rows="14" cols="120" class="input"></textarea>
+                        
+                    </div>
+                    <div class= "desc_footer">
+                        <button href="#" class="blue_curve_button" id="save_desc"> Save </button>
+                    </div>
+                       
+                </div>
+            </div>
+        </div>
+         
+            
+         
+         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+         <script src="../scripts/shared.js"></script>
+         <script src= "../scripts/projectpage.js"></script>
+    </body>
+</html>
