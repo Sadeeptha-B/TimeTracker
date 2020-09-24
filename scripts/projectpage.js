@@ -4,8 +4,6 @@ var editNameField = document.getElementById("name_field");
 var editDescField = document.getElementById("desc_field");
 
 
-
-
 //Chart
 var ctx = document.getElementById('timeContChart');
 var students = ["Robyn McNamara", "Campbell Wilson", "Najam Nazar", "Nathan Companez"];
@@ -40,15 +38,10 @@ var myChart = new Chart(ctx, {
         
         editNameField.setAttribute("placeholder", projectName.innerHTML);
         editDescField.setAttribute("placeholder", description.innerHTML);
-        document.querySelector('.bg-modal').style.display = 'flex';
+        document.getElementById('desc_edit_overlay').style.display = 'flex';
     });
-
-    
-    //Close Edit desciption modal
-    document.querySelector('.close').addEventListener('click', function(){
-        document.querySelector('.bg-modal').style.display = 'none';
-    })
-
+   
+ 
     //Modify Project Name, Description
     document.getElementById("save_desc").addEventListener("click",function(){
         newName = editNameField.value;
@@ -62,3 +55,11 @@ var myChart = new Chart(ctx, {
 
         document.querySelector('.bg-modal').style.display = 'none';
     });
+
+    document.getElementById("new_task_button").addEventListener('click', function(){
+        document.getElementById('new_task_creation').style.display = 'flex';
+
+    })
+
+/* Dynamic Task Entry */
+/* Create Tasks : Backend, Create card */

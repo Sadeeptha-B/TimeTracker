@@ -15,3 +15,23 @@ var firebaseConfig = {
 
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
+
+
+//Close popups
+var closeButtons = document.querySelectorAll('.close');
+console.log(closeButtons);
+for (var i= 0; i < closeButtons.length; i++) {
+    var elem = closeButtons[i];
+    elem.addEventListener('click', function(){
+        makeModalsInvisible();
+    })
+}
+
+
+function makeModalsInvisible(){
+    var modals = document.querySelectorAll(".bg-modal");
+    for (var i= 0; i < modals.length; i++){
+        var modal = modals[i];
+        modal.style.display="none";
+    }
+}
