@@ -3,8 +3,8 @@ const firebaseRef = firebase.database().ref()
 function signup() {
 	var	userEmail = String(document.getElementById("Email").value),
         userPass = String(document.getElementById("Password").value),
-		userConfirmPass = String(document.getElementById("ConfirmPassword").value),
-		userRole = String(document.getElementById("user_type").value)
+		userConfirmPass = String(document.getElementById("ConfirmPassword").value);
+		// userRole = String(document.getElementById("user_type").value);
 
 	// sign up the user
 	if (userPass === userConfirmPass && userPass.length >= 6) {
@@ -22,7 +22,7 @@ function signup() {
 
 		if (!errorFound) {
 			result.then(() => {
-				writeUserData(userEmail, userRole)
+				writeUserData(userEmail)                                                 /*, userRole) */
 
 				window.alert("Sign Up successful!")
 				// Bring the user to the home page after successful sign up

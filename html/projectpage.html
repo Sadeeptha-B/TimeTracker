@@ -1,15 +1,17 @@
 <!doctype html>
 <html lang="en">
 
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
-        <meta name="mobile-web-app-capable" content="yes" />
-        <title>Project Page</title>  
-        <link rel="stylesheet" href="generic_style.css"></link>
-        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
-    </head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes" />
+    
+    <title>Project Page</title>  
+    <link rel="stylesheet" href="generic_style.css"></link>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
+</head>
+
     
     <body>        
         <div class="header">
@@ -21,26 +23,44 @@
         </div>
 
         <div class="body">
-           <div class="description_card">
+            
+           <div id= "description_card" class="header_type_card">
                     <div class="description_header">
                         <h3> Description <h3>
                             <hr class="thin">
                     </div>
+                            
                     <div class="description_content">
-                         <p id= "description">Project Description content</p>
+                         <span id= "description">Project Description content</span>
                     </div>
+                            
                     <div class="description_footer">
-                     <a href="#" id ="edit_desc" class="edit_prompt">Edit description </a>
+                     <a href="#" id ="edit_desc" class="hover_grey_link">Edit description </a>
                     </div>
             </div>
+                        
 <!-- 
             <div class="card" id="team">
                 <h3>Team</h3>
                  <hr class="thin">
 
             </div> -->
-
-            <!--Charts-->
+                 
+              <!--Charts-->
+            <div id ="charts" class="centered_card">
+                    <h3> Progress Charts </h3>
+                    <div class="time_contribution">
+                        <h4 class ="chart_heading"> Time Contribution by Hour </h4>
+                        <div class= "chart_container">
+                            <canvas id="timeContChart"></canvas>
+                        </div>
+                    </div>
+                    
+            </div>
+                        
+            <div class="clr"></div>
+                        
+                        
             <div class="task_card">
                 <!-- Section for tasks, task overview - HIDDEN from teacher -->
                 <div class="task_header">
@@ -63,19 +83,13 @@
                 </div>
             </div>
             
-            <div class="card" id =charts>
-                    <h3> Progress Charts </h3>
-                    <div class="time_contribution">
-                        <h4 id ="timeCont"> Time Contribution</h4>
-                        <canvas id="myChart"></canvas>
-                    </div>
-                    
-            </div>
+            
+           
             
             <!--Modal -->
             <div class="bg-modal">
                 <div class="modal-content">
-                    <div class="close">+</div>
+                    <div id= "desc_edit_close" class="close">+</div>
                     <div class = "desc_edit_form">
                         <h3>Edit description</h3>
                         <label class= "field_elements" for="name_field">Project Name :</label> 
@@ -91,8 +105,6 @@
                 </div>
             </div>
         </div>
-         
-            
          
          <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
          <script src="../scripts/shared.js"></script>
