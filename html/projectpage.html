@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
-    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes"/>
     
     <title>Project Page</title>  
     <link rel="stylesheet" href="generic_style.css"></link>
@@ -24,6 +24,7 @@
 
         <div class="body">
             
+        <div class="body-flex-wrapper">
            <div id= "description_card" class="header_type_card">
                     <div class="description_header">
                         <h3> Description <h3>
@@ -39,12 +40,12 @@
                     </div>
             </div>
                         
-<!-- 
-            <div class="card" id="team">
+
+            <div class="header_type_card" id="team_card">
                 <h3>Team</h3>
                  <hr class="thin">
-
-            </div> -->
+            </div>
+        </div>
                  
               <!--Charts-->
             <div id ="charts" class="centered_card">
@@ -56,30 +57,26 @@
                         </div>
                     </div>
                     
-            </div>
+            </div>         
                         
-            <div class="clr"></div>
-                        
-                        
-            <div class="task_card">
+            <div id="task_card" class="content_card">
                 <!-- Section for tasks, task overview - HIDDEN from teacher -->
                 <div class="task_header">
-                    <h3> Tasks </h3>
-                        <hr class="thin">
+                      <h3> Tasks </h3>
+                          <hr class="thin">
                 </div>
                 <div class="task_body">
                 <!-- Zhe Sheng: section for (preferably) task overview (in table) -->
-                </div>
-                <div class="task_footer">
-                    <!-- Zhe Sheng: section for new tasks and task allocation -->
-                    <a href="newtask.html"><button>New Task</button></a>
+
+                    <a href="newtask.html"><button class="button_with_symbol" id="new_task_button">+</button></a>
                     <a class="dash_project" href="taskpage.html">
-                        <div class="dash_project">
+                        <div class="dash_project" id="task_1">
                             <h2 class="dash_project_head">Task 1</h2>
                             <p class="project_summary">Start: DD/MM/YYYY &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; End: DD/MM/YYYY</p>
                         </div>
                     </a>
-                    <!-- END OF AUTO GENERATED HTML SECTION -->
+                            <!-- END OF AUTO GENERATED HTML SECTION -->
+
                 </div>
             </div>
             
@@ -106,8 +103,8 @@
             </div>
         </div>
          
-         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
-         <script src="../scripts/shared.js"></script>
-         <script src= "../scripts/projectpage.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+        <script src="../scripts/shared.js"></script>
+        <script src= "../scripts/projectpage.js"></script>
     </body>
 </html>
