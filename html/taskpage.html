@@ -21,35 +21,37 @@
         </div>
 
         <div class="body">
-           <div class="description_card">
-                    <div class="description_header">
+
+           <div class="header_type_card">
+                    <div class="card_header">
                         <h3> Description <h3>
                             <hr class="thin">
                     </div>
-                    <div class="description_content">
+                    <div id ="description_card_content" class="header_card_content">
                          <p id= "description">Task Description content</p>
                     </div>
-                    <div class="description_footer">
-                     <a href="#" id ="edit_desc" class="edit_prompt">Edit description </a>
+                    <div class="card_footer">
+                     <a href="#" id="edit_desc" class="hover_grey_link">Edit description </a>
                     </div>
             </div>
-<!-- 
+<!--  Change this to show the people to whom the task is assigned to?
             <div class="card" id="team">
                 <h3>Team</h3>
                  <hr class="thin">
 
             </div> -->
 
+
             <!--Charts-->
-            <div class="task_card">
-                <div class="task_header">
-                    <h3> Tasks </h3>
+            <div class="content_card">
+                <div class="card_header">
+                    <h3> Task Details </h3>
                         <hr class="thin">
                 </div>
-                <div class="task_body">
+                <div class="content_card_body">
                 <!-- Zhe Sheng: section for (preferably) task overview (in table) -->
                 </div>
-                <div class="task_footer">
+                <div class="card_footer">
                     <!-- Zhe Sheng: section for task time input -->
                     <!-- HIDDEN from teacher -->
                     <a href="timeinput.html"><button>Time Input</button></a>
@@ -59,7 +61,7 @@
                 </div>
             </div>
             
-            <div class="card" id =charts>
+            <div class="centered_card" id =charts>
                     <h3> Progress Charts </h3>
                     <div class="time_contribution">
                         <h4 id ="timeCont"> Time Contribution</h4>
@@ -68,6 +70,7 @@
                     
             </div>
             
+
             <!--Modal -->
             <div class="bg-modal">
                 <div class="modal-content">
@@ -93,6 +96,7 @@
                     <div class = "time_input_form">
                         <h3>Time input</h3>
                         <label class="field_elements">Start time :</label>
+
                         <!-- ZS: This is the format for now, maybe there will be a better format coming along? -->
                         <!-- Time input now includes am/pm option, which is in the ID 'start_period' and 'end_period'-->
                         <input type="number" width="20px" class="start_day" name="Start Day" id = "start_day"
@@ -111,6 +115,7 @@
                             <option value="11">November</option>
                             <option value="12">December</option>
                         </select>
+                        
                         <input type="number" width="40px" class="start_year" name="Start Year" id = "Start Year"
                             min="2020" max="2099" value="2020" required><br>
                         <input type="number" id="start_hr" min="1" max="12" required>

@@ -19,7 +19,6 @@ firebase.initializeApp(firebaseConfig);
 
 //Close popups
 var closeButtons = document.querySelectorAll('.close');
-console.log(closeButtons);
 for (var i= 0; i < closeButtons.length; i++) {
     var elem = closeButtons[i];
     elem.addEventListener('click', function(){
@@ -34,4 +33,8 @@ function makeModalsInvisible(){
         var modal = modals[i];
         modal.style.display="none";
     }
+}
+
+function displayModalBasic(elem){
+    document.getElementById(elem).style.display = "flex";
 }

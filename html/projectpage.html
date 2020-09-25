@@ -36,17 +36,18 @@
             
         <div class="body-flex-wrapper">
            <div id= "description_card" class="header_type_card">
-                    <div class="description_header">
+                    <div class="card_header">
                         <h3> Description <h3>
                             <hr class="thin">
                     </div>
                             
-                    <div class="description_content">
+                    <div id ="description_card_content" class="header_card_content">
                          <span id= "description">Project Description content</span>
                     </div>
                             
-                    <div class="description_footer">
+                    <div id="description_footer" class= "card_footer">
                      <a href="#" id ="edit_desc" class="hover_grey_link">Edit description </a>
+                     <!-- <div class="clr"></div> -->
                     </div>
             </div>
                         
@@ -59,30 +60,37 @@
                  
               <!--Charts-->
             <div id ="charts" class="centered_card">
-                    <h3 id ="charts_card_heading"> Progress Charts </h3>
-                    <div class="time_contribution">
-                        <h4 class ="chart_heading"> Time Contribution by Hour </h4>
-                        <div class= "chart_container">
-                            <canvas id="timeContChart"></canvas>
+                    <div class="card_header">
+                        <h3 id ="charts_card_heading"> Progress Charts </h3>
+                    </div>
+
+                    <div class="centered_card_content">
+                        <div id="time_contribution" class="chart">
+                            <h4 class ="chart_heading"> Time Contribution by Hour </h4>
+                            <div class= "chart_container">
+                                <canvas id="timeContChart"></canvas>
+                            </div>
                         </div>
                     </div>
                     
             </div>         
                         
             <div id="task_card" class="content_card">
-                <div class="task_header">
+                <div class="card_header">
                       <h3> Tasks </h3>
                           <hr class="thin">
                 </div>
-                <div class="task_body" id= "task_card_body">
+                <div class="content_card_body" id= "task_card_body">
                 <!-- Zhe Sheng: section for (preferably) task overview (in table) -->
 
-                    <button class="button_with_symbol" id="new_task_button">+</button> 
-                    <div class="indiv_task" id="template">
+                    <button class="button_with_symbol" id="new_task_button" onclick="displayModalBasic('new_task')">+</button> 
+                    <div class="clr"></div>      <!-- Clearing Float-->
+
+                    <div class="task" id="template"> 
                         <a class="dash_project" href="taskpage.html">
-                            <div class="dash_project" id="task_1">
-                                <h2 class="dash_project_head">Task 1</h2>
-                                <p class="project_summary">Start: DD/MM/YYYY &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; End: DD/MM/YYYY</p>
+                            <div class="dash_project">
+                                <h2 class="dash_project_head" id="task 1">Task 1</h2>
+                                <p class="project_summary"><span id="start_date">Start: DD/MM/YYYY </span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span id="end_date"> End: DD/MM/YYYY </span> </</p>
                             </div>
                         </a>
                     </div>
@@ -95,33 +103,41 @@
            
             
             <!--Modals -->
-            <!-- TODO: Accomodate change to non fixed modal sizes. -->
+            <!-- TODO: Larger modal sizes for smaller screens -->
+
+            <!-- Edit description-->
             <div class="bg-modal" id="desc_edit_overlay">
                 <div class="modal-content">
                     <div id= "desc_edit_close" class="close">+</div>
-                    <div class = "desc_edit_form">
+                    <div class = "input_form">
                         <h3>Edit description</h3>
                         <label class= "field_elements" for="name_field">Project Name :</label> 
-                        <input id = "name_field" class="input"><br>
+                        <input id = "name_field" class="input_field"><br>
                         <label class="field_elements" for="desc_field">Description : </label><br>
-                        <textarea id = "desc_field" rows="14" cols="120" class="input"></textarea>
-                        
+                        <textarea id = "desc_field" rows="14" cols="120" class="input_field"></textarea>
                     </div>
-                    <div class= "desc_footer">
+                    
+                    <div id= "desc_footer">
                         <button href="#" class="blue_curve_button" id="save_desc"> Save </button>
+                        <div class="clr"></div>       <!-- Spacer div in case using float causes issue in auto height adjustment-->
                     </div>
+                   
                 </div>
             </div>
 
+            <!-- Create New Task -->
             <div class="bg-modal" id="new_task">
                 <div class= "modal-content">
                     <div id= "new_task_close" class="close">+</div>
-                    <div class="desc_edit_form">
+                    <div class="input_form">
                         <h3>New task</h3>
+
                         <label class="field_elements" for="task_name_field">Task Name :</label>
-                        <input id="name_field" class="input"><br>
-                        <!--<label class="field_elements" for="task_desc_field">Description : </label><br>
-                        <textarea id = "task_desc_field" rows="14" cols="120" class="input"></textarea>-->
+                        <input id="name_field" class="input_field"><br>
+
+                        <label class="field_elements" for="task_desc_field">Description : </label><br>
+                        <textarea id = "task_desc_field" rows="14" cols="120" class="input_field"></textarea>
+
                         <h3>Start date :</h3>
                         <!-- ZS: This is the format for now, maybe there will be a better format coming along? -->
                         <input type="number" width="20px" class="start_day" name="Start Day" id = "start_day"
@@ -159,11 +175,13 @@
                             <option value="11">November</option>
                             <option value="12">December</option>
                         </select>
+
                         <input type="number" width="40px" class="end_year" name="End Year" id = "end_year"
                             min="2020" max="2099" value="2020" required>
                     </div>
                     <div class="new_task_footer">
                         <button href="#" class="blue_curve_button" id="add_new_task"> Add </button>
+                        <div class="clr"></div>
                     </div>
                 </div>
             </div>
@@ -193,3 +211,10 @@
         <script src= "../scripts/projectpage.js"></script>
     </body>
 </html>
+
+<!-- Fixes Left-->
+<!--
+    1. Link edit description
+    2. Chart for small screens, Popup for small screens (Media calls)
+
+-->

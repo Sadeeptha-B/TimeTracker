@@ -64,12 +64,16 @@ h1{
        Generic Button 
        Standard Button
        Blue Curve Button
-       Vutton with symbol
+       Button with symbol
        Background Modal    
        Header Type Card
        Centered card 
        Content card
        Hover Grey Link
+
+IMPORTANT: 
+When specifying button locations in divs, for buttons of these templates,
+for that specific button id,  always use float: right/left etc, to specify position
 */
 
 /* Buttons */
@@ -103,7 +107,7 @@ h1{
 
 
 button.blue_curve_button{
-    display:block;
+    display:inline-block;
     padding:0.3em 1.2em;
     border-radius:2em;
     color:#FFFFFF;
@@ -118,7 +122,7 @@ button.blue_curve_button:hover{
 }
 
 .button_with_symbol{
-    position: absolute;
+    position: relative;
     display: inline-block;
     font-size:25px;
     padding-right: 0.5rem;
@@ -140,8 +144,10 @@ button.blue_curve_button:hover{
 /* Use class .bg-modal to gray background.
     Popup templates - .modal-content
       # Add more templates here if needed.
-*/
 
+IMPORTANT: Do not add element after modal-content div, within bg-modal, without explicit
+ styling, in order to keep it centered.
+*/
 .bg-modal {
     width: 100%;
     height: 100%;
@@ -153,13 +159,15 @@ button.blue_curve_button:hover{
     display:none;
 }
 
+
 .modal-content {
-    width: 500px;
-    height:500px;
+    position: relative;
+    height: auto;
+    width: 60%;
+    max-width: 600px;   /* Can specify min/max widths heights for greater control*/
     background-color: white;
     border-radius: 4px;
     padding: 20px;
-    position: relative;
 }
 
 
@@ -206,15 +214,15 @@ button.blue_curve_button:hover{
 .chart_container{
     position: relative;
     margin: 0 auto;
-    max-width: 600px;
-    max-height: 600px;
+    max-width: 600px;    /* Adjust parent and child for more mobile friendly sizes*/
+    height: auto;
 }
 
 
 
 /*Links*/
 a.hover_grey_link {
-    display: block;
+    display: inline-block;
     text-decoration: none;
     color: #999;
     font-size: 0.9rem;
@@ -222,7 +230,16 @@ a.hover_grey_link {
 }
 
 a.hover_gray_link :hover{
-    color: #696969
+    color: #696969;
+}
+
+/* Media calls */
+@media(min-width: 600px){
+    .body-flex-wrapper{
+        display:grid;
+        grid-template-columns: 1fr 1fr;
+        grid-gap: 1em;
+    }
 }
 
 
@@ -349,84 +366,78 @@ td{
 
 
 /* Project page */
-
-@media(min-width: 700px){
-    .body-flex-wrapper{
-        display:grid;
-        grid-template-columns: 1fr 1fr;
-        grid-gap: 1em;
+/* Description content */
+    div.header_card_content{
+    padding: 0;
+    padding-bottom: 20px;
     }
-}
 
 
-div.description_content{
-   padding: 0;
-   padding-bottom: 20px;
-}
-
-#edit_desc{
-     text-align: right;
-}
+    #edit_desc{
+        float: right;
+    }
 
 
-#charts{
-    transform: translateY(4rem);
-    text-align: center;
-}
-
-#charts_card_heading{
-    padding-left: 3em;
-}
-
-.chart_heading {
-    text-align: left;
-    padding: 1rem;
-}
+/* Chart card*/
+    #charts{
+        transform: translateY(4rem);
+        text-align: center;
+    }
 
 
-#desc_edit_close, #new_task_close{
-    top: 0;
-    right:14px;
-}
+    #charts_card_heading{
+        padding-left: 3em;
+    }
 
-.field_elements {
-    display:inline-block;
-    margin: 15px auto;
-}
+    .chart_heading {
+        text-align: left;
+        padding: 1rem;
+    }
 
-.desc_edit_form {
-    width: 90%;
-    position: relative;
-    padding:1rem;
-}
+/* Description edit modal*/
+    #desc_edit_close, #new_task_close{
+        top: 0;
+        right:14px;
+    }
 
-.input {
-    width:100%;
-    opacity: 0.9;
-}
+    .input_form{
+        width: 90%;
+        padding:1rem;
+    }
 
-#name_field{
-    border: 0px none;
-    border-bottom: 1px solid black;
-    outline-width: 0;
-}
+    .field_elements {
+        display:inline-block;
+        margin: 15px auto;
+    }
 
+    .input_field {
+        width:100%;
+        opacity: 0.9;
+    }
 
-#save_desc{
-    position: absolute;
-    right: 30px;
-}
+    #name_field{
+        border: 0px none;
+        border-bottom: 1px solid black;
+        outline-width: 0;
+    }
 
-#task_card{
-    transform: translateY(5rem);
-}
+    #save_desc{
+        float: right;
+        right: 15px;
+    }
 
-#new_task_button{
-    right: 25px;
-    border-color: black;
-}
+/* Task card*/
+    #task_card{
+        transform: translateY(5rem);
+    }
 
-#task_1{
-    transform: translateY(3rem);
-}
+    #new_task_button{
+        float: right;
+        right: 10px;
+        border-color: black;
+    }
+
+    #add_new_task{
+        float: right;
+    }
 
