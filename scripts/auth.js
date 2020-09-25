@@ -2,20 +2,11 @@ const firebaseRef = firebase.database().ref()
 
 firebase.auth().onAuthStateChanged(function(user) {
 	if (user) {
-		const username = getUsername(user.email),
-			  userRole = getUserRole(username)
-		console.log(username)
-		console.log(userRole)
+		const username = getUsername(user.email)
 
-		// if (getUserRole(getUsername(user.email)) === "Student") {
-		// 	window.location.href = "../html/home.html";
-		// }
-		// else if (getUserRole(getUsername(user.email)) === "Teacher") {
-		// 	window.location.href = "../html/home-teacherview.html";
-		// }
-		// else {
-		// 	window.location.href = "../html/home-adminview.html";
-		// }
+		getHomePage(username)
+		
+		
 	} else {
 	  // No user is signed in.
 	}
@@ -34,7 +25,7 @@ function signup(userRole) {
 
 			window.alert("Sign Up successful!")
 			// Bring the user to the home page after successful sign up
-			window.location.href = "../html/home.html";
+			// window.location.href = "../html/home.html";
 		})
 		.catch(function(error) {
 			var errorCode = error.code
@@ -70,13 +61,22 @@ function getUsername(email) {
 	}
 }
 
-function getUserRole(username) {
+function getHomePage(username) {
 	firebaseRef.child(`Users/${username}`)
 	.once("value")
 	.then(function(snapshot) {
-		return String(snapshot.child("Role").val())
+		const role = snapshot.child("Role").val()
+		if (role === "Student") {
+			window.location.href = "../html/home.html";
+		}
+		else if (role === "Teacher") {
+			window.location.href = "../html/home-teacherview.html";
+		}
+		else {
+			window.location.href = "../html/home-adminview.html";
+		}
 	})
-	console.log(role)
+	loggedIn = true
 }
 
 function login() {
@@ -88,7 +88,7 @@ function login() {
 		// User is signed in.
 		window.alert("User signed in.");
 		
-		window.location.href = "../html/home.html";
+		// window.location.href = "../html/home.html";
 	})
 	.catch(function(error) {
 		// Handle Errors here.
