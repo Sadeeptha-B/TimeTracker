@@ -1,22 +1,22 @@
 const firebaseReference = firebase.database().ref()
 
 function createProject(){
-    var projectName = String(document.getElementById("Project Name").value),
+    var projectName = String(document.getElementById("ProjectName").value),
         description = String(document.getElementById("Description").value),
         //students =  String(document.getElementById("Students").value),
 
         //project start
-        startDay =  String(document.getElementById("Start Day").value),
+        startDay =  String(document.getElementById("start_day").value),
         startMonth = String(document.getElementById("start_month").value),
-        startYear = String(document.getElementById("Start Year").value),
+        startYear = String(document.getElementById("start_year").value),
         
         // Putting into DD/MM/YYYY format
         startDate = startDay + "/" + startMonth + "/" + startYear,
 
         //project end
-        endDay = String(document.getElementById("End Day").value),
+        endDay = String(document.getElementById("end_day").value),
         endMonth = String(document.getElementById("end_month").value),
-        endYear = String(document.getElementById("End Year").value),
+        endYear = String(document.getElementById("end_year").value),
 
         // Putting into DD/MM/YYYY format
         endDate = endDay + "/" + endMonth + "/" + endYear

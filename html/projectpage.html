@@ -27,8 +27,8 @@
                 </div>
             </div>
             <div class="header_links_wrapper">
+                <a href = "home.html"><button id ="home" class="button_generic">Homepage</button></a>
                 <button id="signout_button" class="button_generic" onclick="logout()">Log Out</button>
-                <a href = "home.html"><button id ="home" class="button_generic">Home</button></a>
               </div>
         </div>
 
@@ -113,13 +113,77 @@
                 </div>
             </div>
 
-            <div class="bg-modal" id="new_task_creation">
+            <div class="bg-modal" id="new_task">
                 <div class= "modal-content">
                     <div id= "new_task_close" class="close">+</div>
-
+                    <div class="desc_edit_form">
+                        <h3>New task</h3>
+                        <label class="field_elements" for="task_name_field">Task Name :</label>
+                        <input id="name_field" class="input"><br>
+                        <!--<label class="field_elements" for="task_desc_field">Description : </label><br>
+                        <textarea id = "task_desc_field" rows="14" cols="120" class="input"></textarea>-->
+                        <h3>Start date :</h3>
+                        <!-- ZS: This is the format for now, maybe there will be a better format coming along? -->
+                        <input type="number" width="20px" class="start_day" name="Start Day" id = "start_day"
+                            min="1" max="31" value="1" required>
+                        <select name="start_month" class="start_month" id = "start_month">
+                            <option value="1">January</option>
+                            <option value="2">February</option>
+                            <option value="3">March</option>
+                            <option value="4">April</option>
+                            <option value="5">May</option>
+                            <option value="6">June</option>
+                            <option value="7">July</option>
+                            <option value="8">August</option>
+                            <option value="9">September</option>
+                            <option value="10">October</option>
+                            <option value="11">November</option>
+                            <option value="12">December</option>
+                        </select>
+                        <input type="number" width="40px" class="start_year" name="Start Year" id = "start_year"
+                            min="2020" max="2099" value="2020" required>
+                        <h3>End date :</h3>
+                        <input type="number" width="20px" class="end_day" name="End Day" id = "end_day"
+                            min="1" max="31" value="1" required>
+                        <select name="End Month" class="end_month" id = "end_month">
+                            <option value="1">January</option>
+                            <option value="2">February</option>
+                            <option value="3">March</option>
+                            <option value="4">April</option>
+                            <option value="5">May</option>
+                            <option value="6">June</option>
+                            <option value="7">July</option>
+                            <option value="8">August</option>
+                            <option value="9">September</option>
+                            <option value="10">October</option>
+                            <option value="11">November</option>
+                            <option value="12">December</option>
+                        </select>
+                        <input type="number" width="40px" class="end_year" name="End Year" id = "end_year"
+                            min="2020" max="2099" value="2020" required>
+                    </div>
+                    <div class="new_task_footer">
+                        <button href="#" class="blue_curve_button" id="add_new_task"> Add </button>
+                    </div>
                 </div>
             </div>
-
+            
+            <!-- ZS: popup to add student (no button to make it appear for now) 
+                this is the version which only adds one student at a time, 
+                mainly intended for adding after project is created
+            -->
+            <div class="bg-modal" id="add_student">
+                <div class="modal-content">
+                    <div id= "add_student_close" class="close">+</div>
+                    <div class="add_student_form">
+                        <h3>Student</h3>
+                        <input type="text" class="students_list" name="Students" required>
+                    </div>
+                    <div class="new_task_footer">
+                        <button href="#" class="blue_curve_button" id="add_new_student"> Add </button>
+                    </div>
+                </div>
+            </div>
 
 
         </div>

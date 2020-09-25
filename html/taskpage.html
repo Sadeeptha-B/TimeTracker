@@ -74,7 +74,7 @@
                     <div class="close">+</div>
                     <div class = "desc_edit_form">
                         <h3>Edit description</h3>
-                        <label class= "field_elements" for="name_field">Project Name :</label> 
+                        <label class= "field_elements" for="name_field">Task Name :</label> 
                         <input id = "name_field" class="input"><br>
                         <label class="field_elements" for="desc_field">Description : </label><br>
                         <textarea id = "desc_field" rows="14" cols="120" class="input"></textarea>
@@ -86,6 +86,69 @@
                        
                 </div>
             </div>
+
+            <div class="bg-modal" id="time_input">
+                <div class="modal-content">
+                    <div id="time_input_close" class="close">+</div>
+                    <div class = "time_input_form">
+                        <h3>Time input</h3>
+                        <label class="field_elements">Start time :</label>
+                        <!-- ZS: This is the format for now, maybe there will be a better format coming along? -->
+                        <!-- Time input now includes am/pm option, which is in the ID 'start_period' and 'end_period'-->
+                        <input type="number" width="20px" class="start_day" name="Start Day" id = "start_day"
+                            min="1" max="31" value="1" required>
+                        <select name="start_month" class="start_month" id = "start_month">
+                            <option value="1">January</option>
+                            <option value="2">February</option>
+                            <option value="3">March</option>
+                            <option value="4">April</option>
+                            <option value="5">May</option>
+                            <option value="6">June</option>
+                            <option value="7">July</option>
+                            <option value="8">August</option>
+                            <option value="9">September</option>
+                            <option value="10">October</option>
+                            <option value="11">November</option>
+                            <option value="12">December</option>
+                        </select>
+                        <input type="number" width="40px" class="start_year" name="Start Year" id = "Start Year"
+                            min="2020" max="2099" value="2020" required><br>
+                        <input type="number" id="start_hr" min="1" max="12" required>
+                        <input type="number" id="start_min" min="0" max="59" required>
+                        <select name="Start Period" class="start_period" id="start_period">
+                            <option value="am">a.m.</option>
+                            <option value="pm">p.m.</option>
+                        <label class="field_elements">End time :</label>
+                        <input type="number" width="20px" class="end_day" name="End Day" id = "end_day"
+                            min="1" max="31" value="1" required>
+                        <select name="End Month" class="end_month" id = "end_month">
+                            <option value="1">January</option>
+                            <option value="2">February</option>
+                            <option value="3">March</option>
+                            <option value="4">April</option>
+                            <option value="5">May</option>
+                            <option value="6">June</option>
+                            <option value="7">July</option>
+                            <option value="8">August</option>
+                            <option value="9">September</option>
+                            <option value="10">October</option>
+                            <option value="11">November</option>
+                            <option value="12">December</option>
+                        </select>
+                        <input type="number" width="40px" class="end_year" name="End Year" id = "end_year"
+                            min="2020" max="2099" value="2020" required><br>
+                        <input type="number" id="end_hr" min="1" max="12" required>
+                        <input type="number" id="end_min" min="0" max="59" required>
+                        <select name="End Period" class="end_period" id="end_period">
+                            <option value="am">a.m.</option>
+                            <option value="pm">p.m.</option>
+                    </div>
+                    <div class= "time_input_footer">
+                        <button href="#" class="blue_curve_button" id="save_desc"> Submit </button>
+                    </div>
+                       
+                </div>
+            </div> 
         </div>
          
             
