@@ -119,13 +119,17 @@ button.blue_curve_button:hover{
 
 .button_with_symbol{
     position: absolute;
+    display: inline-block;
     font-size:25px;
     padding-right: 0.5rem;
     padding-left: 0.5rem;
     border: 1px solid #9f9f9f33;
+    border-radius: 0.5em;
     background-color: #fff;
+    cursor: pointer;
 }
 
+/* WIP */
 .button_symbol_with_caption{
     display:grid;
     grid-template-columns: 3fr 1fr;
@@ -189,7 +193,6 @@ button.blue_curve_button:hover{
     transform: translateY(3rem);
     background-color:#fff;
     border-radius: 1rem;
-    width: 100%;
     height: auto;
     padding: 2rem;
     position: relative;
@@ -369,6 +372,10 @@ div.description_content{
 #charts{
     transform: translateY(4rem);
     text-align: center;
+}
+
+#charts_card_heading{
+    padding-left: 3em;
 }
 
 .chart_heading {

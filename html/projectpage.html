@@ -7,6 +7,12 @@
     <meta name="mobile-web-app-capable" content="yes"/>
     
     <title>Project Page</title>  
+    <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-database.js"></script>         
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-colorschemes"></script>
+
     <link rel="stylesheet" href="generic_style.css"></link>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
@@ -53,7 +59,7 @@
                  
               <!--Charts-->
             <div id ="charts" class="centered_card">
-                    <h3> Progress Charts </h3>
+                    <h3 id ="charts_card_heading"> Progress Charts </h3>
                     <div class="time_contribution">
                         <h4 class ="chart_heading"> Time Contribution by Hour </h4>
                         <div class= "chart_container">
@@ -64,21 +70,22 @@
             </div>         
                         
             <div id="task_card" class="content_card">
-                <!-- Section for tasks, task overview - HIDDEN from teacher -->
                 <div class="task_header">
                       <h3> Tasks </h3>
                           <hr class="thin">
                 </div>
-                <div class="task_body">
+                <div class="task_body" id= "task_card_body">
                 <!-- Zhe Sheng: section for (preferably) task overview (in table) -->
 
-                    <a href="#"><button class="button_with_symbol" id="new_task_button">+</button></a>
-                    <a class="dash_project" href="taskpage.html">
-                        <div class="dash_project" id="task_1">
-                            <h2 class="dash_project_head">Task 1</h2>
-                            <p class="project_summary">Start: DD/MM/YYYY &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; End: DD/MM/YYYY</p>
-                        </div>
-                    </a>
+                    <button class="button_with_symbol" id="new_task_button">+</button> 
+                    <div class="indiv_task" id="template">
+                        <a class="dash_project" href="taskpage.html">
+                            <div class="dash_project" id="task_1">
+                                <h2 class="dash_project_head">Task 1</h2>
+                                <p class="project_summary">Start: DD/MM/YYYY &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; End: DD/MM/YYYY</p>
+                            </div>
+                        </a>
+                    </div>
                             <!-- END OF AUTO GENERATED HTML SECTION -->
 
                 </div>
@@ -87,7 +94,7 @@
             
            
             
-            <!--Modal -->
+            <!--Modals -->
             <!-- TODO: Accomodate change to non fixed modal sizes. -->
             <div class="bg-modal" id="desc_edit_overlay">
                 <div class="modal-content">
@@ -116,12 +123,8 @@
 
 
         </div>
-            <!-- The core Firebase JS SDK is always required and must be listed first -->
         <!-- The core Firebase JS SDK is always required and must be listed first -->
-        <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-auth.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-database.js"></script>         
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+        <!-- The core Firebase JS SDK is always required and must be listed first -->
         <script src="../scripts/shared.js"></script>
         <script src= "../scripts/projectpage.js"></script>
     </body>

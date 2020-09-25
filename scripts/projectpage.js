@@ -4,34 +4,9 @@ var editNameField = document.getElementById("name_field");
 var editDescField = document.getElementById("desc_field");
 
 
-//Chart
-var ctx = document.getElementById('timeContChart');
-var students = ["Robyn McNamara", "Campbell Wilson", "Najam Nazar", "Nathan Companez"];
-var times = [4, 7, 3, 5];
-
-//TODO : Modify for random color select
-var myChart = new Chart(ctx, {
-    type: 'pie',
-    data:{
-        labels: students,
-        datasets: [{
-            label: 'Numbers',
-            legend: "Time contributed",
-            data: times,
-            backgroundColor:[ "rgba(178, 102, 255)",
-                              "rgba(153, 255, 204)",
-                              "rgba(204, 0, 102)"  ,
-                              "rgba(204, 204, 0)"]
-        }], 
-    },
-    options: {
-        responsive:true,
-    }
-});
-
-
-/*Click Event Listeners */
-    //Edit description
+/* Click Event Listeners */
+/*=========================================*/
+//Edit description
     document.getElementById("edit_desc").addEventListener('click', function(){
         editNameField.value = "";
         editDescField.value = "";
@@ -42,7 +17,7 @@ var myChart = new Chart(ctx, {
     });
    
  
-    //Modify Project Name, Description
+//Modify Project Name, Description
     document.getElementById("save_desc").addEventListener("click",function(){
         newName = editNameField.value;
         newDesc = editDescField.value;
@@ -61,5 +36,70 @@ var myChart = new Chart(ctx, {
 
     })
 
+
+/* Chart */
+/*=========================================*/
+var ctx = document.getElementById('timeContChart');
+var students = ["Robyn McNamara", "Campbell Wilson", "Najam Nazar", "Nathan Companez"];
+var times = [4, 7, 3, 5];
+
+
+var timeContChart = new Chart(ctx, {
+    type: 'pie',
+    data:{
+        labels: students,
+        datasets: [{
+            label: 'Numbers',
+            legend: "Time contributed",
+            data: times
+        }], 
+    },
+    options: {
+        //  Code for title if needed
+        /*
+        title: {
+            display: true,
+            text: "Time Contribution By Hour",
+            fontFamily: 'Poppins, Verdana, sans-serif',
+            fontSize: 16,
+            fontColor: "black"
+        },
+        */
+        plugins:{
+            colorschemes:{
+                scheme: 'office.Slipstream6',
+            }
+        },
+        responsive:true,
+    }
+});
+
+var customColorFunction = function(schemeColors){
+    var myColors = [ "rgba(178, 102, 255)",
+                     "rgba(153, 255, 204)",
+                     "rgba(204, 0, 102)"  ,
+                     "rgba(204, 204, 0)"];
+
+    Array.prototype.push.apply(schemeColors, myColors);
+    return schemeColors;
+}
+
+
+var template = document.getElementById("template");
+var tasksCard = document.getElementById("task_card_body");
+populateTasks();
+
+
 /* Dynamic Task Entry */
+function populateTasks(){
+    var clone = template.cloneNode(true);
+    tasksCard.appendChild(clone);
+}
+
+/* TODOs */
+    // Make task divs well defined, and allow for change, provide harness for data array
+    //Pop up modal inner contents placement, size configurable
+    // Pop up behaviour for mobile
+
+
 /* Create Tasks : Backend, Create card */
