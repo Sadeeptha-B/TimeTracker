@@ -1,18 +1,15 @@
-const firebaseRef = firebase.database().ref()
+const firebaseRef = firebase.database().ref(),
+	  teacherOnly = document.querySelectorAll('.teacherOnly')
 
 firebase.auth().onAuthStateChanged(function(user) {
 	if (user) {
-		const username = getUsername(user.email)
-
-		getHomePage(username)
-		
 		
 	} else {
 	  // No user is signed in.
 	}
-  });
+  });  
 
-function signup(userRole) {
+function signup() {
 	var	userEmail = String(document.getElementById("Email").value),
         userPass = String(document.getElementById("Password").value),
 		userConfirmPass = String(document.getElementById("ConfirmPassword").value)
@@ -21,11 +18,16 @@ function signup(userRole) {
 	if (userPass === userConfirmPass && userPass.length >= 6) {
 		firebase.auth().createUserWithEmailAndPassword(userEmail, userPass)
 		.then(function() {
-			writeUserData(userEmail, userRole)
+			writeUserData(userEmail)
 
 			window.alert("Sign Up successful!")
 			// Bring the user to the home page after successful sign up
-			// window.location.href = "../html/home.html";
+			if (teacherOrStudent(userEmail) === 'Teacher') {
+				window.location.href = "../html/home-adminview.html";
+			}
+			else {
+				window.location.href = "../html/login.html";
+			}
 		})
 		.catch(function(error) {
 			var errorCode = error.code
@@ -43,8 +45,9 @@ function signup(userRole) {
 	}
 }
 
-function writeUserData(email, userRole) {
-	var username = getUsername(email)
+function writeUserData(email) {
+	var username = getUsername(email),
+		userRole = teacherOrStudent(email)
 	
 	firebaseRef.child(`Users/${username}`).set({
 		Username: username,
@@ -61,6 +64,13 @@ function getUsername(email) {
 	}
 }
 
+function teacherOrStudent(email) {
+	if (email.indexOf('student') !== -1) {
+		return 'Student'
+	}
+	return 'Teacher'
+}
+
 function getHomePage(username) {
 	firebaseRef.child(`Users/${username}`)
 	.once("value")
@@ -68,15 +78,16 @@ function getHomePage(username) {
 		const role = snapshot.child("Role").val()
 		if (role === "Student") {
 			window.location.href = "../html/home.html";
+			
 		}
 		else if (role === "Teacher") {
 			window.location.href = "../html/home-teacherview.html";
+			
 		}
 		else {
 			window.location.href = "../html/home-adminview.html";
 		}
 	})
-	loggedIn = true
 }
 
 function login() {
@@ -87,6 +98,7 @@ function login() {
 	.then(function() {
 		// User is signed in.
 		window.alert("User signed in.");
+		getHomePage(getUsername(userEmail))
 		
 		// window.location.href = "../html/home.html";
 	})
