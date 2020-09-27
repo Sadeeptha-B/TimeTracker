@@ -1,12 +1,19 @@
 const firebaseRef = firebase.database().ref()
 
-// firebase.auth().onAuthStateChanged(function(user) {
-// 	if (user) {
+firebase.auth().onAuthStateChanged(function(user) {
+	if (user) {
+		const welcomeText = document.getElementById("welcome_text")
 		
-// 	} else {
-// 	  // No user is signed in.
-// 	}
-//   });  
+		firebaseRef.child(`Users/${getUsername(user.email)}`)
+				  .once('value').then(function(snapshot) {
+					const username = snapshot.child('Username').val()
+					welcomeText.innerHTML = "Welcome, " + username
+				  })
+		
+	} else {
+	  // No user is signed in.
+	}
+  });  
 
 async function signup() {
 	const userEmail = String(document.getElementById("Email").value),
@@ -27,7 +34,7 @@ async function signup() {
 		}
 		catch(err) {
 			window.alert(err)
-				location.reload()
+			location.reload()
 		}
 			
 	}
@@ -118,19 +125,17 @@ function getRole(email) {
 	return 'Teacher'
 	
 }
-
 function getHomePage(username) {
 	firebaseRef.child(`Users/${username}`)
 	.once("value")
 	.then(function(snapshot) {
 		const role = snapshot.child("Role").val()
+
 		if (role === "Student") {
 			window.location.href = "../html/home.html";
-			
 		}
 		else if (role === "Teacher") {
 			window.location.href = "../html/home-teacherview.html";
-			
 		}
 		else {
 			window.location.href = "../html/home-adminview.html";
@@ -139,16 +144,14 @@ function getHomePage(username) {
 }
 
 function login() {
-	var userEmail = String(document.getElementById("userEmail").value);
-	var userPass = String(document.getElementById("userPass").value);
+	var userEmail = String(document.getElementById("userEmail").value),
+		userPass = String(document.getElementById("userPass").value)
 
 	firebase.auth().signInWithEmailAndPassword(userEmail, userPass)
 	.then(function() {
 		// User is signed in.
 		window.alert("User signed in.");
 		getHomePage(getUsername(userEmail))
-		
-		// window.location.href = "../html/home.html";
 	})
 	.catch(function(error) {
 		// Handle Errors here.
