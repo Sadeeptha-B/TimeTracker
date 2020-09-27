@@ -72,9 +72,10 @@ h1{
        Hover Grey Link
 
 IMPORTANT: 
-When specifying button locations in divs, for buttons of these templates,
-for that specific button id,  always use float: right/left etc, to specify position
+When positioning buttons using the button templates, always use float: right/left etc, to
+specify position.
 */
+
 
 /* Buttons */
 .close{
@@ -83,7 +84,6 @@ for that specific button id,  always use float: right/left etc, to specify posit
     transform: rotate(45deg);
     cursor:pointer;
 }
-
 
 
 .button_generic {
@@ -133,6 +133,7 @@ button.blue_curve_button:hover{
     cursor: pointer;
 }
 
+
 /* WIP */
 .button_symbol_with_caption{
     display:grid;
@@ -161,13 +162,24 @@ IMPORTANT: Do not add element after modal-content div, within bg-modal, without 
 
 
 .modal-content {
-    position: relative;
+    position: absolute;
     height: auto;
     width: 60%;
+    max-height: 90%;
     max-width: 600px;   /* Can specify min/max widths heights for greater control*/
     background-color: white;
     border-radius: 4px;
     padding: 20px;
+
+    /*Scroll*/
+    overflow-x: hidden;
+    overflow-y: scroll;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+}
+
+.modal-content::-webkit-scrollbar{
+    display:none;   /* Chrome and Safari*/
 }
 
 
@@ -176,7 +188,7 @@ IMPORTANT: Do not add element after modal-content div, within bg-modal, without 
     transform: translateY(2rem);   /* Adds 2rem space before one of these elements*/
     background-color:#fff;
     padding: 2rem;
-    /* box-shadow: 0 1.4rem 3rem #908f8f33; */
+    box-shadow: 0 1.4rem 3rem #908f8f33;
     border: 1px solid #9f9f9f33;
     border-radius: .8rem;
     text-align: left;
@@ -192,7 +204,7 @@ IMPORTANT: Do not add element after modal-content div, within bg-modal, without 
     width: 60%;
     height: auto;
     padding: 1rem;
-    /* box-shadow: 0 1.4rem 8rem #908f8f33;  */
+    box-shadow: 0 1.4rem 8rem #908f8f33; 
     border: 1px solid #9f9f9f33;
     position: relative;
 }
@@ -403,6 +415,7 @@ td{
     .input_form{
         width: 90%;
         padding:1rem;
+        font-size: 12px;
     }
 
     .field_elements {
@@ -413,13 +426,17 @@ td{
     .input_field {
         width:100%;
         opacity: 0.9;
+        max-width: 100%;
+        font-family: 'Poppins', Verdana, sans-serif;
     }
 
-    #name_field{
+    
+    #name_field, #task_name_input{
         border: 0px none;
         border-bottom: 1px solid black;
         outline-width: 0;
     }
+
 
     #save_desc{
         float: right;
@@ -440,4 +457,5 @@ td{
     #add_new_task{
         float: right;
     }
+
 

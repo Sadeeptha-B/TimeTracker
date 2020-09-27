@@ -1,37 +1,133 @@
 /* DOM elements to edit Project Name, Description */
-var projectName = document.getElementById("projectName");
-var description = document.getElementById("description");
-var editNameField = document.getElementById("name_field");
-var editDescField = document.getElementById("desc_field");
+    var projectName = document.getElementById("projectName");
+    var description = document.getElementById("description");
+    var editNameField = document.getElementById("name_field");
+    var editDescField = document.getElementById("desc_field");
+
+/* DOM elements for new task elements */
+    var newTaskName = document.getElementById("task_name_input");
+    var newTaskDesc = document.getElementById("task_desc_input");
+
+
+/* Modals */
+   var editDescModal = document.getElementById("desc_edit_overlay");
+   var newTaskModal = document.getElementById("new_task");
 
 /* DOM elements to create new tasks*/
-var template = document.getElementById("template");
-var tasksCard = document.getElementById("task_card_body");
+    var template = document.getElementById("template");
+    var tasksCardBody = document.getElementById("task_card_body");
 
 
-// Set placeholder values before first click of Edit Description: Not essential
-editNameField.setAttribute("placeholder", projectName.innerHTML);
-editDescField.setAttribute("placeholder", description.innerHTML);
+populateAll();
 
 
+function populateAll(){
+    // Include code for retrieval of Project Name, Description
+    // Include code to retrieve and populate tasks from backend
 
-/* Click Event Listeners */
-/*=========================================*/
+        /* Pass an object of the form
+            taskObject = {
+                name:
+                desc:
+                startDate:
+                startMonth:
+                startYear:
+                endDate:
+                endMonth:
+                endYear:
+            }
+        to function populateTask, to display tasks
+        
+        Loop:
+            populate(taskObject)
+
+        */ 
+}
+
+
+function getNewTaskData(){
+    var newTaskName = document.getElementById("task_name_input").value;
+    var newTaskDesc = document.getElementById("task_desc_input").value;
+    var taskStartDate = document.getElementById("task_start_date_input").value;
+    var taskStartMonth = document.getElementById("task_start_month_input").value;
+    var taskStartYear = document.getElementById("task_start_year_input").value;
+    var taskEndDate = document.getElementById("task_end_date_input").value;
+    var taskEndMonth = document.getElementById("task_end_month_input").value;
+    var taskEndYear = document.getElementById("task_end_year_input").value;
+
+    // Validation Code
+    newTaskName = newTaskName.trim();
+    if (newTaskName == ""){
+        //error message
+        return;
+    }
+
+    var valid = true;
+
+    if (valid = compare(taskStartYear, taskEndYear)){
+        if (valid = compare(taskStartMonth,taskEndMonth))
+            valid = compare(taskStartDate, taskEndDate);
+    }
+
+    if (!valid){
+        return;
+    }
+
+
+    //Code for storing data to database
+
+    var taskObject = {
+        name: newTaskName,
+        desc: newTaskDesc,
+        startDate: taskStartDate,
+        startMonth: taskStartMonth,
+        startYear: taskStartYear,
+        endDate: taskEndDate,
+        endMonth: taskEndMonth,
+        endYear: taskEndYear
+    }
+
+    return taskObject;
+}
+
+function populateTask(taskData){
+    document.getElementById("task_heading").innerHTML = taskData.name;
+    document.getElementById("task_start_date").innerHTML = taskData.startDate;
+    document.getElementById("task_start_month").innerHTML = taskData.startMonth;
+    document.getElementById("task_start_year").innerHTML = taskData.startYear;
+    document.getElementById("task_end_date").innerHTML = taskData.endDate;
+    document.getElementById("task_end_month").innerHTML = taskData.endMonth;
+    document.getElementById("task_end_year").innerHTML = taskData.endYear;
+
+    var clone = template.cloneNode(true);
+    clone.removeAttribute("style");
+    clone.setAttribute("id", "taskData.name")  //TODO: Set better ID, provide for delete, modify
+    tasksCardBody.append(clone);
+}
+
+
+/* 
+Click Event Listeners 
+===========================================
+To do all tasks related to clicks except for the opening of modals.
+
+*/
+
 //Edit description
     document.getElementById("edit_desc").addEventListener('click', function(){
         editNameField.value = "";
         editDescField.value = "";
-        
         editNameField.setAttribute("placeholder", projectName.innerHTML);
         editDescField.setAttribute("placeholder", description.innerHTML);
-        document.getElementById('desc_edit_overlay').style.display = 'flex';
     });
    
  
-//Modify Project Name, Description
+//Save new Project Name, Description
     document.getElementById("save_desc").addEventListener("click",function(){
-        newName = editNameField.value;
-        newDesc = editDescField.value;
+        var newName = editNameField.value.trim();
+        var newDesc = editDescField.value.trim();
+
+       // Include code to modify project name and project description on backend
 
         if (newName.length != 0)
             projectName.innerText = newName;
@@ -39,23 +135,36 @@ editDescField.setAttribute("placeholder", description.innerHTML);
         if (newDesc.length != 0)
             description.innerText = newDesc;
 
-        document.querySelector('.bg-modal').style.display = 'none';
+        closeModal(editDescModal);
     });
 
 
- // Save New Task
+// Create New Task
+    document.getElementById("new_task_button").addEventListener("click", function(){
+        newTaskName.value = "";
+        newTaskDesc.value = "";
+    })
+
+
+// Save New Task
     document.getElementById("add_new_task").addEventListener('click',function(){
-
+        var taskData = getNewTaskData();
+        if (taskData != undefined){
+            populateTask(taskData);
+            closeModal(newTaskModal);
+        }
     });
 
 
-/* Chart */
-/*=========================================*/
+
+
+/* Chart 
+=========================================== */
+
 var ctx = document.getElementById('timeContChart');
 var students = ["Robyn McNamara", "Campbell Wilson", "Najam Nazar", "Nathan Companez"];
 var times = [4, 7, 3, 5];
 
-// Chart.defaults.global.maintainAspectRatio = false;
 var timeContChart = new Chart(ctx, {
     type: 'pie',
     data:{
@@ -80,6 +189,7 @@ var timeContChart = new Chart(ctx, {
         plugins:{
             colorschemes:{
                 scheme: 'office.Slipstream6',
+                custom: customColorFunction
             }
         },
         responsive:true,
@@ -97,4 +207,15 @@ var customColorFunction = function(schemeColors){
     return schemeColors;
 }
 
+
+/* Helper functions */
+
+function compare(shouldBeSmaller, shouldBeLarger){
+    var valid = true;
+    if (shouldBeSmaller > shouldBeLarger){
+        //Error message
+        valid = false;
+    }
+    return valid;
+}
 

@@ -17,24 +17,11 @@ var firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 
-//Close popups
-var closeButtons = document.querySelectorAll('.close');
-for (var i= 0; i < closeButtons.length; i++) {
-    var elem = closeButtons[i];
-    elem.addEventListener('click', function(){
-        makeModalsInvisible();
-    })
+function openModal(modalElem){
+    modalElem.style.display = "flex";
 }
 
 
-function makeModalsInvisible(){
-    var modals = document.querySelectorAll(".bg-modal");
-    for (var i= 0; i < modals.length; i++){
-        var modal = modals[i];
-        modal.style.display="none";
-    }
-}
-
-function displayModalBasic(elem){
-    document.getElementById(elem).style.display = "flex";
+function closeModal(modalElem){
+    modalElem.style.display = "none";
 }

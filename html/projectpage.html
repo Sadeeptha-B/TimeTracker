@@ -46,7 +46,7 @@
                     </div>
                             
                     <div id="description_footer" class= "card_footer">
-                     <a href="#" id ="edit_desc" class="hover_grey_link">Edit description </a>
+                     <a href="#" id ="edit_desc" class="hover_grey_link" onclick="openModal(desc_edit_overlay)">Edit description </a>
                      <!-- <div class="clr"></div> -->
                     </div>
             </div>
@@ -83,14 +83,23 @@
                 <div class="content_card_body" id= "task_card_body">
                 <!-- Zhe Sheng: section for (preferably) task overview (in table) -->
 
-                    <button class="button_with_symbol" id="new_task_button" onclick="displayModalBasic('new_task')">+</button> 
+                    <button class="button_with_symbol" id="new_task_button" onclick="openModal(new_task)">+</button> 
                     <div class="clr"></div>      <!-- Clearing Float-->
 
-                    <div class="task" id="template"> 
+                    <div class="task" id="template" style="display: none"> 
                         <a class="dash_project" href="taskpage.html">
                             <div class="dash_project">
-                                <h2 class="dash_project_head" id="task 1">Task 1</h2>
-                                <p class="project_summary"><span id="start_date">Start: DD/MM/YYYY </span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span id="end_date"> End: DD/MM/YYYY </span> </</p>
+                                <h2 class="dash_project_head" id="task_heading">Task 1</h2>
+
+                                <p class="project_summary">Start: <span id="task_start_date">DD</span>/
+                                                                  <span id="task_start_month">MM</span>/
+                                                                  <span id="task_start_year">YYYY</span> 
+                                                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                                                           End:   <span id="task_end_date">DD</span>/
+                                                                  <span id="task_end_month">MM</span>/
+                                                                  <span id="task_end_year">YYYY</span>
+                                </p>
+
                             </div>
                         </a>
                     </div>
@@ -108,7 +117,7 @@
             <!-- Edit description-->
             <div class="bg-modal" id="desc_edit_overlay">
                 <div class="modal-content">
-                    <div id= "desc_edit_close" class="close">+</div>
+                    <div id= "desc_edit_close" class="close" onclick="closeModal(desc_edit_overlay)">+</div>
                     <div class = "input_form">
                         <h3>Edit description</h3>
                         <label class= "field_elements" for="name_field">Project Name :</label> 
@@ -118,7 +127,7 @@
                     </div>
                     
                     <div id= "desc_footer">
-                        <button href="#" class="blue_curve_button" id="save_desc"> Save </button>
+                        <button href="#" class="blue_curve_button" id="save_desc" type="submit"> Save </button>
                         <div class="clr"></div>       <!-- Spacer div in case using float causes issue in auto height adjustment-->
                     </div>
                    
@@ -128,59 +137,64 @@
             <!-- Create New Task -->
             <div class="bg-modal" id="new_task">
                 <div class= "modal-content">
-                    <div id= "new_task_close" class="close">+</div>
-                    <div class="input_form">
+                    <div id= "new_task_close" class="close" onclick="closeModal(new_task)">+</div>
+
+                    <form class="input_form">
                         <h3>New task</h3>
 
                         <label class="field_elements" for="task_name_field">Task Name :</label>
-                        <input id="name_field" class="input_field"><br>
+                        <input id="task_name_input" class="input_field" type="text" data-empty="Task Name cannot be empty"><br>
 
                         <label class="field_elements" for="task_desc_field">Description : </label><br>
-                        <textarea id = "task_desc_field" rows="14" cols="120" class="input_field"></textarea>
+                        <textarea id = "task_desc_input" rows="14" cols="120" class="input_field"></textarea>
 
                         <h3>Start date :</h3>
-                        <!-- ZS: This is the format for now, maybe there will be a better format coming along? -->
-                        <input type="number" width="20px" class="start_day" name="Start Day" id = "start_day"
-                            min="1" max="31" value="1" required>
-                        <select name="start_month" class="start_month" id = "start_month">
-                            <option value="1">January</option>
-                            <option value="2">February</option>
-                            <option value="3">March</option>
-                            <option value="4">April</option>
-                            <option value="5">May</option>
-                            <option value="6">June</option>
-                            <option value="7">July</option>
-                            <option value="8">August</option>
-                            <option value="9">September</option>
-                            <option value="10">October</option>
-                            <option value="11">November</option>
-                            <option value="12">December</option>
-                        </select>
-                        <input type="number" width="40px" class="start_year" name="Start Year" id = "start_year"
-                            min="2020" max="2099" value="2020" required>
-                        <h3>End date :</h3>
-                        <input type="number" width="20px" class="end_day" name="End Day" id = "end_day"
-                            min="1" max="31" value="1" required>
-                        <select name="End Month" class="end_month" id = "end_month">
-                            <option value="1">January</option>
-                            <option value="2">February</option>
-                            <option value="3">March</option>
-                            <option value="4">April</option>
-                            <option value="5">May</option>
-                            <option value="6">June</option>
-                            <option value="7">July</option>
-                            <option value="8">August</option>
-                            <option value="9">September</option>
-                            <option value="10">October</option>
-                            <option value="11">November</option>
-                            <option value="12">December</option>
-                        </select>
+                            <!-- ZS: This is the format for now, maybe there will be a better format coming along? -->
+                            <input type="number" width="20px" class="start_day" name="Start Day" id = "task_start_date_input"
+                                min="1" max="31" value="1" required>
 
-                        <input type="number" width="40px" class="end_year" name="End Year" id = "end_year"
-                            min="2020" max="2099" value="2020" required>
-                    </div>
+                            <select name="start_month" class="select_month" id = "task_start_month_input">
+                                <option value="1">January</option>
+                                <option value="2">February</option>
+                                <option value="3">March</option>
+                                <option value="4">April</option>
+                                <option value="5">May</option>
+                                <option value="6">June</option>
+                                <option value="7">July</option>
+                                <option value="8">August</option>
+                                <option value="9">September</option>
+                                <option value="10">October</option>
+                                <option value="11">November</option>
+                                <option value="12">December</option>
+                            </select>
+
+                            <input type="number" width="40px" class="start_year" name="Start Year" id = "task_start_year_input"
+                                min="2020" max="2099" value="2020" required>
+
+                        <h3>End date :</h3>
+                            <input type="number" width="20px" class="end_day" name="End Day" id = "task_end_date_input"
+                                min="1" max="31" value="1" required>
+
+                            <select name="End Month" class="select_month" id = "task_end_month_input">
+                                <option value="1">January</option>
+                                <option value="2">February</option>
+                                <option value="3">March</option>
+                                <option value="4">April</option>
+                                <option value="5">May</option>
+                                <option value="6">June</option>
+                                <option value="7">July</option>
+                                <option value="8">August</option>
+                                <option value="9">September</option>
+                                <option value="10">October</option>
+                                <option value="11">November</option>
+                                <option value="12">December</option>
+                            </select>
+
+                            <input type="number" width="40px" class="end_year" name="End Year" id = "task_end_year_input"
+                                min="2020" max="2099" value="2020" required>
+                        </form>
                     <div class="new_task_footer">
-                        <button href="#" class="blue_curve_button" id="add_new_task"> Add </button>
+                        <button href="#" class="blue_curve_button" id="add_new_task" type="submit"> Add </button>
                         <div class="clr"></div>
                     </div>
                 </div>
@@ -192,7 +206,7 @@
             -->
             <div class="bg-modal" id="add_student">
                 <div class="modal-content">
-                    <div id= "add_student_close" class="close">+</div>
+                    <div id= "add_student_close" class="close" onclick="closeModal(add_student)">+</div>
                     <div class="add_student_form">
                         <h3>Student</h3>
                         <input type="text" class="students_list" name="Students" required>
