@@ -5,7 +5,7 @@ firebase.auth().onAuthStateChanged(function(user) {
 		const welcomeText = document.getElementById("welcome_text")
 		
 		firebaseRef.child(`Users/${getUsername(user.email)}`)
-				  .once('value').then(function(snapshot) {
+				   .once('value').then(function(snapshot) {
 					const username = snapshot.child('Username').val()
 					welcomeText.innerHTML = "Welcome, " + username
 				  })
@@ -87,7 +87,8 @@ function writeUserData(email, role) {
 		firebaseRef.child(`Users/${username}`).set({
 			Username: username,
 			Email: email,
-			Role: role
+			Role: role,
+			Projects: {}
 		})
 	}
 	else if (!isSchoolAccount(email)) {
