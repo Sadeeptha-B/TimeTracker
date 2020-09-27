@@ -13,25 +13,24 @@ firebase.auth().onAuthStateChanged(function(user) {
   });
 
 async function createProject(){
-    var projectName = String(document.getElementById("ProjectName").value),
-        description = String(document.getElementById("Description").value),
-        //students =  String(document.getElementById("Students").value),
+    const projectName = String(document.getElementById("ProjectName").value),
+          description = String(document.getElementById("Description").value),
 
-        //project start
-        startDay =  String(document.getElementById("start_day").value),
-        startMonth = String(document.getElementById("start_month").value),
-        startYear = String(document.getElementById("start_year").value),
+          //project start
+          startDay =  String(document.getElementById("start_day").value),
+          startMonth = String(document.getElementById("start_month").value),
+          startYear = String(document.getElementById("start_year").value),
         
         // Putting into DD/MM/YYYY format
-        startDate = startDay + "/" + startMonth + "/" + startYear,
+          startDate = startDay + "/" + startMonth + "/" + startYear,
 
         //project end
-        endDay = String(document.getElementById("end_day").value),
-        endMonth = String(document.getElementById("end_month").value),
-        endYear = String(document.getElementById("end_year").value),
+          endDay = String(document.getElementById("end_day").value),
+          endMonth = String(document.getElementById("end_month").value),
+          endYear = String(document.getElementById("end_year").value),
 
         // Putting into DD/MM/YYYY format
-        endDate = endDay + "/" + endMonth + "/" + endYear
+          endDate = endDay + "/" + endMonth + "/" + endYear
 
     if (description.length == 0){
         description = "N/A";
@@ -59,32 +58,32 @@ async function createProject(){
 function addProjectsToHomePage(username) {
     firebaseRef.child(`Users/${username}`)
 			   .once('value').then(function(snapshot) {
-					const html=`<div class="dash_project"> 
-									<h2 class="dash_project_head">Project 1</h2>
-										<p class="project_summary">
-											Admin: TBA &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Created: DD/MM/YYYY
-										</p>
-								</div>`,
-						  
-
-						  projects = snapshot.child('Projects').val()
-					
-					// projects.forEach(element => addProject(element));
-					console.log(projects)
+					const projects = snapshot.child('Projects').val()
+					Object.entries(projects).forEach(project => {addProject(project)})
 				})
 }
 
 function addProject(project) {
-	dashboard = document.getElementById("dash_project"),
-	newDiv = document.createElement("div"),
-	newH2 = document.createElement("h2"),
-	newP = document.createElement("p"),
+	firebaseRef.child(`Projects/${project[0]}`).once("value").then(function(snapshot) {
+		const startDate = snapshot.child('StartDate').val(),
+			  endDate = snapshot.child('EndDate').val(),
+			  teacher = snapshot.child('TeacherInCharge').val(),
 
-	dashboard.appendChild(newDiv)
-	newDiv.appendChild(newH2)
-	newH2.appendChild(newP)
+			  dashboard = document.getElementById("dash_project"),
+			  newDiv = document.createElement("div"),
+			  newH2 = document.createElement("h2"),
+			  newP = document.createElement("p")
 
-	newDiv.className = "dash_project"
-	newH2.className = "dash_project_head"
-	newH2.innerHTML = projects
+		dashboard.appendChild(newDiv)
+		newDiv.appendChild(newH2)
+		newDiv.appendChild(newP)
+
+		newDiv.className = "dash_project"
+		newH2.className = "dash_project_head"
+		newH2.textContent = project[0]
+
+		newP.className = "project_summary"
+		newP.textContent = `Lecturer: ${teacher} | Start: ${startDate} | End: ${endDate}`
+		
+	})
 }
