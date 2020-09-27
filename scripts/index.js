@@ -1,6 +1,18 @@
 const firebaseReference = firebase.database().ref()
 
-function createProject(){
+firebase.auth().onAuthStateChanged(function(user) {
+	if (user) {
+		firebaseRef.child(`Users/${getUsername(user.email)}`)
+				   .once('value').then(function(snapshot) {
+						const username = snapshot.child('Username').val()
+						addProjectsToHomePage(username)
+				  })
+	} else {
+	  // No user is signed in.
+	}
+  });
+
+async function createProject(){
     var projectName = String(document.getElementById("ProjectName").value),
         description = String(document.getElementById("Description").value),
         //students =  String(document.getElementById("Students").value),
@@ -25,24 +37,54 @@ function createProject(){
         description = "N/A";
     }
 
-    firebase.auth().onAuthStateChanged(function(user) {
-        if (user) {
-            window.alert(user)
-        }
-    })
+	var user = await firebase.auth().currentUser
+    
+	firebaseReference.child(`Users/${getUsername(user.email)}/Projects/${projectName}`).update({
+		ProjectName: projectName
+	})
+	
     firebaseReference.child(`Projects/${projectName}`).set({
 		ProjectName: projectName,
         Description: description,
         StartDate: startDate,
         EndDate: endDate,
+        TeacherInCharge: getUsername(user.email)
     })
     
     window.alert("Project Created!")
-    window.alert(user)
     // Bring the user to the home page after successful sign up
-    window.location.href = "../html/home.html";
+    window.location.href = "../html/home-teacherview.html";
 }
 
-function addProject() {
+function addProjectsToHomePage(username) {
+    firebaseRef.child(`Users/${username}`)
+			   .once('value').then(function(snapshot) {
+					const html=`<div class="dash_project"> 
+									<h2 class="dash_project_head">Project 1</h2>
+										<p class="project_summary">
+											Admin: TBA &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Created: DD/MM/YYYY
+										</p>
+								</div>`,
+						  
 
+						  projects = snapshot.child('Projects').val()
+					
+					// projects.forEach(element => addProject(element));
+					console.log(projects)
+				})
+}
+
+function addProject(project) {
+	dashboard = document.getElementById("dash_project"),
+	newDiv = document.createElement("div"),
+	newH2 = document.createElement("h2"),
+	newP = document.createElement("p"),
+
+	dashboard.appendChild(newDiv)
+	newDiv.appendChild(newH2)
+	newH2.appendChild(newP)
+
+	newDiv.className = "dash_project"
+	newH2.className = "dash_project_head"
+	newH2.innerHTML = projects
 }
