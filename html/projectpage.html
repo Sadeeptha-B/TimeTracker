@@ -50,11 +50,13 @@
                      <!-- <div class="clr"></div> -->
                     </div>
             </div>
-                        
 
             <div class="header_type_card" id="team_card">
                 <h3>Team</h3>
                  <hr class="thin">
+                 <div id="team_card_footer" class= "card_footer">
+                    <a href="#" id ="edit_desc" class="hover_grey_link" onclick="openModal(add_student)">Add member </a>
+                   </div>
             </div>
         </div>
                  
@@ -117,7 +119,7 @@
             <!-- Edit description-->
             <div class="bg-modal" id="desc_edit_overlay">
                 <div class="modal-content">
-                    <div id= "desc_edit_close" class="close" onclick="closeModal(desc_edit_overlay)">+</div>
+                    <div id= "generic_popup_close" class="close" onclick="closeModal(desc_edit_overlay)">+</div>
                     <div class = "input_form">
                         <h3>Edit description</h3>
                         <label class= "field_elements" for="name_field">Project Name :</label> 
@@ -137,7 +139,7 @@
             <!-- Create New Task -->
             <div class="bg-modal" id="new_task">
                 <div class= "modal-content">
-                    <div id= "new_task_close" class="close" onclick="closeModal(new_task)">+</div>
+                    <div id= "generic_popup_close" class="close" onclick="closeModal(new_task)">+</div>
 
                     <form class="input_form">
                         <h3>New task</h3>
@@ -206,11 +208,11 @@
             -->
             <div class="bg-modal" id="add_student">
                 <div class="modal-content">
-                    <div id= "add_student_close" class="close" onclick="closeModal(add_student)">+</div>
-                    <div class="add_student_form">
+                    <div id= "generic_popup_close" class="close" onclick="closeModal(add_student)">+</div>
+                    <br>
                         <h3>Student</h3>
+                        <label class="field_elements" for="students_list">Student :</label>
                         <input type="text" class="students_list" name="Students" required>
-                    </div>
                     <div class="new_task_footer">
                         <button href="#" class="blue_curve_button" id="add_new_student"> Add </button>
                     </div>

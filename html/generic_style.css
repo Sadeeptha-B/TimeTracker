@@ -96,15 +96,18 @@ specify position.
 }
 
 
-.button_generic:hover{
+.button_generic:hover, .button_standard:hover{
     background-color: #666699;
 }
 
 
-.button_standard{
-    font: 24px "Arial";
+.button_standard { 
+    background-color: #9999cc;
+    border: none;
+    padding: 8px;
+    color: #ffffff;
+    font: 22px "Arial";
 } 
-
 
 button.blue_curve_button{
     display:inline-block;
@@ -407,7 +410,12 @@ td{
     }
 
 /* Description edit modal*/
-    #desc_edit_close, #new_task_close{
+    #generic_popup_close{
+        top: 0;
+        right: 14px;
+    }
+
+    #desc_edit_close, #new_task_close, #add_student_close{
         top: 0;
         right:14px;
     }

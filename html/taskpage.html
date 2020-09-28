@@ -54,7 +54,9 @@
                 <div class="card_footer">
                     <!-- Zhe Sheng: section for task time input -->
                     <!-- HIDDEN from teacher -->
-                    <a href="timeinput.html"><button>Time Input</button></a>
+                    <a href="#" class="hover_grey_link" onclick="openModal(time_input)">
+                        <button class="button_generic"> Time Input </button>
+                    </a>
                     <table>
                         <!-- and then maybe a table which shows the time contributed? -->
                     </table>
@@ -92,11 +94,10 @@
 
             <div class="bg-modal" id="time_input">
                 <div class="modal-content">
-                    <div id="time_input_close" class="close">+</div>
+                    <div id="generic_popup_close" class="close" onclick="closeModal(time_input)">+</div>
                     <div class = "time_input_form">
                         <h3>Time input</h3>
-                        <label class="field_elements">Start time :</label>
-
+                        <label class="field_elements">Start time :</label><br>
                         <!-- ZS: This is the format for now, maybe there will be a better format coming along? -->
                         <!-- Time input now includes am/pm option, which is in the ID 'start_period' and 'end_period'-->
                         <input type="number" width="20px" class="start_day" name="Start Day" id = "start_day"
@@ -115,15 +116,17 @@
                             <option value="11">November</option>
                             <option value="12">December</option>
                         </select>
-                        
                         <input type="number" width="40px" class="start_year" name="Start Year" id = "Start Year"
                             min="2020" max="2099" value="2020" required><br>
+
                         <input type="number" id="start_hr" min="1" max="12" required>
                         <input type="number" id="start_min" min="0" max="59" required>
                         <select name="Start Period" class="start_period" id="start_period">
                             <option value="am">a.m.</option>
                             <option value="pm">p.m.</option>
-                        <label class="field_elements">End time :</label>
+                        </select><br>
+
+                        <label class="field_elements">End time :</label><br>
                         <input type="number" width="20px" class="end_day" name="End Day" id = "end_day"
                             min="1" max="31" value="1" required>
                         <select name="End Month" class="end_month" id = "end_month">
@@ -147,6 +150,7 @@
                         <select name="End Period" class="end_period" id="end_period">
                             <option value="am">a.m.</option>
                             <option value="pm">p.m.</option>
+                        </select>
                     </div>
                     <div class= "time_input_footer">
                         <button href="#" class="blue_curve_button" id="save_desc"> Submit </button>
