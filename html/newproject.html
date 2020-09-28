@@ -13,8 +13,8 @@
                 <h1>TimeTracker</h1>
             </div>
             <div class="header_links_wrapper">
-                <a href="home.html"><button class="button_generic">Homepage</button></a>
-                <a href="login.html"><button class="button_generic">Log Out</button></a>  
+                <a><button class="button_generic" id="homepage_button" onclick="getHomePage()">Home Page</button></a>
+                <a href="login.html"><button id="signout_button" class="button_generic" onclick="logout()">Log Out</button></a>  
             </div>
         </div>
     </div>
@@ -123,8 +123,7 @@
             
         </div>
     </div>
-             
-    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    
     <!-- The core Firebase JS SDK is always required and must be listed first -->
     <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-auth.js"></script>

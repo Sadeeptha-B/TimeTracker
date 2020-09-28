@@ -13,24 +13,24 @@ firebase.auth().onAuthStateChanged(function(user) {
   });
 
 async function createProject(){
-    const projectName = String(document.getElementById("ProjectName").value),
-          description = String(document.getElementById("Description").value),
+    var projectName = String(document.getElementById("ProjectName").value),
+        description = String(document.getElementById("Description").value),
 
-          //project start
-          startDay =  String(document.getElementById("start_day").value),
-          startMonth = String(document.getElementById("start_month").value),
-          startYear = String(document.getElementById("start_year").value),
+        //project start
+        startDay =  String(document.getElementById("start_day").value),
+        startMonth = String(document.getElementById("start_month").value),
+        startYear = String(document.getElementById("start_year").value),
         
         // Putting into DD/MM/YYYY format
-          startDate = startDay + "/" + startMonth + "/" + startYear,
+        startDate = startDay + "/" + startMonth + "/" + startYear,
 
         //project end
-          endDay = String(document.getElementById("end_day").value),
-          endMonth = String(document.getElementById("end_month").value),
-          endYear = String(document.getElementById("end_year").value),
+        endDay = String(document.getElementById("end_day").value),
+        endMonth = String(document.getElementById("end_month").value),
+        endYear = String(document.getElementById("end_year").value),
 
         // Putting into DD/MM/YYYY format
-          endDate = endDay + "/" + endMonth + "/" + endYear
+        endDate = endDay + "/" + endMonth + "/" + endYear
 
     if (description.length == 0){
         description = "N/A";

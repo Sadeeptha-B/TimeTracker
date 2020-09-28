@@ -7,6 +7,7 @@ firebase.auth().onAuthStateChanged(function(user) {
 		firebaseRef.child(`Users/${getUsername(user.email)}`)
 				   .once('value').then(function(snapshot) {
 					const username = snapshot.child('Username').val()
+
 					welcomeText.innerHTML = "Welcome, " + username
 				  })
 		
@@ -14,6 +15,30 @@ firebase.auth().onAuthStateChanged(function(user) {
 	  // No user is signed in.
 	}
   });  
+
+//Event listener for home page button
+// document.getElementById("homepage_button").addEventListener('click', async function(){
+// 	var user = await firebase.auth().currentUser
+
+async function getHomePage() {
+	var user = await firebase.auth().currentUser
+	firebaseRef.child(`Users/${getUsername(user.email)}`)
+	.once('value').then(function(snapshot) {
+		const role = snapshot.child("Role").val()
+		
+		if (role === 'Student') {
+			window.location.href = "../html/home.html"
+		}
+		else if (role === 'Teacher') {
+			window.location.href = "../html/home-teacherview.html"
+		}
+		else if (role === 'Admin') {
+			window.location.href = "../html/home-adminview.html"
+		}
+		
+   })
+}
+// });
 
 async function signup() {
 	const userEmail = String(document.getElementById("Email").value),
@@ -126,7 +151,7 @@ function getRole(email) {
 	return 'Teacher'
 	
 }
-function getHomePage(username) {
+function getUserHomePage(username) {
 	firebaseRef.child(`Users/${username}`)
 	.once("value")
 	.then(function(snapshot) {
@@ -152,7 +177,7 @@ function login() {
 	.then(function() {
 		// User is signed in.
 		window.alert("User signed in.");
-		getHomePage(getUsername(userEmail))
+		getUserHomePage(getUsername(userEmail))
 	})
 	.catch(function(error) {
 		// Handle Errors here.
