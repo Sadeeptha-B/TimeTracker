@@ -108,6 +108,12 @@
                             <!-- END OF AUTO GENERATED HTML SECTION -->
 
                 </div>
+                <div id="task_card_footer" class= "card_footer">
+                    <a href="#" id ="edit_desc" class="hover_grey_link" onclick="openModal(assign_task_overlay)" style="left: 14px;">
+                        <button class="button_generic">Assign task</button>
+                    </a>
+                </div>
+                <div class="clr"></div>
             </div>
             
             
@@ -210,11 +216,35 @@
                 <div class="modal-content">
                     <div id= "generic_popup_close" class="close" onclick="closeModal(add_student)">+</div>
                     <br>
-                        <h3>Student</h3>
+                        <h3>Add Student</h3>
                         <label class="field_elements" for="students_list">Student :</label>
                         <input type="text" class="students_list" name="Students" required>
                     <div class="new_task_footer">
                         <button href="#" class="blue_curve_button" id="add_new_student"> Add </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-modal" id="assign_task_overlay">
+                <div class="modal-content">
+                    <div id= "generic_popup_close" class="close" onclick="closeModal(assign_task_overlay)">+</div>
+                    <br>
+                        <h3>Assign Task</h3>
+                        <label class="field_elements" for="students_list">Task :</label>
+                        <!-- Updated in real time/dynamically -->
+                        <!-- Option 1: use select element -->
+                        <select name="task_name" class="select_task_panel" id="task_select">
+                            </select>
+                            <!-- Option 2: use div list (does not use add button) -->
+                            <div class="task" id="template" style="display: none"> 
+                                <a class="dash_project" href="taskpage.html">
+                                    <div class="dash_project">
+                                        <h2 class="dash_project_head" id="task_heading">Task 1</h2>
+                                    </div>
+                                </a>
+                            </div>
+                    <div class="new_task_footer">
+                        <button href="#" class="blue_curve_button" id="assign_task_button"> Assign </button>
                     </div>
                 </div>
             </div>

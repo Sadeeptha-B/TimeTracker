@@ -12,6 +12,8 @@
 /* Modals */
    var editDescModal = document.getElementById("desc_edit_overlay");
    var newTaskModal = document.getElementById("new_task");
+   var addStudentModal = document.getElementById("add_student");
+   var assignTaskModal = document.getElementById("assign_task_overlay");
 
 /* DOM elements to create new tasks*/
     var template = document.getElementById("template");
