@@ -24,6 +24,12 @@ populateAll();
 
 
 function populateAll(){
+    firebaseRef.child(`Tasks/${getUsername(user.email)}`)
+				   .once('value').then(function(snapshot) {
+					const username = snapshot.child('Username').val()
+                    
+
+				  })
     // Include code for retrieval of Project Name, Description
     // Include code to retrieve and populate tasks from backend
 
@@ -48,14 +54,14 @@ function populateAll(){
 
 
 function getNewTaskData(){
-    var newTaskName = document.getElementById("task_name_input").value;
-    var newTaskDesc = document.getElementById("task_desc_input").value;
-    var taskStartDate = document.getElementById("task_start_date_input").value;
-    var taskStartMonth = document.getElementById("task_start_month_input").value;
-    var taskStartYear = document.getElementById("task_start_year_input").value;
-    var taskEndDate = document.getElementById("task_end_date_input").value;
-    var taskEndMonth = document.getElementById("task_end_month_input").value;
-    var taskEndYear = document.getElementById("task_end_year_input").value;
+    var newTaskName = document.getElementById("task_name_input").value,
+        newTaskDesc = document.getElementById("task_desc_input").value,
+        taskStartDate = document.getElementById("task_start_date_input").value,
+        taskStartMonth = document.getElementById("task_start_month_input").value,
+        taskStartYear = document.getElementById("task_start_year_input").value,
+        taskEndDate = document.getElementById("task_end_date_input").value,
+        taskEndMonth = document.getElementById("task_end_month_input").value,
+        taskEndYear = document.getElementById("task_end_year_input").value
 
     // Validation Code
     newTaskName = newTaskName.trim();
@@ -75,19 +81,28 @@ function getNewTaskData(){
         return;
     }
 
+    // Putting task start and end date into DD/MM/YYYY format
+    var startDate = taskStartDate + "/" + taskStartMonth + "/" + taskStartYear,
+        endDate = taskEndDate + "/" + taskEndMonth + "/" + taskEndYear,
+        taskObject = {Name: newTaskName,
+                      Description: newTaskDesc,
+                      StartDate: startDate,
+                      EndDate: endDate}
 
-    //Code for storing data to database
 
-    var taskObject = {
-        name: newTaskName,
-        desc: newTaskDesc,
-        startDate: taskStartDate,
-        startMonth: taskStartMonth,
-        startYear: taskStartYear,
-        endDate: taskEndDate,
-        endMonth: taskEndMonth,
-        endYear: taskEndYear
-    }
+    
+    // Store the task information under Tasks
+    firebaseRef.child(`Tasks/${newTaskName}`).set({
+        TaskName: newTaskName,
+        Description: newTaskDesc,
+        StartDate: startDate,
+        EndDate: endDate
+    })
+
+    // Update tasks the project has
+    firebaseRef.child(`Projects/Tasks/${newTaskName}`).set({
+        TaskName: newTaskName
+    })
 
     return taskObject;
 }
@@ -156,8 +171,6 @@ To do all tasks related to clicks except for the opening of modals.
             closeModal(newTaskModal);
         }
     });
-
-
 
 
 /* Chart 

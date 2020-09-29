@@ -1,5 +1,3 @@
-const firebaseReference = firebase.database().ref()
-
 firebase.auth().onAuthStateChanged(function(user) {
 	if (user) {
 		firebaseRef.child(`Users/${getUsername(user.email)}`)
@@ -37,19 +35,21 @@ async function createProject(){
     }
 
 	var user = await firebase.auth().currentUser
-    
-	firebaseReference.child(`Users/${getUsername(user.email)}/Projects/${projectName}`).update({
-		ProjectName: projectName
-	})
-	
-    firebaseReference.child(`Projects/${projectName}`).set({
+
+	// Store project information under Projects
+	firebaseRef.child(`Projects/${projectName}`).set({
 		ProjectName: projectName,
         Description: description,
         StartDate: startDate,
         EndDate: endDate,
         TeacherInCharge: getUsername(user.email)
-    })
-    
+	})
+	
+	// Update projects the current user is in charge of
+	firebaseRef.child(`Users/${getUsername(user.email)}/Projects/${projectName}`).update({
+		ProjectName: projectName
+	})
+	
     window.alert("Project Created!")
     // Bring the user to the home page after successful sign up
     window.location.href = "../html/home-teacherview.html";
@@ -79,6 +79,7 @@ function addProject(project) {
 		newDiv.appendChild(newP)
 
 		newDiv.className = "dash_project"
+		newDiv.
 		newH2.className = "dash_project_head"
 		newH2.textContent = project[0]
 

@@ -1,5 +1,6 @@
 const firebaseRef = firebase.database().ref()
 
+// Upadate username at the top of the screen depending on user
 firebase.auth().onAuthStateChanged(function(user) {
 	if (user) {
 		const welcomeText = document.getElementById("welcome_text")
@@ -16,29 +17,34 @@ firebase.auth().onAuthStateChanged(function(user) {
 	}
   });  
 
-//Event listener for home page button
-// document.getElementById("homepage_button").addEventListener('click', async function(){
-// 	var user = await firebase.auth().currentUser
+function login() {
+	var userEmail = String(document.getElementById("userEmail").value),
+		userPass = String(document.getElementById("userPass").value)
 
-async function getHomePage() {
-	var user = await firebase.auth().currentUser
-	firebaseRef.child(`Users/${getUsername(user.email)}`)
-	.once('value').then(function(snapshot) {
-		const role = snapshot.child("Role").val()
-		
-		if (role === 'Student') {
-			window.location.href = "../html/home.html"
-		}
-		else if (role === 'Teacher') {
-			window.location.href = "../html/home-teacherview.html"
-		}
-		else if (role === 'Admin') {
-			window.location.href = "../html/home-adminview.html"
-		}
-		
-   })
+	firebase.auth().signInWithEmailAndPassword(userEmail, userPass)
+	.then(function() {
+		// User is signed in.
+		getHomePage()
+	})
+	.catch(function(error) {
+		// Handle Errors here.
+		var errorCode = error.code;
+		var errorMessage = error.message;
+		// ...
+		console.log(errorCode)
+		window.alert("Error :" + errorMessage);
+	});
 }
-// });
+
+function logout(){
+	firebase.auth().signOut()
+	.then(function() {
+		window.location.href = "../html/login.html";
+	})
+	.catch(function(error) {
+		window.alert('Sign Out Error', error)
+	});
+}
 
 async function signup() {
 	const userEmail = String(document.getElementById("Email").value),
@@ -71,14 +77,39 @@ async function signup() {
 	}
 }
 
+async function getHomePage() {
+	var user = await firebase.auth().currentUser
+	firebaseRef.child(`Users/${getUsername(user.email)}`)
+	.once('value').then(function(snapshot) {
+		const role = snapshot.child("Role").val()
+		
+		if (role === 'Student') {
+			window.location.href = "../html/home.html"
+		}
+		else if (role === 'Teacher') {
+			window.location.href = "../html/home-teacherview.html"
+		}
+		else if (role === 'Admin') {
+			window.location.href = "../html/home-adminview.html"
+		}
+		
+   })
+}
+
 function createAccount(userEmail, userPass, userRole) {
 	try {
+		// Enters the information into the database
 		writeUserData(userEmail, userRole)
+
+		// When account is created, users is automatically logged in,
+		// so the user is straight away logged out in order to prevent unintentional login
 		firebase.auth().createUserWithEmailAndPassword(userEmail, userPass)
 		.then(function() {
 			firebase.auth().signOut()
 			.then(function() {
 				window.alert("Sign Up Successful")
+
+				// This means Admin is creating a teacher account
 				if (userRole === 'Teacher') {
 					firebase.auth().signInWithEmailAndPassword('timetracker999@gmail.com', 'admin123!')
 					.then(function() {
@@ -112,8 +143,7 @@ function writeUserData(email, role) {
 		firebaseRef.child(`Users/${username}`).set({
 			Username: username,
 			Email: email,
-			Role: role,
-			Projects: {}
+			Role: role
 		})
 	}
 	else if (!isSchoolAccount(email)) {
@@ -151,51 +181,5 @@ function getRole(email) {
 	return 'Teacher'
 	
 }
-function getUserHomePage(username) {
-	firebaseRef.child(`Users/${username}`)
-	.once("value")
-	.then(function(snapshot) {
-		const role = snapshot.child("Role").val()
 
-		if (role === "Student") {
-			window.location.href = "../html/home.html";
-		}
-		else if (role === "Teacher") {
-			window.location.href = "../html/home-teacherview.html";
-		}
-		else {
-			window.location.href = "../html/home-adminview.html";
-		}
-	})
-}
 
-function login() {
-	var userEmail = String(document.getElementById("userEmail").value),
-		userPass = String(document.getElementById("userPass").value)
-
-	firebase.auth().signInWithEmailAndPassword(userEmail, userPass)
-	.then(function() {
-		// User is signed in.
-		window.alert("User signed in.");
-		getUserHomePage(getUsername(userEmail))
-	})
-	.catch(function(error) {
-		// Handle Errors here.
-		var errorCode = error.code;
-		var errorMessage = error.message;
-		// ...
-		console.log(errorCode)
-		window.alert("Error :" + errorMessage);
-	});
-}
-
-function logout(){
-	firebase.auth().signOut()
-	.then(function() {
-		window.alert('Signed Out')
-		window.location.href = "../html/login.html";
-	})
-	.catch(function(error) {
-		window.alert('Sign Out Error', error)
-	});
-}
