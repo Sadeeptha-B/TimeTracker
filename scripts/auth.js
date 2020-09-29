@@ -1,22 +1,5 @@
 const firebaseRef = firebase.database().ref()
 
-// Upadate username at the top of the screen depending on user
-firebase.auth().onAuthStateChanged(function(user) {
-	if (user) {
-		const welcomeText = document.getElementById("welcome_text")
-		
-		firebaseRef.child(`Users/${getUsername(user.email)}`)
-				   .once('value').then(function(snapshot) {
-					const username = snapshot.child('Username').val()
-
-					welcomeText.innerHTML = "Welcome, " + username
-				  })
-		
-	} else {
-	  // No user is signed in.
-	}
-  });  
-
 function login() {
 	var userEmail = String(document.getElementById("userEmail").value),
 		userPass = String(document.getElementById("userPass").value)

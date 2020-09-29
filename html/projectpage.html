@@ -56,7 +56,13 @@
                  <hr class="thin">
                  <div id="team_card_footer" class= "card_footer">
                     <a href="#" id ="edit_desc" class="hover_grey_link" onclick="openModal(add_student)">Add member </a>
-                   </div>
+                    
+                    <!--Template for adding members-->
+                    <div class="header_card_content" id="add_member_template"> 
+                        <p class="header_card_content" id="member_name">Member 1</p>
+                    </div>
+
+                </div>
             </div>
         </div>
                  
@@ -93,13 +99,9 @@
                             <div class="dash_project">
                                 <h2 class="dash_project_head" id="task_heading">Task 1</h2>
 
-                                <p class="project_summary">Start: <span id="task_start_date">DD</span>/
-                                                                  <span id="task_start_month">MM</span>/
-                                                                  <span id="task_start_year">YYYY</span> 
+                                <p class="project_summary">Start: <span id="task_start_date">DD/MM/YY</span>
                                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-                                                           End:   <span id="task_end_date">DD</span>/
-                                                                  <span id="task_end_month">MM</span>/
-                                                                  <span id="task_end_year">YYYY</span>
+                                                           End:   <span id="task_end_date">DD/MM/YY</span>
                                 </p>
 
                             </div>
@@ -256,6 +258,7 @@
         <!-- The core Firebase JS SDK is always required and must be listed first -->
         <script src="../scripts/shared.js"></script>
         <script src= "../scripts/auth.js"></script>
+        <script src= "../scripts/index.js"></script>
         <script src= "../scripts/projectpage.js"></script>
     </body>
 </html>

@@ -24,12 +24,12 @@ populateAll();
 
 
 function populateAll(){
-    firebaseRef.child(`Tasks/${getUsername(user.email)}`)
-				   .once('value').then(function(snapshot) {
-					const username = snapshot.child('Username').val()
+    // firebaseRef.child(`Tasks/${getUsername(user.email)}`)
+	// 			   .once('value').then(function(snapshot) {
+	// 				const username = snapshot.child('Username').val()
                     
 
-				  })
+	// 			  })
     // Include code for retrieval of Project Name, Description
     // Include code to retrieve and populate tasks from backend
 
@@ -84,7 +84,7 @@ function getNewTaskData(){
     // Putting task start and end date into DD/MM/YYYY format
     var startDate = taskStartDate + "/" + taskStartMonth + "/" + taskStartYear,
         endDate = taskEndDate + "/" + taskEndMonth + "/" + taskEndYear,
-        taskObject = {Name: newTaskName,
+        taskObject = {TaskName: newTaskName,
                       Description: newTaskDesc,
                       StartDate: startDate,
                       EndDate: endDate}
@@ -108,17 +108,13 @@ function getNewTaskData(){
 }
 
 function populateTask(taskData){
-    document.getElementById("task_heading").innerHTML = taskData.name;
-    document.getElementById("task_start_date").innerHTML = taskData.startDate;
-    document.getElementById("task_start_month").innerHTML = taskData.startMonth;
-    document.getElementById("task_start_year").innerHTML = taskData.startYear;
-    document.getElementById("task_end_date").innerHTML = taskData.endDate;
-    document.getElementById("task_end_month").innerHTML = taskData.endMonth;
-    document.getElementById("task_end_year").innerHTML = taskData.endYear;
+    document.getElementById("task_heading").innerHTML = taskData.TaskName;
+    document.getElementById("task_start_date").innerHTML = taskData.StartDate;
+    document.getElementById("task_end_date").innerHTML = taskData.EndDate;
 
     var clone = template.cloneNode(true);
     clone.removeAttribute("style");
-    clone.setAttribute("id", "taskData.name")  //TODO: Set better ID, provide for delete, modify
+    clone.id = taskData.TaskName  //TODO: Set better ID, provide for delete, modify
     tasksCardBody.append(clone);
 }
 
@@ -131,46 +127,46 @@ To do all tasks related to clicks except for the opening of modals.
 */
 
 //Edit description
-    document.getElementById("edit_desc").addEventListener('click', function(){
-        editNameField.value = "";
-        editDescField.value = "";
-        editNameField.setAttribute("placeholder", projectName.innerHTML);
-        editDescField.setAttribute("placeholder", description.innerHTML);
-    });
-   
- 
+document.getElementById("edit_desc").addEventListener('click', function(){
+    editNameField.value = "";
+    editDescField.value = "";
+    editNameField.setAttribute("placeholder", projectName.innerHTML);
+    editDescField.setAttribute("placeholder", description.innerHTML);
+});
+
+
 //Save new Project Name, Description
-    document.getElementById("save_desc").addEventListener("click",function(){
-        var newName = editNameField.value.trim();
-        var newDesc = editDescField.value.trim();
+document.getElementById("save_desc").addEventListener("click",function(){
+    var newName = editNameField.value.trim();
+    var newDesc = editDescField.value.trim();
 
-       // Include code to modify project name and project description on backend
+    // Include code to modify project name and project description on backend
 
-        if (newName.length != 0)
-            projectName.innerText = newName;
+    if (newName.length != 0)
+        projectName.innerText = newName;
 
-        if (newDesc.length != 0)
-            description.innerText = newDesc;
+    if (newDesc.length != 0)
+        description.innerText = newDesc;
 
-        closeModal(editDescModal);
-    });
+    closeModal(editDescModal);
+});
 
 
 // Create New Task
-    document.getElementById("new_task_button").addEventListener("click", function(){
-        newTaskName.value = "";
-        newTaskDesc.value = "";
-    })
+document.getElementById("new_task_button").addEventListener("click", function(){
+    newTaskName.value = "";
+    newTaskDesc.value = "";
+})
 
 
 // Save New Task
-    document.getElementById("add_new_task").addEventListener('click',function(){
-        var taskData = getNewTaskData();
-        if (taskData != undefined){
-            populateTask(taskData);
-            closeModal(newTaskModal);
-        }
-    });
+document.getElementById("add_new_task").addEventListener('click',function(){
+    var taskData = getNewTaskData();
+    if (taskData != undefined){
+        populateTask(taskData);
+        closeModal(newTaskModal);
+    }
+});
 
 
 /* Chart 
