@@ -13,12 +13,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-colorschemes"></script>
 
-    <link rel="stylesheet" href="generic_style.css"></link>
+
+    <link rel="stylesheet" href="generic_style.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
 </head>
-
-    
     <body>        
         <div class="header">
             <div class="header_content_wrapper">
@@ -37,7 +36,7 @@
         <div class="body-flex-wrapper">
            <div id= "description_card" class="header_type_card">
                     <div class="card_header">
-                        <h3> Description <h3>
+                        <h3> Description </h3>
                             <hr class="thin">
                     </div>
                             
@@ -46,16 +45,23 @@
                     </div>
                             
                     <div id="description_footer" class= "card_footer">
-                     <a href="#" id ="edit_desc" class="hover_grey_link" onclick="openModal(desc_edit_overlay)">Edit description </a>
+                     <a href="#" id ="edit_desc" class="hover_grey_link float_right_elements" onclick="openModal(desc_edit_overlay, true, name_field, desc_field)">Edit description </a>
                      <!-- <div class="clr"></div> -->
                     </div>
             </div>
 
             <div class="header_type_card" id="team_card">
-                <h3>Team</h3>
-                 <hr class="thin">
+                <div class="card_header">
+                    <h3>Team</h3>
+                    <hr class="thin">
+                </div>
+               
+                <div class="header_card_content" id="team_members">
+
+                </div>
+
                  <div id="team_card_footer" class= "card_footer">
-                    <a href="#" id ="edit_desc" class="hover_grey_link" onclick="openModal(add_student)">Add member </a>
+                    <a href="#" id ="add_member" class="hover_grey_link float_right_elements" onclick="openModal(add_student, false)">Add member </a>
                    </div>
             </div>
         </div>
@@ -67,12 +73,14 @@
                     </div>
 
                     <div class="centered_card_content">
+
                         <div id="time_contribution" class="chart">
                             <h4 class ="chart_heading"> Time Contribution by Hour </h4>
                             <div class= "chart_container">
                                 <canvas id="timeContChart"></canvas>
                             </div>
                         </div>
+
                     </div>
                     
             </div>         
@@ -85,12 +93,11 @@
                 <div class="content_card_body" id= "task_card_body">
                 <!-- Zhe Sheng: section for (preferably) task overview (in table) -->
 
-                    <button class="button_with_symbol" id="new_task_button" onclick="openModal(new_task)">+</button> 
+                    <button class="button_with_symbol" id="new_task_button" onclick="openModal(create_edit_task, true, task_name_input, task_desc_input)">+</button> 
                     <div class="clr"></div>      <!-- Clearing Float-->
 
-                    <div class="task" id="template" style="display: none"> 
-                        <a class="dash_project" href="taskpage.html">
-                            <div class="dash_project">
+                    <div class="task" id="template"> 
+                            <div class="dash_project"  onclick="location.href='taskpage.html'">
                                 <h2 class="dash_project_head" id="task_heading">Task 1</h2>
 
                                 <p class="project_summary">Start: <span id="task_start_date">DD</span>/
@@ -101,16 +108,18 @@
                                                                   <span id="task_end_month">MM</span>/
                                                                   <span id="task_end_year">YYYY</span>
                                 </p>
-
+                                <div class="action_pane">
+                                    <input type="image" src="../imgs/edit-16.png" id="edit_task"  class="std_component" onclick = "event.stopPropagation(), openModal(new_task)">
+                                    <input type="image" id="delete_task" src="../imgs/delete-16.png" class="std_component" onclick="event.stopPropagation()">
+                                </div>
+                                <div class="clr"></div>
                             </div>
-                        </a>
                     </div>
                             <!-- END OF AUTO GENERATED HTML SECTION -->
 
                 </div>
                 <div id="task_card_footer" class= "card_footer">
-                    <!-- Originally: id ="edit_desc" class="hover_grey_link" -->
-                    <a href="#" onclick="openModal(assign_task_overlay)" style="left: 14px;">
+                    <a href="#" onclick="openModal(assign_task_overlay, false)" style="left: 14px;">
                         <button class="button_generic">Assign task</button>
                     </a>
                 </div>
@@ -126,7 +135,7 @@
             <!-- Edit description-->
             <div class="bg-modal" id="desc_edit_overlay">
                 <div class="modal-content">
-                    <div id= "generic_popup_close" class="close" onclick="closeModal(desc_edit_overlay)">+</div>
+                    <div class="close generic_popup_close" onclick="closeModal(desc_edit_overlay)">+</div>
                     <div class = "input_form">
                         <h3>Edit description</h3>
                         <label class= "field_elements" for="name_field">Project Name :</label> 
@@ -135,8 +144,8 @@
                         <textarea id = "desc_field" rows="14" cols="120" class="input_field"></textarea>
                     </div>
                     
-                    <div id= "desc_footer">
-                        <button href="#" class="blue_curve_button" id="save_desc" type="submit"> Save </button>
+                    <div class= "modal_footer">
+                        <button class="blue_curve_button" id="save_desc" type="submit"> Save </button>
                         <div class="clr"></div>       <!-- Spacer div in case using float causes issue in auto height adjustment-->
                     </div>
                    
@@ -144,22 +153,22 @@
             </div>
 
             <!-- Create New Task -->
-            <div class="bg-modal" id="new_task">
+            <div class="bg-modal" id="create_edit_task">
                 <div class= "modal-content">
-                    <div id= "generic_popup_close" class="close" onclick="closeModal(new_task)">+</div>
+                    <div class="close generic_popup_close" onclick="closeModal(create_edit_task)">+</div>
 
                     <form class="input_form">
-                        <h3>New task</h3>
+                        <h3> <span id="new_task_header"> New task</span> <!--<span id="edit_task_header"> Edit Task </span> --> </h3> 
 
-                        <label class="field_elements" for="task_name_field">Task Name :</label>
-                        <input id="task_name_input" class="input_field" type="text" data-empty="Task Name cannot be empty"><br>
+                        <label class="field_elements" for="task_name_input">Task Name :</label>
+                        <input id="task_name_input" class="input_field" type="text"><br>
 
-                        <label class="field_elements" for="task_desc_field">Description : </label><br>
+                        <label class="field_elements" for="task_desc_input">Description : </label><br>
                         <textarea id = "task_desc_input" rows="14" cols="120" class="input_field"></textarea>
 
                         <h3>Start date :</h3>
                             <!-- ZS: This is the format for now, maybe there will be a better format coming along? -->
-                            <input type="number" width="20px" class="start_day" name="Start Day" id = "task_start_date_input"
+                            <input type="number" class="start_day" name="Start Day" id = "task_start_date_input"
                                 min="1" max="31" value="1" required>
 
                             <select name="start_month" class="select_month" id = "task_start_month_input">
@@ -177,11 +186,11 @@
                                 <option value="12">December</option>
                             </select>
 
-                            <input type="number" width="40px" class="start_year" name="Start Year" id = "task_start_year_input"
+                            <input type="number" class="start_year" name="Start Year" id = "task_start_year_input"
                                 min="2020" max="2099" value="2020" required>
 
                         <h3>End date :</h3>
-                            <input type="number" width="20px" class="end_day" name="End Day" id = "task_end_date_input"
+                            <input type="number" class="end_day" name="End Day" id = "task_end_date_input"
                                 min="1" max="31" value="1" required>
 
                             <select name="End Month" class="select_month" id = "task_end_month_input">
@@ -199,11 +208,11 @@
                                 <option value="12">December</option>
                             </select>
 
-                            <input type="number" width="40px" class="end_year" name="End Year" id = "task_end_year_input"
+                            <input type="number" class="end_year" name="End Year" id = "task_end_year_input"
                                 min="2020" max="2099" value="2020" required>
                         </form>
-                    <div class="new_task_footer">
-                        <button href="#" class="blue_curve_button" id="add_new_task" type="submit"> Add </button>
+                    <div class="modal_footer">
+                        <button class="blue_curve_button" type="submit"><span id="add_task_btn"> Add </span> <!--<span id="edit_task_btn"> Edit </span> --></button>
                         <div class="clr"></div>
                     </div>
                 </div>
@@ -215,28 +224,32 @@
             -->
             <div class="bg-modal" id="add_student">
                 <div class="modal-content">
-                    <div id= "generic_popup_close" class="close" onclick="closeModal(add_student)">+</div>
+                    <div class="close generic_popup_close" onclick="closeModal(add_student)">+</div>
                     <br>
                         <h3>Add Student</h3>
                         <label class="field_elements" for="students_list">Student :</label>
-                        <input type="text" class="students_list" name="Students" required>
+                        <input type="text" id="students_list" name="Students" required>
                     <div class="new_task_footer">
-                        <button href="#" class="blue_curve_button" id="add_new_student"> Add </button>
+                        <button class="blue_curve_button" id="add_new_student"> Add </button>
                     </div>
                 </div>
             </div>
 
             <div class="bg-modal" id="assign_task_overlay">
                 <div class="modal-content">
-                    <div id= "generic_popup_close" class="close" onclick="closeModal(assign_task_overlay)">+</div>
+                    <div class="close generic_popup_close" onclick="closeModal(assign_task_overlay)">+</div>
                     <br>
                         <h3>Assign Task</h3>
                         <label class="field_elements" for="students_list">Task :</label>
+
                         <!-- Updated in real time/dynamically -->
                         <!-- Option 1: use select element -->
                         <select name="task_name" class="select_task_panel" id="task_select">
                             </select>
+
                             <!-- Option 2: use div list (does not use add button) -->
+                            <!-- Issue: Duplicated ID not detected by script-->
+                            <!--
                             <div class="task" id="template" style="display: none"> 
                                 <a class="dash_project" href="taskpage.html">
                                     <div class="dash_project">
@@ -244,14 +257,18 @@
                                     </div>
                                 </a>
                             </div>
-                    <div class="new_task_footer">
-                        <button href="#" class="blue_curve_button" id="assign_task_button"> Assign </button>
+                            -->
+
+                    <div class="modal_footer">
+                        <button class="blue_curve_button" id="assign_task_button"> Assign </button>
                     </div>
                 </div>
             </div>
 
 
         </div>
+
+
         <!-- The core Firebase JS SDK is always required and must be listed first -->
         <!-- The core Firebase JS SDK is always required and must be listed first -->
         <script src="../scripts/shared.js"></script>
@@ -259,10 +276,3 @@
         <script src= "../scripts/projectpage.js"></script>
     </body>
 </html>
-
-<!-- Fixes Left-->
-<!--
-    1. Link edit description
-    2. Chart for small screens, Popup for small screens (Media calls)
-
--->

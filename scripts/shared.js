@@ -17,11 +17,21 @@ var firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 
-function openModal(modalElem){
+function openModal(modalElem, isTextModal){
+    if (isTextModal == true){
+        for (i=1; i < arguments.length; i++){
+            arguments[i].value = ""
+        }
+    }
     modalElem.style.display = "flex";
 }
 
 
 function closeModal(modalElem){
-    modalElem.style.display = "none";
+   setDisplayNone(modalElem);
+}
+
+
+function setDisplayNone(elem){
+    elem.style.display = "none";
 }
