@@ -17,11 +17,43 @@ var firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 
-function openModal(modalElem){
+function openModal(modalElem, isTextModal, ...editableElems){
+    if (isTextModal == true){
+        for (i= 0; i < editableElems.length; i++){
+            editableElems[i].value = "";
+        }
+    } 
     modalElem.style.display = "flex";
 }
 
 
+function openConfigurableModal(modalElem, isTextModal, isCreateMode, ...editableElems){
+    var createModeElems = document.querySelectorAll('[id^=create_mode]');
+    var editModeElems = document.querySelectorAll('[id^=edit_mode]');
+
+
+    for (i =0; i< createModeElems.length;i++){
+        createModeElems[i].classList.toggle('visible', isCreateMode);
+        createModeElems[i].classList.toggle('hidden', !isCreateMode);
+    }
+
+    for (i =0; i<  editModeElems.length;i++){
+        editModeElems[i].classList.toggle('visible', !isCreateMode);
+        editModeElems[i].classList.toggle('hidden', isCreateMode);
+    }
+
+    var args = [].slice.call(arguments).slice(openConfigurableModal.length);
+  
+    openModal(modalElem, isTextModal, ...editableElems);
+}
+
+
+
 function closeModal(modalElem){
-    modalElem.style.display = "none";
+   setDisplayNone(modalElem);
+}
+
+
+function setDisplayNone(elem){
+    elem.style.display = "none";
 }

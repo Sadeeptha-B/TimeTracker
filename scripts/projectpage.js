@@ -1,25 +1,37 @@
-/* DOM elements to edit Project Name, Description */
-    var projectName = document.getElementById("projectName");
+/*
+HTML contains modal open, close for direct button click
+Modal open close, after saving, editing, is done in this script.
+*/
+
+/* DOM elements on Page */
+    var projectName = document.getElementById("project_name");
     var description = document.getElementById("description");
+
+    var template = document.getElementById("template");
+    var tasksCardBody = document.getElementById("task_card_body");
+
+/* Modals elements */
+    var editDescModal = document.getElementById("desc_edit_overlay");
+    var updateTaskModal = document.getElementById("create_edit_task");
+    var addStudentModal = document.getElementById("add_student");
+    var assignTaskModal = document.getElementById("assign_task_overlay");
+
+/* Elements contained within modals */
+   // Name, Edit Description
     var editNameField = document.getElementById("name_field");
     var editDescField = document.getElementById("desc_field");
 
-/* DOM elements for new task elements */
+  // New task name, description
     var newTaskName = document.getElementById("task_name_input");
     var newTaskDesc = document.getElementById("task_desc_input");
 
 
-/* Modals */
-   var editDescModal = document.getElementById("desc_edit_overlay");
-   var newTaskModal = document.getElementById("new_task");
-   var addStudentModal = document.getElementById("add_student");
-   var assignTaskModal = document.getElementById("assign_task_overlay");
 
-/* DOM elements to create new tasks*/
-    var template = document.getElementById("template");
-    var tasksCardBody = document.getElementById("task_card_body");
+var taskCount = 0;
+var editId;
 
 
+/* Load all data required data from backend. Called upon page load */
 populateAll();
 
 
@@ -31,9 +43,9 @@ function populateAll(){
 
 	// 			  })
     // Include code for retrieval of Project Name, Description
-    // Include code to retrieve and populate tasks from backend
-
-        /* Pass an object of the form
+    // Include code to retrieve tasks from backend
+    
+    /*To display tasks, pass retrieved tasks into function populateTask(taskObject) where
             taskObject = {
                 name:
                 desc:
@@ -44,13 +56,21 @@ function populateAll(){
                 endMonth:
                 endYear:
             }
-        to function populateTask, to display tasks
         
         Loop:
             populate(taskObject)
-
-        */ 
+     */ 
 }
+
+
+// Code for the addition of a individual task
+document.getElementById("create_mode_btn").addEventListener('click',function(){
+    var taskData = getNewTaskData();               // Get data, validate, and store in backend
+    if (taskData != undefined){
+        populateTask(taskData);                   // Display data
+        closeModal(updateTaskModal);
+    }
+});
 
 
 function getNewTaskData(){
@@ -107,38 +127,77 @@ function getNewTaskData(){
     return taskObject;
 }
 
+
+
+/* Code to display a new task addition (Display only!) */
 function populateTask(taskData){
+    taskCount += 1;
     document.getElementById("task_heading").innerHTML = taskData.TaskName;
     document.getElementById("task_start_date").innerHTML = taskData.StartDate;
     document.getElementById("task_end_date").innerHTML = taskData.EndDate;
+    
+    var deleteButton = document.getElementById("delete_task");
+    var editButton = document.getElementById("edit_task");
+
+    deleteButton.setAttribute("onclick","deleteTask("+taskCount+")");
+    editButton.setAttribute("onclick", "editTask("+taskCount+")")
 
     var clone = template.cloneNode(true);
     clone.removeAttribute("style");
-    clone.id = taskData.TaskName  //TODO: Set better ID, provide for delete, modify
+    clone.setAttribute("id" , "task_" + taskCount); 
+    clone.childNodes.getElementById
     tasksCardBody.append(clone);
+     
+}
+
+
+
+//Code for editing a task
+document.getElementById("edit_mode_btn").addEventListener('click', function(){
+    var taskData = getNewTaskData();               // Get data, validate, and store in backend
+    if (taskData != undefined){
+        deleteTask(editId);
+        populateTask(taskData);                   // Display data
+        closeModal(updateTaskModal);
+    }
+})
+
+
+/* Delete a task */
+function deleteTask(index){
+    event.stopPropagation();       // Check if there is a better way to make an element clickable within a clickable div
+    var task = document.getElementById("task_" + index);
+    tasksCardBody.removeChild(task);
+
+    /* Delete from backend */
+}
+
+
+function editTask(index){
+    event.stopPropagation();
+    openConfigurableModal(updateTaskModal, true, false, newTaskName, newTaskDesc);
+    editId = index;
 }
 
 
 /* 
 Click Event Listeners 
 ===========================================
-To do all tasks related to clicks except for the opening of modals.
+To do all tasks related to clicks except for the opening and closing of modals.
 
 */
 
-//Edit description
-document.getElementById("edit_desc").addEventListener('click', function(){
-    editNameField.value = "";
-    editDescField.value = "";
-    editNameField.setAttribute("placeholder", projectName.innerHTML);
-    editDescField.setAttribute("placeholder", description.innerHTML);
-});
+    //Edit description
+    document.getElementById("edit_desc").addEventListener('click', function(){
+        editNameField.setAttribute("placeholder", projectName.innerHTML);
+        editDescField.setAttribute("placeholder", description.innerHTML);
+    });
 
 
-//Save new Project Name, Description
-document.getElementById("save_desc").addEventListener("click",function(){
-    var newName = editNameField.value.trim();
-    var newDesc = editDescField.value.trim();
+    //Save new Project Name, Description
+    document.getElementById("save_desc").addEventListener("click",function(){
+        var newName = editNameField.value.trim();
+        var newDesc = editDescField.value.trim();
 
     // Include code to modify project name and project description on backend
 
@@ -149,24 +208,7 @@ document.getElementById("save_desc").addEventListener("click",function(){
         description.innerText = newDesc;
 
     closeModal(editDescModal);
-});
-
-
-// Create New Task
-document.getElementById("new_task_button").addEventListener("click", function(){
-    newTaskName.value = "";
-    newTaskDesc.value = "";
-})
-
-
-// Save New Task
-document.getElementById("add_new_task").addEventListener('click',function(){
-    var taskData = getNewTaskData();
-    if (taskData != undefined){
-        populateTask(taskData);
-        closeModal(newTaskModal);
-    }
-});
+    });
 
 
 /* Chart 
@@ -175,6 +217,8 @@ document.getElementById("add_new_task").addEventListener('click',function(){
 var ctx = document.getElementById('timeContChart');
 var students = ["Robyn McNamara", "Campbell Wilson", "Najam Nazar", "Nathan Companez"];
 var times = [4, 7, 3, 5];
+
+
 
 var timeContChart = new Chart(ctx, {
     type: 'pie',
@@ -204,6 +248,29 @@ var timeContChart = new Chart(ctx, {
             }
         },
         responsive:true,
+        tooltips: {
+            callbacks: {
+              label: function(tooltipItem, data) {
+                var dataset = data.datasets[tooltipItem.datasetIndex];  //get the concerned dataset
+              
+                var component = data.labels[tooltipItem.index];
+
+                //calculate the total of this data set
+                var total = dataset.data.reduce(function(previousValue, currentValue) {
+                  return previousValue + currentValue;
+                });
+
+                //get the current items value
+                var currentValue = dataset.data[tooltipItem.index];
+
+
+                //calculate the precentage based on the total and current item, also this does a rough rounding to give a whole number
+                var percentage = Math.floor(((currentValue/total) * 100)+0.5);
+          
+                return component + " : " + percentage + "%";
+              }
+            }
+          } 
     }
 });
 

@@ -58,6 +58,10 @@ h1{
     font-family: 'Roboto', sans-serif;
 }
 
+.float_right_elements{
+    float: right;
+}
+
 
 /* Components */
 /*     Close Button
@@ -70,6 +74,7 @@ h1{
        Centered card 
        Content card
        Hover Grey Link
+       Delete button
 
 IMPORTANT: 
 When positioning buttons using the button templates, always use float: right/left etc, to
@@ -144,6 +149,13 @@ button.blue_curve_button:hover{
     grid-auto-columns: auto;
 }
 
+
+.std_component{
+    position: relative;
+    padding: 5px;
+    z-index: 10; 
+}
+
 /*Popups*/
 /* Use class .bg-modal to gray background.
     Popup templates - .modal-content
@@ -183,6 +195,11 @@ IMPORTANT: Do not add element after modal-content div, within bg-modal, without 
 
 .modal-content::-webkit-scrollbar{
     display:none;   /* Chrome and Safari*/
+}
+
+.generic_popup_close{
+    top: 0;
+    right: 14px;
 }
 
 
@@ -233,6 +250,20 @@ IMPORTANT: Do not add element after modal-content div, within bg-modal, without 
     height: auto;
 }
 
+/*Review */
+.action_pane{
+    float:right;
+    right: 200px;
+}
+
+/* Control visibility of elements*/
+.visible{
+    display: initial;
+}
+
+.hidden{
+    display: none;
+}
 
 
 /*Links*/
@@ -287,15 +318,18 @@ div.dash_project{
     margin-right: 1%;
     margin-top: 1%;
     margin-bottom: 1%; */
+    position: relative;                    /*Note */
     margin: 1%;
     border-radius: 2px;
     background-color: #9999cc;
     padding: 8px;
+    z-index: 5;
+    cursor:pointer;
 }
 
-a.dash_project{
+/* a.dash_project{
    text-decoration: none;
-}
+} */
 
 h2.dash_project_head{
     color: white;
@@ -388,10 +422,6 @@ td{
     }
 
 
-    #edit_desc{
-        float: right;
-    }
-
 
 /* Chart card*/
     #charts{
@@ -410,16 +440,6 @@ td{
     }
 
 /* Description edit modal*/
-    #generic_popup_close{
-        top: 0;
-        right: 14px;
-    }
-
-    #desc_edit_close, #new_task_close, #add_student_close{
-        top: 0;
-        right:14px;
-    }
-
     .input_form{
         width: 90%;
         padding:1rem;
@@ -465,5 +485,6 @@ td{
     #add_new_task{
         float: right;
     }
+
 
 
