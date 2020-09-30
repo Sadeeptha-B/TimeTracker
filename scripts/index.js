@@ -2,7 +2,7 @@ firebase.auth().onAuthStateChanged(function(user) {
 	if (user) {
 		// Adds all the projects the logged in user is a part of to the his/her homepage
 		const welcomeText = document.getElementById("welcome_text")
-		console.log(document)
+
 		firebaseRef.child(`Users/${getUsername(user.email)}`)
 				   .once('value').then(function(snapshot) {
 						const username = snapshot.child('Username').val()
@@ -21,6 +21,8 @@ firebase.auth().onAuthStateChanged(function(user) {
 							Array.from(projects).forEach(project => getProjectDetails(project))
 						}, 1000)
 				  })
+
+		updateProjectPage()
 	} 
 	else {
 	  // No user is signed in.
@@ -30,42 +32,49 @@ firebase.auth().onAuthStateChanged(function(user) {
 function getProjectDetails(project){
 	project.addEventListener("click", function(){
 		firebaseRef.child(`Projects/${project.id}`)
-		.once('value').then(async function(snapshot) {
+		.once('value').then(function(snapshot) {
 			const projectName = snapshot.child('ProjectName').val(),
 				  description = snapshot.child('Description').val(),
 				  members = snapshot.child('Members').val()  // Object containing all the students
-			
+
+			localStorage.setItem("projectName", projectName)
+			localStorage.setItem("description", description)
+			localStorage.setItem("members", JSON.stringify(members))
 			// Still got problems here, basically the logic is ran first before page is even loaded
-			const newPromise = new Promise(function(resolve, reject) {
-				window.location.href = "../html/projectpage.html"
-				resolve()
-			})
-
-			newPromise.then(function() {
-
-				if (document.readyState === "complete") {
-					const projectField = document.getElementById("projectName"),
-					descriptionField = document.getElementById("description")
-
-					projectField.textContent = projectName
-					descriptionField.textContent = description
-					Object.entries(members).forEach(member => {addMembers(member)})
-				}
-				
-			})
+			window.location.href = "../html/projectpage.html"
 		})
 	});
 }
 
-function addMembers(member) {
-	var membersName = document.getElementById("member_name"),
-		add_member_template = document.getElementById('add_member_template'),
-		member_field = document.getElementById('team_card_footer'),
-		duplicate = add_member_template.cloneNode(true)
+function updateProjectPage() {
+	const projectField = document.getElementById("projectName"),
+		  descriptionField = document.getElementById("description")
 
-	membersName.textContent = member[0]
-	duplicate.id = member[0]
-	member_field.append(clone);
+	// Update the fields with project information
+	projectField.textContent = localStorage.getItem("projectName")
+	descriptionField.textContent = localStorage.getItem("description")
+
+	Object.entries(JSON.parse(localStorage.getItem("members"))).forEach(member => {addMembers(member)})
+
+	// Remove the data once it has been updated
+	localStorage.removeItem("projectName")
+	localStorage.removeItem("description")
+	localStorage.removeItem("members")
+}
+
+function addMembers(member) {
+	var member_field = document.getElementById('team_card_footer'),
+		newDiv = document.createElement("div"),
+		newP = document.createElement("p")
+
+	member_field.appendChild(newDiv)
+	newDiv.appendChild(newP)
+	newDiv.className = "header_card_content"
+	newP.className = "header_card_content"
+	newP.id = member[1].Username
+
+	console.log(member)
+	newP.textContent = member[1].Username
 }
 
 async function createProject(){
