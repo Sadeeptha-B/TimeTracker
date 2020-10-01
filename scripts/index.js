@@ -1,14 +1,43 @@
 firebase.auth().onAuthStateChanged(function(user) {
 	if (user) {
 		// Adds all the projects the logged in user is a part of to the his/her homepage
-		const welcomeText = document.getElementById("welcome_text")
+		const welcomeText = document.getElementById("welcome_text"),
+			  addTaskButton = document.getElementById("new_task_button"),
+			  assignTaskButton = document.getElementById("assign_task_button"),
+			  timeInputButton = document.getElementById("time_input_button")
 
 		firebaseRef.child(`Users/${getUsername(user.email)}`)
 				   .once('value').then(function(snapshot) {
-						const username = snapshot.child('Username').val()
+						const username = snapshot.child('Username').val(),
+							  role = snapshot.child('Role').val()
 
 						// Upadate username at the top of the screen depending on user
-						welcomeText.innerHTML = "Welcome, " + username
+						if (welcomeText != null) {
+							welcomeText.innerHTML = "Welcome, " + username
+						}
+
+						// Remove the add and assign task button for teachers but show for students
+						if (addTaskButton != null && assignTaskButton != null) {
+							if (role === 'Teacher') {
+								addTaskButton.style.display = "none"
+								assignTaskButton.style.display = "none"
+								console.log("hi")
+							}
+							else if (role === 'Student'){
+								addTaskButton.style.display = "block"
+								assignTaskButton.style.display = "block"
+							}
+						}
+
+						// Remove time input button for teachers but show for students
+						if (timeInputButton != null) {
+							if (role === 'Teacher') {
+								timeInputButton.style.display = "none"
+							}
+							else if (role === 'Student') {
+								timeInputButton.style.display = "block"
+							}
+						}
 
 						addProjectsToHomePage(username)
 				  })
@@ -40,7 +69,6 @@ function getProjectsEventListener(project){
 			localStorage.setItem("projectName", projectName)
 			localStorage.setItem("description", description)
 			localStorage.setItem("members", JSON.stringify(members))
-			// Still got problems here, basically the logic is ran first before page is even loaded
 			window.location.href = "../html/projectpage.html"
 		})
 	});
