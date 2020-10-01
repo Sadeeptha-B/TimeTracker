@@ -32,51 +32,45 @@ window.myNameSpace ={
     editId: 0
 };
 
-
-
-/* Load all data required data from backend. Called upon page load */
-populateAll();
-
-
-function populateAll(){
-    // firebaseRef.child(`Tasks/${getUsername(user.email)}`)
-	// 			   .once('value').then(function(snapshot) {
-	// 				const username = snapshot.child('Username').val()
-                    
-
-	// 			  })
-    // Include code for retrieval of Project Name, Description
-    // Include code to retrieve tasks from backend
-    
-    /*To display tasks, pass retrieved tasks into function populateTask(taskObject) where
-            taskObject = {
-                name:
-                desc:
-                startDate:
-                startMonth:
-                startYear:
-                endDate:
-                endMonth:
-                endYear:
-            }
-        
-        Loop:
-            populate(taskObject)
-     */ 
-}
-
-
 // Code for the addition of a individual task
 document.getElementById("create_mode_btn").addEventListener('click',function(){
-    var taskData = getNewTaskData();               // Get data, validate, and store in backend
+    var taskData = getNewTaskData(localStorage.getItem("projectName"));  // Get data, validate, and store in backend
     if (taskData != undefined){
-        populateTask(taskData);                   // Display data
+        populateTask(taskData);  // Display data
         closeModal(updateTaskModal);
     }
 });
+//Code for editing a task
+document.getElementById("edit_mode_btn").addEventListener('click', function(){
+    var taskData = getNewTaskData(localStorage.getItem("projectName"));  // Get data, validate, and store in backend
+    if (taskData != undefined){
+        deleteTask(myNameSpace.editId);
+        populateTask(taskData);  // Display data
+        closeModal(updateTaskModal);
+    }
+})
 
 
-function getNewTaskData(){
+
+/* Load all data required data from backend. Called upon page load */
+function populateAll(projectName){
+    firebaseRef.child(`Projects/${projectName}`)
+    .once('value').then(function(snapshot) {
+        const tasks = snapshot.child('Tasks').val()
+        Object.entries(tasks).map(task => populateTask(task[1].TaskName))
+    })
+}
+
+function updateTaskPage() {
+	const taskField = document.getElementById("taskName"),
+		  descriptionField = document.getElementById("description")
+
+	// Update the fields with project information
+	taskField.textContent = localStorage.getItem("taskName")
+	descriptionField.textContent = localStorage.getItem("taskDescription")
+}
+
+function getNewTaskData(project){
     var newTaskName = document.getElementById("task_name_input").value,
         newTaskDesc = document.getElementById("task_desc_input").value,
         taskStartDate = document.getElementById("task_start_date_input").value,
@@ -104,6 +98,10 @@ function getNewTaskData(){
         return;
     }
 
+    if (newTaskDesc.length == 0){
+        newTaskDesc = "N/A";
+    }
+
     // Putting task start and end date into DD/MM/YYYY format
     var startDate = taskStartDate + "/" + taskStartMonth + "/" + taskStartYear,
         endDate = taskEndDate + "/" + taskEndMonth + "/" + taskEndYear,
@@ -112,18 +110,11 @@ function getNewTaskData(){
                       StartDate: startDate,
                       EndDate: endDate}
 
-
-    
     // Store the task information under Tasks
-    firebaseRef.child(`Tasks/${newTaskName}`).set({
-        TaskName: newTaskName,
-        Description: newTaskDesc,
-        StartDate: startDate,
-        EndDate: endDate
-    })
+    firebaseRef.child(`Tasks/${newTaskName}`).set(taskObject)
 
     // Update tasks the project has
-    firebaseRef.child(`Projects/Tasks/${newTaskName}`).set({
+    firebaseRef.child(`Projects/${project}/Tasks/${newTaskName}`).set({
         TaskName: newTaskName
     })
 
@@ -133,36 +124,30 @@ function getNewTaskData(){
 
 
 /* Code to display a new task addition (Display only!) */
-function populateTask(taskData){
+function populateTask(taskName){
     myNameSpace.taskCount += 1;
-    document.getElementById("task_heading").innerHTML = taskData.TaskName;
-    document.getElementById("task_start_date").innerHTML = taskData.StartDate;
-    document.getElementById("task_end_date").innerHTML = taskData.EndDate;
-    
-    var deleteButton = document.getElementById("delete_task");
-    var editButton = document.getElementById("edit_task");
+    firebaseRef.child(`Tasks/${taskName}`)
+    .once('value').then(function(snapshot) {
+        const name = snapshot.child('TaskName').val(),
+                startDate = snapshot.child('StartDate').val(),
+                endDate = snapshot.child('EndDate').val()
 
-    deleteButton.setAttribute("onclick","deleteTask("+myNameSpace.taskCount+")");
-    editButton.setAttribute("onclick", "editTask("+myNameSpace.taskCount+")")
+        document.getElementById("task_heading").innerHTML = name;
+        document.getElementById("task_start_date").innerHTML = startDate;
+        document.getElementById("task_end_date").innerHTML = endDate;
+        
+        var deleteButton = document.getElementById("delete_task");
+        var editButton = document.getElementById("edit_task");
 
-    var clone = template.cloneNode(true);
-    clone.removeAttribute("style");
-    clone.setAttribute("id" , "task_" + myNameSpace.taskCount); 
-    tasksCardBody.append(clone);
+        deleteButton.setAttribute("onclick","deleteTask("+myNameSpace.taskCount+")");
+        editButton.setAttribute("onclick", "editTask("+myNameSpace.taskCount+")")
+
+        var clone = template.cloneNode(true);
+        clone.removeAttribute("style");
+        clone.id = name
+        tasksCardBody.append(clone);
+    })
 }
-
-
-
-//Code for editing a task
-document.getElementById("edit_mode_btn").addEventListener('click', function(){
-    var taskData = getNewTaskData();               // Get data, validate, and store in backend
-    if (taskData != undefined){
-        deleteTask(myNameSpace.editId);
-        populateTask(taskData);                   // Display data
-        closeModal(updateTaskModal);
-    }
-})
-
 
 /* Delete a task */
 function deleteTask(index){

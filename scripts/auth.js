@@ -77,6 +77,14 @@ async function getHomePage() {
 		}
 		
    })
+
+   // Remove the data once it has been project page has been left
+	localStorage.removeItem("projectName")
+	localStorage.removeItem("description")
+	localStorage.removeItem("members")
+	localStorage.removeItem("taskName")
+	localStorage.removeItem("taskDescription")
+	
 }
 
 function createAccount(userEmail, userPass, userRole) {
