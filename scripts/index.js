@@ -4,7 +4,9 @@ firebase.auth().onAuthStateChanged(function(user) {
 		const welcomeText = document.getElementById("welcome_text"),
 			  addTaskButton = document.getElementById("new_task_button"),
 			  assignTaskButton = document.getElementById("assign_task_button"),
-			  timeInputButton = document.getElementById("time_input_button")
+			  timeInputButton = document.getElementById("time_input_button"),
+			  addMemberButton = document.getElementById("add_member"),
+			  editDescriptionButton = document.getElementById("edit_desc")
 
 		firebaseRef.child(`Users/${getUsername(user.email)}`)
 				   .once('value').then(function(snapshot) {
@@ -36,6 +38,18 @@ firebase.auth().onAuthStateChanged(function(user) {
 							}
 							else if (role === 'Student') {
 								timeInputButton.style.display = "block"
+							}
+						}
+
+						// Remove add member button for students but show for teachers
+						if (addMemberButton != null && editDescriptionButton != null) {
+							if (role === 'Teacher') {
+								addMemberButton.style.display = "block"
+								editDescriptionButton.style.display = "block"
+							}
+							else if (role === 'Student') {
+								addMemberButton.style.display = "none"
+								editDescriptionButton.style.display = "none"
 							}
 						}
 
