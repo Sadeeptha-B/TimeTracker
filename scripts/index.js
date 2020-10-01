@@ -18,7 +18,7 @@ firebase.auth().onAuthStateChanged(function(user) {
 						const projects = document.getElementsByClassName("dash_project")
 						
 						setTimeout(function () {
-							Array.from(projects).forEach(project => getProjectDetails(project))
+							Array.from(projects).forEach(project => getProjectsEventListener(project))
 						}, 1000)
 				  })
 
@@ -29,7 +29,7 @@ firebase.auth().onAuthStateChanged(function(user) {
 	}
   });
 
-function getProjectDetails(project){
+function getProjectsEventListener(project){
 	project.addEventListener("click", function(){
 		firebaseRef.child(`Projects/${project.id}`)
 		.once('value').then(function(snapshot) {
@@ -47,7 +47,7 @@ function getProjectDetails(project){
 }
 
 function updateProjectPage() {
-	const projectField = document.getElementById("projectName"),
+	const projectField = document.getElementById("project_name"),
 		  descriptionField = document.getElementById("description")
 
 	// Update the fields with project information
@@ -63,18 +63,12 @@ function updateProjectPage() {
 }
 
 function addMembers(member) {
-	var member_field = document.getElementById('team_card_footer'),
-		newDiv = document.createElement("div"),
-		newP = document.createElement("p")
+	var member_field = document.getElementById('member_card_content'),
+		newDiv = document.createElement("div")
 
 	member_field.appendChild(newDiv)
-	newDiv.appendChild(newP)
-	newDiv.className = "header_card_content"
-	newP.className = "header_card_content"
-	newP.id = member[1].Username
-
-	console.log(member)
-	newP.textContent = member[1].Username
+	newDiv.id = member[1].Username
+	newDiv.textContent = member[1].Username
 }
 
 async function createProject(){

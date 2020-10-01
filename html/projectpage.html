@@ -22,7 +22,7 @@
         <div class="header">
             <div class="header_content_wrapper">
                 <div class="header_word_wrapper">
-                    <h1 id="project_name">Project Name</h1>
+                    <h1 id="project_name"></h1>
                 </div>
             </div>
             <div class="header_links_wrapper">
@@ -40,11 +40,11 @@
                             <hr class="thin">
                     </div>
                     <div id="description_footer" class= "card_footer">
-                        <a href="#" id ="edit_desc" class="hover_grey_link" onclick="openModal(desc_edit_overlay true, name_field, desc_field)">Edit description </a>
+                        <a href="#" id ="edit_desc" class="hover_grey_link float_right_elements" onclick="openModal(desc_edit_overlay=true, name_field, desc_field)">Edit description </a>
                         <!-- <div class="clr"></div> -->
                     </div>
                     <div id ="description_card_content" class="header_card_content">
-                         <span id= "description">Project Description content</span>
+                         <span id= "description"></span>
                     </div>
             </div>
                             
@@ -55,9 +55,8 @@
                 </div>
                     <a href="#" id ="add_member" class="hover_grey_link float_right_elements" onclick="openModal(add_student, false)">Add member </a>
                     <!--Template for adding members-->
-                    <div class="header_card_content" id="add_member_template"> 
-                        <p class="header_card_content" id="member_name">Member 1</p>
-                    </div>
+                    <div id ="member_card_content" class="header_card_content">
+                   </div>
             </div>
         </div>
                  
