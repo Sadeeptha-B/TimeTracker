@@ -73,11 +73,19 @@
                     <div class="centered_card_content">
 
                         <div id="time_contribution" class="chart">
-                            <h4 class ="chart_heading"> Time Contribution by Hour </h4>
+                            <h4 class ="chart_heading"> Time Contribution Percentage </h4>
                             <div class= "chart_container">
-                                <canvas id="timeContChart"></canvas>
+                                <canvas id="timeContPie"></canvas>
                             </div>
                         </div>
+                        <br>
+                        <div id="time_contribution" class="chart">
+                            <h4 class ="chart_heading"> Time Contribution By Hour </h4>
+                            <div class= "chart_container">
+                                <canvas id="timeContBar"></canvas>
+                            </div>
+                        </div>
+                        
 
                     </div>
                     
@@ -221,6 +229,16 @@
                     <div class="close generic_popup_close" onclick="closeModal(add_student)">+</div>
                     <br>
                         <h3>Add Student</h3>
+                            <hr class="thin">
+                            <h4> Select </h4>
+                        <div class="search_wrapper">
+                            <input type="text" class="search_field" id= "search_student" placeholder="Search Student...">
+                            <div class="suggestions">
+                                <div> Content 1</div>
+                                <div> Content 2</div>
+                            </div>
+                        </div>
+                        <ul id="students_list"></ul>
                         <label class="field_elements" for="students_list">Student :</label>
                         <input type="text" id="students_list" name="Students" required>
                     <div class="new_task_footer">

@@ -132,10 +132,17 @@ function addProject(project) {
 			  newDiv = document.createElement("div"),
 			  newH2 = document.createElement("h2"),
 			  newP = document.createElement("p")
+			  imgEdit = document.createElement("input")
+			  imgDelete = document.createElement("delete")
+			  footerDiv = document.createElement("div")
+
 
 		dashboard.appendChild(newDiv)
+		dashboard.appendChild(footerDiv)
 		newDiv.appendChild(newH2)
 		newDiv.appendChild(newP)
+		// footerDiv.appendChild(imgEdit)
+		// footerDiv.appendChild(imgDelete)
 
 		newDiv.className = "dash_project"
 		newDiv.id = `${projectName}`
@@ -144,5 +151,18 @@ function addProject(project) {
 
 		newP.className = "project_summary"
 		newP.textContent = `Lecturer: ${teacher} | Start: ${startDate} | End: ${endDate}`
+		
+		/* Not working
+		footerDiv.className = "action_pane"
+		imgEdit.type="image"
+		imgEdit.src="../imgs/edit-16.png"
+		imgEdit.id="edit_project"
+		imgEdit.class="std_component"
+
+		imgEdit.type="image"
+		imgDelete.src="../imgs/delete-16.png"
+		imgDelete.id="edit_project"
+		imgDelete.class="std_component"
+		*/
 	})
 }

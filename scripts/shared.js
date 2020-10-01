@@ -17,6 +17,53 @@ var firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 
+/* Search functionality */
+
+/* Provide Searchbar and Array of data to search from */
+function searchSingle(searchBar, searchSpace){
+    var searchValue = searchBar.value.toLowerCase();
+    var foundArray = [];
+
+    for (i=0; i < searchSpace.length; i++){
+        var item = searchSpace[i].toLowerCase();
+        var itemCheck = item.indexOf(searchValue);
+        var found = indexToBoolean(itemCheck);
+
+        if(found){
+            foundArray.push(item);
+        }
+    }
+    return foundArray;
+}
+
+/* Provide searchbar and pass in an array of objects of which keys need to be 
+searched.
+*/
+function searchMultiple(searchBar, objArray){
+    var searchValue = searchBar.value.toLowerCase();
+    var foundArray=[];
+
+    for (i= 0; i< objArray.length; i++){
+        var obj = objArray[i];
+        var criteria = Object.keys(obj);
+        var found = false;
+
+        for (j=0; j < criteria.length; j++){
+            var item = obj[criteria[j]].toLowerCase();
+            var itemCheck = item.indexOf(searchValue);
+            found = found || indexToBoolean(itemCheck)
+        }
+
+        if (found){
+            foundArray.push(objArray[i]);
+        }
+    }   
+
+    return foundArray;
+}
+
+
+/* Modal Controls */
 function openModal(modalElem, isTextModal, ...editableElems){
     if (isTextModal == true){
         for (i= 0; i < editableElems.length; i++){
@@ -40,13 +87,9 @@ function openConfigurableModal(modalElem, isTextModal, isCreateMode, ...editable
     for (i =0; i<  editModeElems.length;i++){
         editModeElems[i].classList.toggle('visible', !isCreateMode);
         editModeElems[i].classList.toggle('hidden', isCreateMode);
-    }
-
-    var args = [].slice.call(arguments).slice(openConfigurableModal.length);
-  
+    }  
     openModal(modalElem, isTextModal, ...editableElems);
 }
-
 
 
 function closeModal(modalElem){
@@ -57,3 +100,14 @@ function closeModal(modalElem){
 function setDisplayNone(elem){
     elem.style.display = "none";
 }
+
+/* Helper function */
+function indexToBoolean(index){
+    var value; 
+     if (index === -1) {
+         value = false;
+     } else {
+         value = true;
+     }
+     return value;
+ };

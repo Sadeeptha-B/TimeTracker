@@ -26,9 +26,12 @@ Modal open close, after saving, editing, is done in this script.
     var newTaskDesc = document.getElementById("task_desc_input");
 
 
+/* Important : Do not delete. */
+window.myNameSpace ={
+    taskCount : 0,
+    editId: 0
+};
 
-var taskCount = 0;
-var editId;
 
 
 /* Load all data required data from backend. Called upon page load */
@@ -131,7 +134,7 @@ function getNewTaskData(){
 
 /* Code to display a new task addition (Display only!) */
 function populateTask(taskData){
-    taskCount += 1;
+    myNameSpace.taskCount += 1;
     document.getElementById("task_heading").innerHTML = taskData.TaskName;
     document.getElementById("task_start_date").innerHTML = taskData.StartDate;
     document.getElementById("task_end_date").innerHTML = taskData.EndDate;
@@ -139,15 +142,13 @@ function populateTask(taskData){
     var deleteButton = document.getElementById("delete_task");
     var editButton = document.getElementById("edit_task");
 
-    deleteButton.setAttribute("onclick","deleteTask("+taskCount+")");
-    editButton.setAttribute("onclick", "editTask("+taskCount+")")
+    deleteButton.setAttribute("onclick","deleteTask("+myNameSpace.taskCount+")");
+    editButton.setAttribute("onclick", "editTask("+myNameSpace.taskCount+")")
 
     var clone = template.cloneNode(true);
     clone.removeAttribute("style");
-    clone.setAttribute("id" , "task_" + taskCount); 
-    clone.childNodes.getElementById
+    clone.setAttribute("id" , "task_" + myNameSpace.taskCount); 
     tasksCardBody.append(clone);
-     
 }
 
 
@@ -156,7 +157,7 @@ function populateTask(taskData){
 document.getElementById("edit_mode_btn").addEventListener('click', function(){
     var taskData = getNewTaskData();               // Get data, validate, and store in backend
     if (taskData != undefined){
-        deleteTask(editId);
+        deleteTask(myNameSpace.editId);
         populateTask(taskData);                   // Display data
         closeModal(updateTaskModal);
     }
@@ -176,7 +177,7 @@ function deleteTask(index){
 function editTask(index){
     event.stopPropagation();
     openConfigurableModal(updateTaskModal, true, false, newTaskName, newTaskDesc);
-    editId = index;
+    myNameSpace.editId = index;
 }
 
 
@@ -214,13 +215,14 @@ To do all tasks related to clicks except for the opening and closing of modals.
 /* Chart 
 =========================================== */
 
-var ctx = document.getElementById('timeContChart');
+var ctxTimeContPie = document.getElementById('timeContPie');
+var ctxTimeContBar = document.getElementById('timeContBar');
 var students = ["Robyn McNamara", "Campbell Wilson", "Najam Nazar", "Nathan Companez"];
 var times = [4, 7, 3, 5];
 
 
 
-var timeContChart = new Chart(ctx, {
+var timeContPie = new Chart(ctxTimeContPie, {
     type: 'pie',
     data:{
         labels: students,
@@ -274,6 +276,29 @@ var timeContChart = new Chart(ctx, {
     }
 });
 
+var timeContBar = new Chart(ctxTimeContBar, {
+    type:'bar',
+    data:{
+        labels: students,
+        datasets: [{
+            label: 'Hours',
+            legend: "Time contributed",
+            backgroundColor: "rgb(75,192, 192)",
+            data: times
+        }], 
+    },
+    options:{
+        scales:{
+            yAxes: [{
+                display: true,
+                ticks:{
+                    beginAtZero:true
+                }
+            }]
+        }
+    }
+});
+
 
 var customColorFunction = function(schemeColors){
     var myColors = [ "rgba(178, 102, 255)",
@@ -297,3 +322,7 @@ function compare(shouldBeSmaller, shouldBeLarger){
     return valid;
 }
 
+
+// /* Searches */
+const searchBar = document.getElementById("search_student");
+searchBar.setAttribute("oninput", "searchSingle(searchBar, students)");    //Use global student list from backend

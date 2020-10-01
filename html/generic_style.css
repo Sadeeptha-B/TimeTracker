@@ -135,7 +135,7 @@ button.blue_curve_button:hover{
     font-size:25px;
     padding-right: 0.5rem;
     padding-left: 0.5rem;
-    border: 1px solid #9f9f9f33;
+    border: 1px solid #ccc2c233;
     border-radius: 0.5em;
     background-color: #fff;
     cursor: pointer;
@@ -201,6 +201,42 @@ IMPORTANT: Do not add element after modal-content div, within bg-modal, without 
     top: 0;
     right: 14px;
 }
+
+/* Search field */
+.search_wrapper{
+    width: 70%;
+    margin: 0 auto;
+}
+
+.search_field{
+     width: 100%;
+     padding: 8px;
+     background: transparent;
+     font-family: 'Poppins', Verdana, sans-serif;
+     border: 1.4px solid black;
+}
+
+.search_field:focus{
+    /* outline:none; */
+};
+
+.suggestions{
+    bottom: 500px;
+    border: 100px solid black;
+}
+
+.suggestions > div{
+    bottom: 200px;
+    width: 100%;
+    padding: 8px;
+    cursor: pointer;
+    border: none;
+    border-bottom: 1px solid black;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+    /* align-items:right; */
+}
+
 
 
 /*Cards*/
