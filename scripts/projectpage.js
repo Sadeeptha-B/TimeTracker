@@ -193,6 +193,7 @@ To do all tasks related to clicks except for the opening and closing of modals.
         editNameField.setAttribute("placeholder", projectName.innerHTML);
         editDescField.setAttribute("placeholder", description.innerHTML);
     });
+    //ZS: also please save the name and desc in the DB for retrieving later
 
 
     //Save new Project Name, Description
