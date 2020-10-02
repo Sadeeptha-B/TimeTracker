@@ -5,11 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
     <meta name="mobile-web-app-capable" content="yes"/>
-    
-    <title>Project Page</title>  
+
+    <title>Project Page</title>
     <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-database.js"></script>         
+    <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-database.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-colorschemes"></script>
 
@@ -18,7 +18,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
 </head>
-    <body>        
+    <body>
         <div class="header">
             <div class="header_content_wrapper">
                 <div class="header_word_wrapper">
@@ -27,12 +27,12 @@
             </div>
             <div class="header_links_wrapper">
                 <a><button class="button_generic" id="homepage_button" onclick="getHomePage()">Home Page</button></a>
-                <a href="login.html"><button id="signout_button" class="button_generic" onclick="logout()">Log Out</button></a>  
+                <a href="login.html"><button id="signout_button" class="button_generic" onclick="logout()">Log Out</button></a>
             </div>
         </div>
 
         <div class="body">
-            
+
         <div class="body-flex-wrapper">
            <div id= "description_card" class="header_type_card">
                     <div class="card_header">
@@ -41,7 +41,7 @@
                     </div>
                     <div id="description_footer" class= "card_footer">
                         <a href="#" id ="edit_desc" class="hover_grey_link float_right_elements" onclick="openModal(desc_edit_overlay, true, name_field, desc_field)" style="display:none">
-                            Edit description 
+                            Edit description
                         </a>
                         <!-- <div class="clr"></div> -->
                     </div>
@@ -49,21 +49,21 @@
                          <span id= "description"></span>
                     </div>
             </div>
-                            
+
             <div class="header_type_card" id="team_card">
                 <div class="card_header">
                     <h3>Team</h3>
                     <hr class="thin">
                 </div>
-                    <a href="#" id ="add_member" class="hover_grey_link float_right_elements" onclick="openModal(add_student, false)"  style="display:none">
-                        Add member 
+                    <a href="#" id ="add_member" class="hover_grey_link float_right_elements" onclick="openModal(add_student, false),displayStudentList()"  style="display:none">
+                        Add member
                     </a>
                     <!--Template for adding members-->
                     <div id ="member_card_content" class="header_card_content">
                    </div>
             </div>
         </div>
-                 
+
               <!--Charts-->
             <div id ="charts" class="centered_card">
                     <div class="card_header">
@@ -85,9 +85,9 @@
                                 <canvas id="timeContBar"></canvas>
                             </div>
                         </div>
-                    </div> 
-            </div>         
-                        
+                    </div>
+            </div>
+
             <div id="task_card" class="content_card">
                 <div class="card_header">
                       <h3> Tasks </h3>
@@ -96,15 +96,15 @@
                 <div class="content_card_body" id= "task_card_body">
                 <!-- Zhe Sheng: section for (preferably) task overview (in table) -->
 
-                    <button class="button_with_symbol" id="new_task_button" onclick="openConfigurableModal(create_edit_task, true, true, task_name_input, task_desc_input)" style="display:none">+</button> 
+                    <button class="button_with_symbol" id="new_task_button" onclick="openConfigurableModal(create_edit_task, true, true, task_name_input, task_desc_input)" style="display:none">+</button>
                     <div class="clr"></div>      <!-- Clearing Float-->
 
-                    <div class="task" id="template" style="display:none"> 
+                    <div class="task" id="template" style="display:none">
                             <div class="dash_project">
                                 <h2 class="dash_project_head" id="task_heading">Task 1</h2>
 
                                 <p class="project_summary">Start: <span id="task_start_date">DD/MM/YY</span>
-                                                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                                                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                            End:   <span id="task_end_date">DD/MM/YY</span>
                                 </p>
                                 <div class="action_pane">
@@ -124,10 +124,10 @@
                 </div>
                 <div class="clr"></div>
             </div>
-            
-            
-           
-            
+
+
+
+
             <!--Modals -->
             <!-- TODO: Larger modal sizes for smaller screens -->
 
@@ -137,17 +137,17 @@
                     <div class="close generic_popup_close" onclick="closeModal(desc_edit_overlay)">+</div>
                     <div class = "input_form">
                         <h3>Edit description</h3>
-                        <label class= "field_elements" for="name_field">Project Name :</label> 
+                        <label class= "field_elements" for="name_field">Project Name :</label>
                         <input id = "name_field" class="input_field"><br>
                         <label class="field_elements" for="desc_field">Description : </label><br>
                         <textarea id = "desc_field" rows="14" cols="120" class="input_field"></textarea>
                     </div>
-                    
+
                     <div class= "modal_footer">
                         <button class="blue_curve_button" id="save_desc" type="submit"> Save </button>
                         <div class="clr"></div>       <!-- Spacer div in case using float causes issue in auto height adjustment-->
                     </div>
-                   
+
                 </div>
             </div>
 
@@ -157,7 +157,7 @@
                     <div class="close generic_popup_close" onclick="closeModal(create_edit_task)">+</div>
 
                     <form class="input_form">
-                        <h3> <span id="create_mode_header"> New task</span> <span id="edit_mode_header"> Edit Task </span>  </h3> 
+                        <h3> <span id="create_mode_header"> New task</span> <span id="edit_mode_header"> Edit Task </span>  </h3>
 
                         <label class="field_elements" for="task_name_input">Task Name :</label>
                         <input id="task_name_input" class="input_field" type="text"><br>
@@ -216,9 +216,9 @@
                     </div>
                 </div>
             </div>
-            
-            <!-- ZS: popup to add student (no button to make it appear for now) 
-                this is the version which only adds one student at a time, 
+
+            <!-- ZS: popup to add student (no button to make it appear for now)
+                this is the version which only adds one student at a time,
                 mainly intended for adding after project is created
             -->
             <div class="bg-modal" id="add_student">
@@ -227,19 +227,23 @@
                     <br>
                         <h3>Add Student</h3>
                             <hr class="thin">
-                            <h4> Select </h4>
+                            <!--<h4> Select </h4>
+
                         <div class="search_wrapper">
-                            <input type="text" class="search_field" id= "search_student" placeholder="Search Student...">
+                            <input type="text" class="search_field" id= "search_student"  placeholder="Search Student...">
                             <div class="suggestions">
                                 <div> Content 1</div>
                                 <div> Content 2</div>
                             </div>
-                        </div>
-                        <ul id="students_list"></ul>
+                        </div>-->
+
+                        <select id = "search_student" ></select>
+                        <ul id="students_list" ></ul>
                         <label class="field_elements" for="students_list">Student :</label>
-                        <input type="text" id="students_list" name="Students" required>
+                        <input type = "text" id="students_list" name="Students" required>
+
                     <div class="new_task_footer">
-                        <button class="blue_curve_button" id="add_new_student"> Add </button>
+                        <button class="blue_curve_button" id="add_new_student" onclick = "writeUserData()"> Add </button>
                     </div>
                 </div>
             </div>
@@ -259,7 +263,7 @@
                             <!-- Option 2: use div list (does not use add button) -->
                             <!-- Issue: Duplicated ID not detected by script-->
                             <!--
-                            <div class="task" id="template" style="display: none"> 
+                            <div class="task" id="template" style="display: none">
                                 <a class="dash_project" href="taskpage.html">
                                     <div class="dash_project">
                                         <h2 class="dash_project_head" id="task_heading">Task 1</h2>

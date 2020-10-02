@@ -14,36 +14,37 @@ firebase.auth().onAuthStateChanged(function(user) {
 			try { updateTaskPage() } catch(err) { ; }
 
 			// Add all the projects of the user to the home page
-			populateProjects(username)
-			populateTasks(localStorage.getItem("projectName"));
+			addProjectsToHomePage(username)
+			populateAll(localStorage.getItem("projectName"));
 		})
 		// Event listener is then set up to see if any projects are trying to be accessed
 		// If yes, alter projectpage.html to suit the called project's information
 		.then(function() {
 			const projects = document.getElementsByClassName("dash_project"),
 				  tasks = document.getElementById("task_card_body")
-			
-			// SetTimeouts are placed as need to give time to load projects/tasks
-			if (projects) {
+
+			if (projects != null) {
 				setTimeout(function () {
 					Array.from(projects).forEach(project => addProjectsEventListener(project))
 				}, 1000)
 			}
-				
-			if (tasks) {
+
+			if (tasks != null) {
 				setTimeout(function() {
 					Array.from(tasks.getElementsByClassName("task")).forEach(task => addTasksEventListener(task))
 				}, 1000)
 			}
 		})
+		console.log(localStorage.getItem("projectName"))
+		console.log(localStorage.getItem("description"))
+		console.log(localStorage.getItem("members"))
+		console.log(localStorage.getItem("taskName"))
+		console.log(localStorage.getItem("taskDescription"))
 	}
 	else {
 	  // No user is signed in.
 	}
   });
-
-// FUNCTION TO ALTER THE PAGE BASED ON THE CURRENT USER LOGGED IN
-// ======================================================================
 
 function updatePage(username, role) {
 	const welcomeText = document.getElementById("welcome_text"),
@@ -54,12 +55,12 @@ function updatePage(username, role) {
 		  editDescriptionButton = document.getElementById("edit_desc")
 
 	// Upadate username at the top of the screen depending on user
-	if (welcomeText) {
+	if (welcomeText != null) {
 		welcomeText.innerHTML = "Welcome, " + username
 	}
 
 	// Remove the add and assign task button for teachers but show for students
-	if (addTaskButton && assignTaskButton) {
+	if (addTaskButton != null && assignTaskButton != null) {
 		if (role === 'Teacher') {
 			addTaskButton.style.display = "none"
 			assignTaskButton.style.display = "none"
@@ -71,7 +72,7 @@ function updatePage(username, role) {
 	}
 
 	// Remove time input button for teachers but show for students
-	if (timeInputButton) {
+	if (timeInputButton != null) {
 		if (role === 'Teacher') {
 			timeInputButton.style.display = "none"
 		}
@@ -81,7 +82,7 @@ function updatePage(username, role) {
 	}
 
 	// Remove add member button for students but show for teachers
-	if (addMemberButton && editDescriptionButton) {
+	if (addMemberButton != null && editDescriptionButton != null) {
 		if (role === 'Teacher') {
 			addMemberButton.style.display = "block"
 			editDescriptionButton.style.display = "block"
@@ -93,9 +94,6 @@ function updatePage(username, role) {
 	}
 }
 
-// FUNCTIONS TO ADD EVENT LISTENERS TO ALL THE PROJECT/TASK ELEMENTS
-// ======================================================================
-
 function addProjectsEventListener(project){
 	project.addEventListener("click", function(){
 		firebaseRef.child(`Projects/${project.id}`)
@@ -103,7 +101,7 @@ function addProjectsEventListener(project){
 			const projectName = snapshot.child('ProjectName').val(),
 				  description = snapshot.child('Description').val(),
 				  members = snapshot.child('Members').val()  // Object containing all the students
-				  
+
 			localStorage.setItem("projectName", projectName)
 			localStorage.setItem("description", description)
 			localStorage.setItem("members", JSON.stringify(members))
@@ -114,14 +112,14 @@ function addProjectsEventListener(project){
 
 function addTasksEventListener(task){
 	task.addEventListener("click", function(){
-		firebaseRef.child(`Tasks/${task.data}`)
+		firebaseRef.child(`Tasks/${task.id}`)
 		.once('value').then(function(snapshot) {
 			const taskName = snapshot.child('TaskName').val(),
 				  taskDescription = snapshot.child('Description').val(),
 				  projectName = document.getElementById("project_name").textContent,
 				  projectDescription = document.getElementById("description").textContent,
 				  members = document.getElementById("member_card_content").getElementsByClassName("member")
-			
+
 			// To store the names of the members in the project in the form of an objecy
 			var membersObject = {}
 
@@ -129,7 +127,7 @@ function addTasksEventListener(task){
 			localStorage.setItem("description", projectDescription)
 			localStorage.setItem("taskName", taskName)
 			localStorage.setItem("taskDescription", taskDescription)
-			
+
 			// Get the name of each member and store in the object
 			Array.from(members).forEach(member => {
 				const name = member.textContent
@@ -142,10 +140,6 @@ function addTasksEventListener(task){
 		})
 	});
 }
-
-
-// FUNCTIONS TO UPDATE PAGES BASED ON THE CURRENT TASK/PROJECT SELECTED
-// ======================================================================
 
 function updateProjectPage() {
 	const projectField = document.getElementById("project_name"),
@@ -168,19 +162,63 @@ function addMembers(member) {
 	newDiv.textContent = member[1].Username
 }
 
-function updateTaskPage() {
-	const taskField = document.getElementById("taskName"),
-		  descriptionField = document.getElementById("description")
+async function createProject(){
+    var projectName = document.getElementById("ProjectName").value,
+        description = document.getElementById("Description").value,
 
-	// Update the fields with project information
-	taskField.textContent = localStorage.getItem("taskName")
-	descriptionField.textContent = localStorage.getItem("taskDescription")
+        //project start
+        startDay =  document.getElementById("start_day").value,
+        startMonth = document.getElementById("start_month").value,
+        startYear = document.getElementById("start_year").value,
+
+        // Putting into DD/MM/YYYY format
+        startDate = startDay + "/" + startMonth + "/" + startYear,
+
+        //project end
+        endDay = document.getElementById("end_day").value,
+        endMonth = document.getElementById("end_month").value,
+        endYear = document.getElementById("end_year").value,
+
+        // Putting into DD/MM/YYYY format
+        endDate = endDay + "/" + endMonth + "/" + endYear
+
+	var valid = true;
+
+    if (valid = compare(startYear, endYear)){
+        if (valid = compare(startMonth,endMonth))
+            valid = compare(startDay, endDay);
+    }
+
+    if (!valid){
+        return;
+	}
+
+    if (description.length == 0){
+        description = "N/A";
+	}
+
+	var user = await firebase.auth().currentUser
+
+	// Store project information under Projects
+	firebaseRef.child(`Projects/${projectName}`).set({
+		ProjectName: projectName,
+        Description: description,
+        StartDate: startDate,
+        EndDate: endDate,
+        TeacherInCharge: getUsername(user.email)
+	})
+
+	// Update projects the current user is in charge of
+	firebaseRef.child(`Users/${getUsername(user.email)}/Projects/${projectName}`).update({
+		ProjectName: projectName
+	})
+
+    window.alert("Project Created!")
+    // Bring the user to the home page after successful sign up
+    window.location.href = "../html/home-teacherview.html";
 }
 
-// FUNCTIONS TO POPULATE THE PAGE WITH PROJECTS/TASKS BASED ON USER/PROJECT RESPECTIVELY
-// ======================================================================
-
-function populateProjects(username) {
+function addProjectsToHomePage(username) {
     firebaseRef.child(`Users/${username}`)
 	.once('value').then(function(snapshot) {
 		const projects = snapshot.child('Projects').val()
@@ -218,7 +256,7 @@ function addProject(project) {
 
 		newP.className = "project_summary"
 		newP.textContent = `Lecturer: ${teacher} | Start: ${startDate} | End: ${endDate}`
-		
+
 		/* Not working
 		footerDiv.className = "action_pane"
 		imgEdit.type="image"
@@ -234,107 +272,19 @@ function addProject(project) {
 	})
 }
 
-function populateTasks(projectName){
-    firebaseRef.child(`Projects/${projectName}`)
-    .once('value').then(function(snapshot) {
-        const tasks = snapshot.child('Tasks').val()
-        Object.entries(tasks).map(task => populateTask(task[1].TaskName))
-    })
-}
-
-
-// ONCLICK FUNCTIONS
-// ======================================================================
-
-function laterThan(startVal, endVal){
-	return endVal > startVal;
-}
-
-function sameTimeAs(startVal, endVal){
-	return endVal == startVal;
-}
-
-async function createProject(){
-    var projectName = document.getElementById("ProjectName").value,
-        description = document.getElementById("Description").value,
-
-        //project start
-        startDay =  document.getElementById("start_day").value,
-        startMonth = document.getElementById("start_month").value,
-        startYear = document.getElementById("start_year").value,
-        
-        // Putting into DD/MM/YYYY format
-        startDate = startDay + "/" + startMonth + "/" + startYear,
-
-        //project end
-        endDay = document.getElementById("end_day").value,
-        endMonth = document.getElementById("end_month").value,
-        endYear = document.getElementById("end_year").value,
-
-        // Putting into DD/MM/YYYY format
-        endDate = endDay + "/" + endMonth + "/" + endYear
-
-	var valid = true;
-
-	/* 
-	Initially we have valid = true; we change this value according to the criteria below:
-	if startYear > endYear: not valid
-	else:
-		if startYear == endYear:
-			if startMonth > endMonth: not valid
-			else: 
-				if startMonth == endMonth:
-					if startDay > endDay: not valid
-					else: valid
-				else if startMonth < endMonth: valid
-		if startYear < endYear: valid
-	*/
-	if (startYear > endYear){
-		valid = false;
-	}
-	else if (startYear == endYear){
-		if (startMonth > endMonth){
-			valid = false;
+function displayStudentList()
+{
+  let studentList = document.getElementById("search_student");
+  let output = "";
+  firebaseRef.child(`Users`)
+  .once('value').then(function(snapshot)
+  {
+    const students = snapshot.val()
+		console.log(Object.entries(students))
+		for (let i = 0; i < Object.entries(students).length; i++){
+			output += `<option value = "${Object.entries(students)[i][0]}" style = "font-color:black">${Object.entries(students)[i][0]}</option>`
 		}
-		else if (startMonth == endMonth){
-			if (startDay > endDay){ 
-				valid = false;
-			}
-		}
-	}
+		studentList.innerHTML = output;
+  })
 
-	/*
-    if (valid = compare(startYear, endYear)){
-        if (valid = compare(startMonth,endMonth))
-            valid = compare(startDay, endDay);
-	}
-	*/
-
-    if (!valid){
-        return;
-	}
-	
-    if (description.length == 0){
-        description = "N/A";
-	}
-
-	var user = await firebase.auth().currentUser
-
-	// Store project information under Projects
-	firebaseRef.child(`Projects/${projectName}`).set({
-		ProjectName: projectName,
-        Description: description,
-        StartDate: startDate,
-        EndDate: endDate,
-        TeacherInCharge: getUsername(user.email)
-	})
-	
-	// Update projects the current user is in charge of
-	firebaseRef.child(`Users/${getUsername(user.email)}/Projects/${projectName}`).update({
-		ProjectName: projectName
-	})
-	
-    window.alert("Project Created!")
-    // Bring the user to the home page after successful sign up
-    window.location.href = "../html/home-teacherview.html";
 }

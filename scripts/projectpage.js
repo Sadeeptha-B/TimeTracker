@@ -36,7 +36,7 @@ window.myNameSpace ={
 document.getElementById("create_mode_btn").addEventListener('click',function(){
     var taskData = getNewTaskData(localStorage.getItem("projectName"));  // Get data, validate, and store in backend
     if (taskData != undefined){
-        populateTask(taskData.TaskName);  // Display data
+        populateTask(taskData);  // Display data
         closeModal(updateTaskModal);
     }
 });
@@ -45,10 +45,32 @@ document.getElementById("edit_mode_btn").addEventListener('click', function(){
     var taskData = getNewTaskData(localStorage.getItem("projectName"));  // Get data, validate, and store in backend
     if (taskData != undefined){
         deleteTask(myNameSpace.editId);
-        populateTask(taskData.TaskName);  // Display data
+        populateTask(taskData);  // Display data
         closeModal(updateTaskModal);
     }
 })
+
+
+
+
+/* Load all data required data from backend. Called upon page load */
+function populateAll(projectName){
+    firebaseRef.child(`Projects/${projectName}`)
+    .once('value').then(function(snapshot) {
+        const tasks = snapshot.child('Tasks').val()
+        Object.entries(tasks).map(task => populateTask(task[1].TaskName))
+    })
+}
+
+function updateTaskPage() {
+	const taskField = document.getElementById("taskName"),
+		  descriptionField = document.getElementById("description")
+
+	// Update the fields with project information
+	taskField.textContent = localStorage.getItem("taskName")
+	descriptionField.textContent = localStorage.getItem("taskDescription")
+}
+
 
 function getNewTaskData(project){
     var newTaskName = document.getElementById("task_name_input").value,
@@ -117,8 +139,7 @@ function getNewTaskData(project){
         taskObject = {TaskName: newTaskName,
                       Description: newTaskDesc,
                       StartDate: startDate,
-                      EndDate: endDate,
-                      Project: project}
+                      EndDate: endDate}
 
     // Store the task information under Tasks
     firebaseRef.child(`Tasks/${newTaskName}`).set(taskObject)
@@ -146,7 +167,7 @@ function populateTask(taskName){
         document.getElementById("task_heading").innerHTML = name;
         document.getElementById("task_start_date").innerHTML = startDate;
         document.getElementById("task_end_date").innerHTML = endDate;
-        
+
         var deleteButton = document.getElementById("delete_task");
         var editButton = document.getElementById("edit_task");
 
@@ -182,8 +203,8 @@ function editTask(index){
 }
 
 
-/* 
-Click Event Listeners 
+/*
+Click Event Listeners
 ===========================================
 To do all tasks related to clicks except for the opening and closing of modals.
 
@@ -214,7 +235,7 @@ To do all tasks related to clicks except for the opening and closing of modals.
     });
 
 
-/* Chart 
+/* Chart
 =========================================== */
 
 var ctxTimeContPie = document.getElementById('timeContPie');
@@ -232,7 +253,7 @@ var timeContPie = new Chart(ctxTimeContPie, {
             label: 'Numbers',
             legend: "Time contributed",
             data: times
-        }], 
+        }],
     },
     options: {
         //  Code for title if needed
@@ -256,7 +277,7 @@ var timeContPie = new Chart(ctxTimeContPie, {
             callbacks: {
               label: function(tooltipItem, data) {
                 var dataset = data.datasets[tooltipItem.datasetIndex];  //get the concerned dataset
-              
+
                 var component = data.labels[tooltipItem.index];
 
                 //calculate the total of this data set
@@ -270,11 +291,11 @@ var timeContPie = new Chart(ctxTimeContPie, {
 
                 //calculate the precentage based on the total and current item, also this does a rough rounding to give a whole number
                 var percentage = Math.floor(((currentValue/total) * 100)+0.5);
-          
+
                 return component + " : " + percentage + "%";
               }
             }
-          } 
+          }
     }
 });
 
@@ -287,7 +308,7 @@ var timeContBar = new Chart(ctxTimeContBar, {
             legend: "Time contributed",
             backgroundColor: "rgb(75,192, 192)",
             data: times
-        }], 
+        }],
     },
     options:{
         scales:{
