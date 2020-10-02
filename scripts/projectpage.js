@@ -50,26 +50,6 @@ document.getElementById("edit_mode_btn").addEventListener('click', function(){
     }
 })
 
-
-/* Load all data required data from backend. Called upon page load */
-function populateAll(projectName){
-    firebaseRef.child(`Projects/${projectName}`)
-    .once('value').then(function(snapshot) {
-        const tasks = snapshot.child('Tasks').val()
-        console.log(Object.entries(tasks))
-        Object.entries(tasks).map(task => populateTask(task[1].TaskName))
-    })
-}
-
-function updateTaskPage() {
-	const taskField = document.getElementById("taskName"),
-		  descriptionField = document.getElementById("description")
-
-	// Update the fields with project information
-	taskField.textContent = localStorage.getItem("taskName")
-	descriptionField.textContent = localStorage.getItem("taskDescription")
-}
-
 function getNewTaskData(project){
     var newTaskName = document.getElementById("task_name_input").value,
         newTaskDesc = document.getElementById("task_desc_input").value,
@@ -127,12 +107,12 @@ function getNewTaskData(project){
 /* Code to display a new task addition (Display only!) */
 function populateTask(taskName){
     myNameSpace.taskCount += 1;
-    console.log(taskName)
     firebaseRef.child(`Tasks/${taskName}`)
     .once('value').then(function(snapshot) {
         const name = snapshot.child('TaskName').val(),
-                startDate = snapshot.child('StartDate').val(),
-                endDate = snapshot.child('EndDate').val()
+              startDate = snapshot.child('StartDate').val(),
+              endDate = snapshot.child('EndDate').val(),
+              project = snapshot.child('Project').val()
 
         document.getElementById("task_heading").innerHTML = name;
         document.getElementById("task_start_date").innerHTML = startDate;
@@ -146,7 +126,9 @@ function populateTask(taskName){
 
         var clone = template.cloneNode(true);
         clone.removeAttribute("style");
-        clone.id = name
+        clone.id = "task_" + myNameSpace.taskCount
+        clone.setAttribute("data-taskName", taskName)
+        clone.setAttribute("data-projectName", project)
         tasksCardBody.append(clone);
     })
 }
@@ -155,9 +137,12 @@ function populateTask(taskName){
 function deleteTask(index){
     event.stopPropagation();       // Check if there is a better way to make an element clickable within a clickable div
     var task = document.getElementById("task_" + index);
-    tasksCardBody.removeChild(task);
 
     /* Delete from backend */
+    firebaseRef.child(`Tasks/${task.getAttribute("data-taskName")}`).remove()
+    firebaseRef.child(`Projects/${task.getAttribute("data-projectName")}/Tasks/${task.getAttribute("data-taskName")}`).remove()
+
+    tasksCardBody.removeChild(task);
 }
 
 

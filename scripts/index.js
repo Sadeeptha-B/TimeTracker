@@ -14,8 +14,8 @@ firebase.auth().onAuthStateChanged(function(user) {
 			try { updateTaskPage() } catch(err) { ; }
 
 			// Add all the projects of the user to the home page
-			addProjectsToHomePage(username)
-			populateAll(localStorage.getItem("projectName"));
+			populateProjects(username)
+			populateTasks(localStorage.getItem("projectName"));
 		})
 		// Event listener is then set up to see if any projects are trying to be accessed
 		// If yes, alter projectpage.html to suit the called project's information
@@ -23,28 +23,27 @@ firebase.auth().onAuthStateChanged(function(user) {
 			const projects = document.getElementsByClassName("dash_project"),
 				  tasks = document.getElementById("task_card_body")
 			
-			if (projects != null) {
+			// SetTimeouts are placed as need to give time to load projects/tasks
+			if (projects) {
 				setTimeout(function () {
 					Array.from(projects).forEach(project => addProjectsEventListener(project))
 				}, 1000)
 			}
 				
-			if (tasks != null) {
+			if (tasks) {
 				setTimeout(function() {
 					Array.from(tasks.getElementsByClassName("task")).forEach(task => addTasksEventListener(task))
 				}, 1000)
 			}
 		})
-		console.log(localStorage.getItem("projectName"))
-		console.log(localStorage.getItem("description"))
-		console.log(localStorage.getItem("members"))
-		console.log(localStorage.getItem("taskName"))
-		console.log(localStorage.getItem("taskDescription"))
 	}
 	else {
 	  // No user is signed in.
 	}
   });
+
+// FUNCTION TO ALTER THE PAGE BASED ON THE CURRENT USER LOGGED IN
+// ======================================================================
 
 function updatePage(username, role) {
 	const welcomeText = document.getElementById("welcome_text"),
@@ -55,12 +54,12 @@ function updatePage(username, role) {
 		  editDescriptionButton = document.getElementById("edit_desc")
 
 	// Upadate username at the top of the screen depending on user
-	if (welcomeText != null) {
+	if (welcomeText) {
 		welcomeText.innerHTML = "Welcome, " + username
 	}
 
 	// Remove the add and assign task button for teachers but show for students
-	if (addTaskButton != null && assignTaskButton != null) {
+	if (addTaskButton && assignTaskButton) {
 		if (role === 'Teacher') {
 			addTaskButton.style.display = "none"
 			assignTaskButton.style.display = "none"
@@ -72,7 +71,7 @@ function updatePage(username, role) {
 	}
 
 	// Remove time input button for teachers but show for students
-	if (timeInputButton != null) {
+	if (timeInputButton) {
 		if (role === 'Teacher') {
 			timeInputButton.style.display = "none"
 		}
@@ -82,7 +81,7 @@ function updatePage(username, role) {
 	}
 
 	// Remove add member button for students but show for teachers
-	if (addMemberButton != null && editDescriptionButton != null) {
+	if (addMemberButton && editDescriptionButton) {
 		if (role === 'Teacher') {
 			addMemberButton.style.display = "block"
 			editDescriptionButton.style.display = "block"
@@ -93,6 +92,9 @@ function updatePage(username, role) {
 		}
 	}
 }
+
+// FUNCTIONS TO ADD EVENT LISTENERS TO ALL THE PROJECT/TASK ELEMENTS
+// ======================================================================
 
 function addProjectsEventListener(project){
 	project.addEventListener("click", function(){
@@ -112,7 +114,7 @@ function addProjectsEventListener(project){
 
 function addTasksEventListener(task){
 	task.addEventListener("click", function(){
-		firebaseRef.child(`Tasks/${task.id}`)
+		firebaseRef.child(`Tasks/${task.data}`)
 		.once('value').then(function(snapshot) {
 			const taskName = snapshot.child('TaskName').val(),
 				  taskDescription = snapshot.child('Description').val(),
@@ -141,6 +143,10 @@ function addTasksEventListener(task){
 	});
 }
 
+
+// FUNCTIONS TO UPDATE PAGES BASED ON THE CURRENT TASK/PROJECT SELECTED
+// ======================================================================
+
 function updateProjectPage() {
 	const projectField = document.getElementById("project_name"),
 		  descriptionField = document.getElementById("description")
@@ -161,6 +167,84 @@ function addMembers(member) {
 	newDiv.className = "member"
 	newDiv.textContent = member[1].Username
 }
+
+function updateTaskPage() {
+	const taskField = document.getElementById("taskName"),
+		  descriptionField = document.getElementById("description")
+
+	// Update the fields with project information
+	taskField.textContent = localStorage.getItem("taskName")
+	descriptionField.textContent = localStorage.getItem("taskDescription")
+}
+
+// FUNCTIONS TO POPULATE THE PAGE WITH PROJECTS/TASKS BASED ON USER/PROJECT RESPECTIVELY
+// ======================================================================
+
+function populateProjects(username) {
+    firebaseRef.child(`Users/${username}`)
+	.once('value').then(function(snapshot) {
+		const projects = snapshot.child('Projects').val()
+		Object.entries(projects).forEach(project => {addProject(project)})
+	})
+}
+
+function addProject(project) {
+	firebaseRef.child(`Projects/${project[1].ProjectName}`).once("value").then(function(snapshot) {
+		const projectName = snapshot.child('ProjectName').val(),
+			  startDate = snapshot.child('StartDate').val(),
+			  endDate = snapshot.child('EndDate').val(),
+			  teacher = snapshot.child('TeacherInCharge').val(),
+
+			  dashboard = document.getElementById("dash_container"),
+			  newDiv = document.createElement("div"),
+			  newH2 = document.createElement("h2"),
+			  newP = document.createElement("p")
+			  imgEdit = document.createElement("input")
+			  imgDelete = document.createElement("delete")
+			  footerDiv = document.createElement("div")
+
+
+		dashboard.appendChild(newDiv)
+		dashboard.appendChild(footerDiv)
+		newDiv.appendChild(newH2)
+		newDiv.appendChild(newP)
+		// footerDiv.appendChild(imgEdit)
+		// footerDiv.appendChild(imgDelete)
+
+		newDiv.className = "dash_project"
+		newDiv.id = `${projectName}`
+		newH2.className = "dash_project_head"
+		newH2.textContent = project[0]
+
+		newP.className = "project_summary"
+		newP.textContent = `Lecturer: ${teacher} | Start: ${startDate} | End: ${endDate}`
+		
+		/* Not working
+		footerDiv.className = "action_pane"
+		imgEdit.type="image"
+		imgEdit.src="../imgs/edit-16.png"
+		imgEdit.id="edit_project"
+		imgEdit.class="std_component"
+
+		imgEdit.type="image"
+		imgDelete.src="../imgs/delete-16.png"
+		imgDelete.id="edit_project"
+		imgDelete.class="std_component"
+		*/
+	})
+}
+
+function populateTasks(projectName){
+    firebaseRef.child(`Projects/${projectName}`)
+    .once('value').then(function(snapshot) {
+        const tasks = snapshot.child('Tasks').val()
+        Object.entries(tasks).map(task => populateTask(task[1].TaskName))
+    })
+}
+
+
+// ONCLICK FUNCTIONS
+// ======================================================================
 
 async function createProject(){
     var projectName = document.getElementById("ProjectName").value,
@@ -216,58 +300,4 @@ async function createProject(){
     window.alert("Project Created!")
     // Bring the user to the home page after successful sign up
     window.location.href = "../html/home-teacherview.html";
-}
-
-function addProjectsToHomePage(username) {
-    firebaseRef.child(`Users/${username}`)
-	.once('value').then(function(snapshot) {
-		const projects = snapshot.child('Projects').val()
-		Object.entries(projects).forEach(project => {addProject(project)})
-	})
-}
-
-function addProject(project) {
-	firebaseRef.child(`Projects/${project[1].ProjectName}`).once("value").then(function(snapshot) {
-		const projectName = snapshot.child('ProjectName').val(),
-			  startDate = snapshot.child('StartDate').val(),
-			  endDate = snapshot.child('EndDate').val(),
-			  teacher = snapshot.child('TeacherInCharge').val(),
-
-			  dashboard = document.getElementById("dash_container"),
-			  newDiv = document.createElement("div"),
-			  newH2 = document.createElement("h2"),
-			  newP = document.createElement("p")
-			  imgEdit = document.createElement("input")
-			  imgDelete = document.createElement("delete")
-			  footerDiv = document.createElement("div")
-
-
-		dashboard.appendChild(newDiv)
-		dashboard.appendChild(footerDiv)
-		newDiv.appendChild(newH2)
-		newDiv.appendChild(newP)
-		// footerDiv.appendChild(imgEdit)
-		// footerDiv.appendChild(imgDelete)
-
-		newDiv.className = "dash_project"
-		newDiv.id = `${projectName}`
-		newH2.className = "dash_project_head"
-		newH2.textContent = project[0]
-
-		newP.className = "project_summary"
-		newP.textContent = `Lecturer: ${teacher} | Start: ${startDate} | End: ${endDate}`
-		
-		/* Not working
-		footerDiv.className = "action_pane"
-		imgEdit.type="image"
-		imgEdit.src="../imgs/edit-16.png"
-		imgEdit.id="edit_project"
-		imgEdit.class="std_component"
-
-		imgEdit.type="image"
-		imgDelete.src="../imgs/delete-16.png"
-		imgDelete.id="edit_project"
-		imgDelete.class="std_component"
-		*/
-	})
 }
