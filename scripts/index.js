@@ -246,6 +246,14 @@ function populateTasks(projectName){
 // ONCLICK FUNCTIONS
 // ======================================================================
 
+function laterThan(startVal, endVal){
+	return endVal > startVal;
+}
+
+function sameTimeAs(startVal, endVal){
+	return endVal == startVal;
+}
+
 async function createProject(){
     var projectName = document.getElementById("ProjectName").value,
         description = document.getElementById("Description").value,
@@ -268,10 +276,39 @@ async function createProject(){
 
 	var valid = true;
 
+	/* 
+	Initially we have valid = true; we change this value according to the criteria below:
+	if startYear > endYear: not valid
+	else:
+		if startYear == endYear:
+			if startMonth > endMonth: not valid
+			else: 
+				if startMonth == endMonth:
+					if startDay > endDay: not valid
+					else: valid
+				else if startMonth < endMonth: valid
+		if startYear < endYear: valid
+	*/
+	if (startYear > endYear){
+		valid = false;
+	}
+	else if (startYear == endYear){
+		if (startMonth > endMonth){
+			valid = false;
+		}
+		else if (startMonth == endMonth){
+			if (startDay > endDay){ 
+				valid = false;
+			}
+		}
+	}
+
+	/*
     if (valid = compare(startYear, endYear)){
         if (valid = compare(startMonth,endMonth))
             valid = compare(startDay, endDay);
-    }
+	}
+	*/
 
     if (!valid){
         return;

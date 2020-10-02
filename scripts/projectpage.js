@@ -69,10 +69,39 @@ function getNewTaskData(project){
 
     var valid = true;
 
-    if (valid = compare(taskStartYear, taskEndYear)){
-        if (valid = compare(taskStartMonth,taskEndMonth))
-            valid = compare(taskStartDate, taskEndDate);
-    }
+	/* 
+	Initially we have valid = true; we change this value according to the criteria below:
+	if startYear > endYear: not valid
+	else:
+		if startYear == endYear:
+			if startMonth > endMonth: not valid
+			else: 
+				if startMonth == endMonth:
+					if startDay > endDay: not valid
+					else: valid
+				else if startMonth < endMonth: valid
+		if startYear < endYear: valid
+	*/
+	if (startYear > endYear){
+		valid = false;
+	}
+	else if (startYear == endYear){
+		if (startMonth > endMonth){
+			valid = false;
+		}
+		else if (startMonth == endMonth){
+			if (startDay > endDay){ 
+				valid = false;
+			}
+		}
+	}
+
+	/*
+    if (valid = compare(startYear, endYear)){
+        if (valid = compare(startMonth,endMonth))
+            valid = compare(startDay, endDay);
+	}
+	*/
 
     if (!valid){
         return;
