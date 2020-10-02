@@ -36,7 +36,7 @@ window.myNameSpace ={
 document.getElementById("create_mode_btn").addEventListener('click',function(){
     var taskData = getNewTaskData(localStorage.getItem("projectName"));  // Get data, validate, and store in backend
     if (taskData != undefined){
-        populateTask(taskData);  // Display data
+        populateTask(taskData.TaskName);  // Display data
         closeModal(updateTaskModal);
     }
 });
@@ -45,11 +45,10 @@ document.getElementById("edit_mode_btn").addEventListener('click', function(){
     var taskData = getNewTaskData(localStorage.getItem("projectName"));  // Get data, validate, and store in backend
     if (taskData != undefined){
         deleteTask(myNameSpace.editId);
-        populateTask(taskData);  // Display data
+        populateTask(taskData.TaskName);  // Display data
         closeModal(updateTaskModal);
     }
 })
-
 
 
 /* Load all data required data from backend. Called upon page load */
@@ -57,6 +56,7 @@ function populateAll(projectName){
     firebaseRef.child(`Projects/${projectName}`)
     .once('value').then(function(snapshot) {
         const tasks = snapshot.child('Tasks').val()
+        console.log(Object.entries(tasks))
         Object.entries(tasks).map(task => populateTask(task[1].TaskName))
     })
 }
@@ -108,7 +108,8 @@ function getNewTaskData(project){
         taskObject = {TaskName: newTaskName,
                       Description: newTaskDesc,
                       StartDate: startDate,
-                      EndDate: endDate}
+                      EndDate: endDate,
+                      Project: project}
 
     // Store the task information under Tasks
     firebaseRef.child(`Tasks/${newTaskName}`).set(taskObject)
@@ -126,6 +127,7 @@ function getNewTaskData(project){
 /* Code to display a new task addition (Display only!) */
 function populateTask(taskName){
     myNameSpace.taskCount += 1;
+    console.log(taskName)
     firebaseRef.child(`Tasks/${taskName}`)
     .once('value').then(function(snapshot) {
         const name = snapshot.child('TaskName').val(),

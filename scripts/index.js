@@ -119,22 +119,23 @@ function addTasksEventListener(task){
 				  projectName = document.getElementById("project_name").textContent,
 				  projectDescription = document.getElementById("description").textContent,
 				  members = document.getElementById("member_card_content").getElementsByClassName("member")
-
+			
+			// To store the names of the members in the project in the form of an objecy
 			var membersObject = {}
-			// I need to figure out how to put members in the localStorage
-			// Maybe try to loop through all the members (getElementsByClassName) and get the textContent
-			// Then somehow make a JSON/object with this format
-			// {"hban0006":{"Username":"hban0006"},"josephloo":{"Username":"josephloo"}}
+
 			localStorage.setItem("projectName", projectName)
 			localStorage.setItem("description", projectDescription)
 			localStorage.setItem("taskName", taskName)
 			localStorage.setItem("taskDescription", taskDescription)
+			
+			// Get the name of each member and store in the object
 			Array.from(members).forEach(member => {
 				const name = member.textContent
 				membersObject[name] = {"Username": name}
 			})
-			localStorage.setItem("member", JSON.stringify(membersObject))
-
+			localStorage.setItem("members", JSON.stringify(membersObject))
+		}).then(function() {
+			// Move to the task page once data has been stored
 			window.location.href = "../html/taskpage.html"
 		})
 	});
@@ -181,6 +182,17 @@ async function createProject(){
         // Putting into DD/MM/YYYY format
         endDate = endDay + "/" + endMonth + "/" + endYear
 
+	var valid = true;
+
+    if (valid = compare(startYear, endYear)){
+        if (valid = compare(startMonth,endMonth))
+            valid = compare(startDay, endDay);
+    }
+
+    if (!valid){
+        return;
+	}
+	
     if (description.length == 0){
         description = "N/A";
 	}
