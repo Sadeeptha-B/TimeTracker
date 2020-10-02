@@ -117,8 +117,10 @@ function addTasksEventListener(task){
 			const taskName = snapshot.child('TaskName').val(),
 				  taskDescription = snapshot.child('Description').val(),
 				  projectName = document.getElementById("project_name").textContent,
-				  projectDescription = document.getElementById("description").textContent
-					
+				  projectDescription = document.getElementById("description").textContent,
+				  members = document.getElementById("member_card_content").getElementsByClassName("member")
+
+			var membersObject = {}
 			// I need to figure out how to put members in the localStorage
 			// Maybe try to loop through all the members (getElementsByClassName) and get the textContent
 			// Then somehow make a JSON/object with this format
@@ -127,7 +129,12 @@ function addTasksEventListener(task){
 			localStorage.setItem("description", projectDescription)
 			localStorage.setItem("taskName", taskName)
 			localStorage.setItem("taskDescription", taskDescription)
-			localStorage.setItem()
+			Array.from(members).forEach(member => {
+				const name = member.textContent
+				membersObject[name] = {"Username": name}
+			})
+			localStorage.setItem("member", JSON.stringify(membersObject))
+
 			window.location.href = "../html/taskpage.html"
 		})
 	});
@@ -150,6 +157,7 @@ function addMembers(member) {
 
 	member_field.appendChild(newDiv)
 	newDiv.id = member[1].Username
+	newDiv.className = "member"
 	newDiv.textContent = member[1].Username
 }
 
