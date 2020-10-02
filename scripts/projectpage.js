@@ -36,7 +36,7 @@ window.myNameSpace ={
 document.getElementById("create_mode_btn").addEventListener('click',function(){
     var taskData = getNewTaskData(localStorage.getItem("projectName"));  // Get data, validate, and store in backend
     if (taskData != undefined){
-        populateTask(taskData);  // Display data
+        populateTask(taskData.TaskName);  // Display data
         closeModal(updateTaskModal);
     }
 });
@@ -45,32 +45,10 @@ document.getElementById("edit_mode_btn").addEventListener('click', function(){
     var taskData = getNewTaskData(localStorage.getItem("projectName"));  // Get data, validate, and store in backend
     if (taskData != undefined){
         deleteTask(myNameSpace.editId);
-        populateTask(taskData);  // Display data
+        populateTask(taskData.TaskName);  // Display data
         closeModal(updateTaskModal);
     }
 })
-
-
-
-
-/* Load all data required data from backend. Called upon page load */
-function populateAll(projectName){
-    firebaseRef.child(`Projects/${projectName}`)
-    .once('value').then(function(snapshot) {
-        const tasks = snapshot.child('Tasks').val()
-        Object.entries(tasks).map(task => populateTask(task[1].TaskName))
-    })
-}
-
-function updateTaskPage() {
-	const taskField = document.getElementById("taskName"),
-		  descriptionField = document.getElementById("description")
-
-	// Update the fields with project information
-	taskField.textContent = localStorage.getItem("taskName")
-	descriptionField.textContent = localStorage.getItem("taskDescription")
-}
-
 
 function getNewTaskData(project){
     var newTaskName = document.getElementById("task_name_input").value,
@@ -139,7 +117,8 @@ function getNewTaskData(project){
         taskObject = {TaskName: newTaskName,
                       Description: newTaskDesc,
                       StartDate: startDate,
-                      EndDate: endDate}
+                      EndDate: endDate,
+                      Project: project}
 
     // Store the task information under Tasks
     firebaseRef.child(`Tasks/${newTaskName}`).set(taskObject)
@@ -162,12 +141,19 @@ function populateTask(taskName){
         const name = snapshot.child('TaskName').val(),
               startDate = snapshot.child('StartDate').val(),
               endDate = snapshot.child('EndDate').val(),
+              assignedTo = snapshot.child('AssignedTo').val(),
               project = snapshot.child('Project').val()
 
         document.getElementById("task_heading").innerHTML = name;
         document.getElementById("task_start_date").innerHTML = startDate;
         document.getElementById("task_end_date").innerHTML = endDate;
-
+        if (assignedTo) {
+            document.getElementById("assignee").innerHTML = assignedTo;
+        }
+        else {
+            document.getElementById("assignee").innerHTML = "No user is assigned to this task yet";
+        }
+        
         var deleteButton = document.getElementById("delete_task");
         var editButton = document.getElementById("edit_task");
 
@@ -210,30 +196,58 @@ To do all tasks related to clicks except for the opening and closing of modals.
 
 */
 
-    //Edit description
-    document.getElementById("edit_desc").addEventListener('click', function(){
-        editNameField.setAttribute("placeholder", projectName.innerHTML);
-        editDescField.setAttribute("placeholder", description.innerHTML);
-    });
-    //ZS: also please save the name and desc in the DB for retrieving later
+//Edit description
+document.getElementById("edit_desc").addEventListener('click', function(){
+    editNameField.setAttribute("placeholder", projectName.innerHTML);
+    editDescField.setAttribute("placeholder", description.innerHTML);
+});
+//ZS: also please save the name and desc in the DB for retrieving later
 
 
-    //Save new Project Name, Description
-    document.getElementById("save_desc").addEventListener("click",function(){
-        var newName = editNameField.value.trim();
-        var newDesc = editDescField.value.trim();
+//Save new Project Name, Description
+document.getElementById("save_desc").addEventListener("click",function(){
+    var newName = editNameField.value.trim();
+    var newDesc = editDescField.value.trim();
 
-    // Include code to modify project name and project description on backend
+// Include code to modify project name and project description on backend
 
-    if (newName.length != 0)
-        projectName.innerText = newName;
+if (newName.length != 0)
+    projectName.innerText = newName;
 
-    if (newDesc.length != 0)
-        description.innerText = newDesc;
+if (newDesc.length != 0)
+    description.innerText = newDesc;
 
-    closeModal(editDescModal);
-    });
+closeModal(editDescModal);
+});
 
+document.getElementById("assign_task_button").addEventListener('click', function() {
+    const currentProject = localStorage.getItem('projectName')
+    
+    firebaseRef.child(`Projects/${currentProject}`)
+    .once('value').then(function(snapshot) {
+        const tasks = snapshot.child('Tasks').val(),
+              selectField = document.getElementById('task_select')
+              
+
+        Object.entries(tasks).forEach(task => {
+            const newOption = document.createElement('option')
+            selectField.appendChild(newOption)
+
+            newOption.textContent = task[1].TaskName
+            newOption.value = task[1].TaskName
+        })
+    })
+})
+
+document.getElementById("assign_button").addEventListener('click', async function() {
+    const task = document.getElementById('task_select').value
+    var user = await firebase.auth().currentUser
+
+    firebaseRef.child(`Tasks/${task}`).update({AssignedTo: getUsername(user.email)})
+    closeModal(assign_task_overlay)
+    window.location.reload()
+})
+    
 
 /* Chart
 =========================================== */
@@ -345,6 +359,13 @@ function compare(shouldBeSmaller, shouldBeLarger){
     return valid;
 }
 
+function laterThan(startVal, endVal){
+	return endVal > startVal;
+}
+
+function sameTimeAs(startVal, endVal){
+	return endVal == startVal;
+}
 
 // /* Searches */
 const searchBar = document.getElementById("search_student");
