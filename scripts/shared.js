@@ -63,6 +63,25 @@ function searchMultiple(searchBar, objArray){
 }
 
 
+/* Populate Element */
+
+function populateElement(templateElement, parent){
+    var clone = templateElement.cloneNode(true);
+    clone
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
 /* Modal Controls */
 function openModal(modalElem, isTextModal, ...editableElems){
     if (isTextModal == true){

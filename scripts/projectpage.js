@@ -114,7 +114,7 @@ function getNewTaskData(project){
         return;
     }
 
-    if (newTaskDesc.length == 0){
+    if (newTaskDesc.trim().length == 0){
         newTaskDesc = "N/A";
     }
 

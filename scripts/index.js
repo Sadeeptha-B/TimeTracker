@@ -39,6 +39,7 @@ firebase.auth().onAuthStateChanged(function(user) {
 		console.log(localStorage.getItem("members"))
 	}
 	else {
+		window.location.href = "../html/login.html"
 	  // No user is signed in.
 	}
   });
@@ -238,8 +239,8 @@ function addProject(project) {
 function populateTasks(projectName){
     firebaseRef.child(`Projects/${projectName}`)
     .once('value').then(function(snapshot) {
-        const tasks = snapshot.child('Tasks').val()
-        Object.entries(tasks).map(task => populateTask(task[1].TaskName))
+		const tasks = snapshot.child('Tasks').val();
+        Object.entries(tasks).map(task => populateTask(task[1].TaskName));
     })
 }
 
