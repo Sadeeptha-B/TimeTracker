@@ -73,8 +73,12 @@ function getNewTaskData(project){
     }
 
     var dateValid = true;
+    // We can use JS Date objects to verify date and calculate time.
+    var start = new Date(taskStartYear, taskStartMonth-1, taskStartDate);
+    var end = new Date(taskEndYear, taskEndMonth-1, taskEndDate);
 
-	/* 
+    dateValid = end.getTime() > start.getTime();
+	/* REDUNDANT SOON: using JS Date objects to compare date/time and calculate time
 	Initially we have valid = true; we change this value according to the criteria below:
 	if taskStartYear > taskEndYear: not valid
 	else:
@@ -86,7 +90,7 @@ function getNewTaskData(project){
 					else: valid
 				else if taskStartMonth < taskEndMonth: valid
 		if taskStartYear < taskEndYear: valid
-	*/
+    *//*
 	if (taskStartYear > taskEndYear){
         dateValid = false;
 	}
