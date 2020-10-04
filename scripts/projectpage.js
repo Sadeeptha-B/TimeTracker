@@ -96,9 +96,10 @@ function getNewTaskData(project){
             
 		}
 		else if (taskStartMonth == taskEndMonth){
-			if (taskStartDate > taskEndDate){ 
+			if (taskStartDate >= taskEndDate){ 
 				dateValid = false;
-			}
+            }
+            // replaced > with >= - maybe tasks are not allowed to have the same start and end date?
 		}
 	}
 
@@ -110,7 +111,7 @@ function getNewTaskData(project){
 	*/
 
     if (!dateValid){
-        displayError("Task cannot end before it starts",commonTaskError);
+        displayError("Task cannot end before it starts, or end on the same day as the start date",commonTaskError);
         return;
     }
 

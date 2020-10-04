@@ -268,7 +268,8 @@ async function createProject(){
         // Putting into DD/MM/YYYY format
         endDate = endDay + "/" + endMonth + "/" + endYear
 
-	var valid = true;
+	var commonProjError = document.getElementById("create_project_error");
+	var dateValid = true;
 
     /* 
 	Initially we have valid = true; we change this value according to the criteria below:
@@ -284,15 +285,15 @@ async function createProject(){
 		if startYear < endYear: valid
 	*/
 	if (startYear > endYear){
-		valid = false;
+		dateValid = false;
 	}
 	else if (startYear == endYear){
 		if (startMonth > endMonth){
-			valid = false;
+			dateValid = false;
 		}
 		else if (startMonth == endMonth){
-			if (startDay > endDay){ 
-				valid = false;
+			if (startDay >= endDay){ 
+				dateValid = false;
 			}
 		}
 	}
@@ -304,9 +305,9 @@ async function createProject(){
 	}
 	*/
 
-
-    if (!valid){
-        return;
+    if (!dateValid){
+		displayError("Project cannot end before it starts, or end on the same day as the start date",commonProjError);
+		return;
 	}
 	
     if (description.length == 0){
