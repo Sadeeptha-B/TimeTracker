@@ -10,12 +10,12 @@ document.getElementById("save_time_log").addEventListener('click', function(){
 
 
 function getDataforPopulation(){
-    var startDate = document.getElementById("start_day");
-    var startMonth = document.getElementById("start_month");
-    var startYear = document.getElementById("start_year");
-    var startHr = document.getElementById("start_hr");
-    var startMin = document.getElementById("start_min");
-    var startPeriod = document.getElementById("start_period")
+    var startDate = document.getElementById("start_day").value;
+    var startMonth = document.getElementById("start_month").value;
+    var startYear = document.getElementById("start_year").value;
+    var startHr = document.getElementById("start_hr").value;
+    var startMin = document.getElementById("start_min").value;
+    var startPeriod = document.getElementById("start_period").value;
     var start;
     if (startHr == 12) { // 12am
         start = new Date(startYear, startMonth-1, startDate, startPeriod, startMin)
@@ -24,12 +24,12 @@ function getDataforPopulation(){
         start = new Date(startYear, startMonth-1, startDate, startHr+startPeriod, startMin)
     }
 
-    var endDate = document.getElementById("end_day"); 
-    var endMonth = document.getElementById("end_month");
-    var endYear = document.getElementById('end_year');
-    var endHr = document.getElementById('end_hr');
-    var endMin = document.getElementById('end_min');
-    var endPeriod = document.getElementById('end_period');
+    var endDate = document.getElementById("end_day").value; 
+    var endMonth = document.getElementById("end_month").value;
+    var endYear = document.getElementById('end_year').value;
+    var endHr = document.getElementById('end_hr').value;
+    var endMin = document.getElementById('end_min').value;
+    var endPeriod = document.getElementById('end_period').value;
     var end;
     if (endHr == 12) { // 12am
         end = new Date(endYear, endMonth-1, endDate, endPeriod, endMin)
@@ -37,6 +37,7 @@ function getDataforPopulation(){
     else{
         end = new Date(endYear, endMonth-1, endDate, endHr+endPeriod, endMin)
     }
+    // We need the values from these elements
 
     var workTime = end.getTime() - start.getTime();
     var dateValid = end.getTime() > start.getTime();
@@ -47,9 +48,9 @@ function getDataforPopulation(){
     }
 
     if (dateValid){
-        var workHrs = ((time/1000)/60).toPrecision(3);
-        print(workHrs);
+        var workHrs = ((time/1000)/60).toFixed(2);
         // toPrecision(x) rounds value to x-1 decimal places
+        // can use parseInt() to get integer value;
     }
 
     /* REDUNDANT SOON: using JS Date objects to compare date/time and calculate time
