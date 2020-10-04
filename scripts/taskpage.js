@@ -24,9 +24,30 @@ function getDataforPopulation(){
     var endMin = document.getElementById('end_min');
     var endPeriod = document.getElementById('end_period');
 
+    var dateValid = true;
 
-    
-
+    // date & time validation
+	if (startYear > endYear){
+        dateValid = false;
+	}
+	else if (startYear == endYear){
+		if (startMonth > endMonth){
+            dateValid = false;
+            
+		}
+		else if (startMonth == endMonth){
+			if (startDate > endDate){ 
+				dateValid = false;
+            }
+            // tasks can be done within the same day
+		}
+    }
+    // if we start at pm and end at am, we must start and end on different days, but endDate >= startDate
+    if (startPeriod < endPeriod){
+        if (startYear == endYear && startMonth == endMonth && startDate == endDate){
+            dateValid = false;
+        }
+    }
 
 
 }
