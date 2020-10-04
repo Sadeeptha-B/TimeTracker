@@ -7,7 +7,7 @@ Modal open close, after saving, editing, is done in this script.
     var projectName = document.getElementById("project_name");
     var description = document.getElementById("description");
 
-    var template = document.getElementById("template");
+    var taskTemplate = document.getElementById("task_template");
     var tasksCardBody = document.getElementById("task_card_body");
 
 /* Modals elements */
@@ -24,6 +24,8 @@ Modal open close, after saving, editing, is done in this script.
   // New task name, description
     var newTaskName = document.getElementById("task_name_input");
     var newTaskDesc = document.getElementById("task_desc_input");
+    var taskNameError = document.getElementById("task_name_error");
+    var commonTaskError = document.getElementById("update_task_error");
 
 
 /* Important : Do not delete. */
@@ -34,6 +36,7 @@ window.myNameSpace ={
 
 // Code for the addition of a individual task
 document.getElementById("create_mode_btn").addEventListener('click',function(){
+    clearErrors(taskNameError, commonTaskError);
     var taskData = getNewTaskData(localStorage.getItem("projectName"));  // Get data, validate, and store in backend
     if (taskData != undefined){
         populateTask(taskData.TaskName);  // Display data
@@ -42,6 +45,8 @@ document.getElementById("create_mode_btn").addEventListener('click',function(){
 });
 //Code for editing a task
 document.getElementById("edit_mode_btn").addEventListener('click', function(){
+    clearErrors(taskNameError, commonTaskError);
+
     var taskData = getNewTaskData(localStorage.getItem("projectName"));  // Get data, validate, and store in backend
     if (taskData != undefined){
         deleteTask(myNameSpace.editId);
@@ -63,11 +68,11 @@ function getNewTaskData(project){
     // Validation Code
     newTaskName = newTaskName.trim();
     if (newTaskName == ""){
-        //error message
+        displayError("Task Name cannot be empty", taskNameError);
         return;
     }
 
-    var valid = true;
+    var dateValid = true;
 
 	/* 
 	Initially we have valid = true; we change this value according to the criteria below:
@@ -83,15 +88,16 @@ function getNewTaskData(project){
 		if taskStartYear < taskEndYear: valid
 	*/
 	if (taskStartYear > taskEndYear){
-		valid = false;
+        dateValid = false;
 	}
 	else if (taskStartYear == taskEndYear){
 		if (taskStartMonth > taskEndMonth){
-			valid = false;
+            dateValid = false;
+            
 		}
 		else if (taskStartMonth == taskEndMonth){
 			if (taskStartDate > taskEndDate){ 
-				valid = false;
+				dateValid = false;
 			}
 		}
 	}
@@ -103,7 +109,8 @@ function getNewTaskData(project){
 	}
 	*/
 
-    if (!valid){
+    if (!dateValid){
+        displayError("Task cannot end before it starts",commonTaskError);
         return;
     }
 
@@ -136,6 +143,8 @@ function getNewTaskData(project){
 /* Code to display a new task addition (Display only!) */
 function populateTask(taskName){
     myNameSpace.taskCount += 1;
+    var taskID = myNameSpace.taskCount;
+
     firebaseRef.child(`Tasks/${taskName}`)
     .once('value').then(function(snapshot) {
         const name = snapshot.child('TaskName').val(),
@@ -147,6 +156,7 @@ function populateTask(taskName){
         document.getElementById("task_heading").innerHTML = name;
         document.getElementById("task_start_date").innerHTML = startDate;
         document.getElementById("task_end_date").innerHTML = endDate;
+        
         if (assignedTo) {
             document.getElementById("assignee").innerHTML = assignedTo;
         }
@@ -157,12 +167,12 @@ function populateTask(taskName){
         var deleteButton = document.getElementById("delete_task");
         var editButton = document.getElementById("edit_task");
 
-        deleteButton.setAttribute("onclick","deleteTask("+myNameSpace.taskCount+")");
-        editButton.setAttribute("onclick", "editTask("+myNameSpace.taskCount+")")
+        deleteButton.setAttribute("onclick","deleteTask("+taskID+")");
+        editButton.setAttribute("onclick", "editTask("+taskID+")")
 
-        var clone = template.cloneNode(true);
+        var clone = taskTemplate.cloneNode(true);
         clone.removeAttribute("style");
-        clone.id = "task_" + myNameSpace.taskCount
+        clone.id = "task_" + taskID
         clone.setAttribute("data-taskName", taskName)
         clone.setAttribute("data-projectName", project)
         tasksCardBody.append(clone);

@@ -101,6 +101,18 @@ function setDisplayNone(elem){
     elem.style.display = "none";
 }
 
+function displayError(errorMsg, errorElement){
+    errorElement.innerText = errorMsg;
+    errorElement.style.display="block";
+}
+
+
+function clearErrors(...errorDivs){
+    for (i=0; i< errorDivs.length; i++){
+        setDisplayNone(errorDivs[i]);
+    }
+}
+
 /* Helper function */
 function indexToBoolean(index){
     var value; 

@@ -34,7 +34,7 @@
         <div class="body">
 
         <div class="body-flex-wrapper">
-           <div id= "description_card" class="header_type_card">
+           <div id= "description_card" class="classic_card header_type_card">
                     <div class="card_header">
                         <h3> Description </h3>
                             <hr class="thin">
@@ -46,11 +46,12 @@
                         <!-- <div class="clr"></div> -->
                     </div>
                     <div id ="description_card_content" class="header_card_content">
-                         <span id= "description"></span>
+                         <span id= "description">
+                         </span>
                     </div>
             </div>
 
-            <div class="header_type_card" id="team_card">
+            <div class="classic_card header_type_card" id="team_card">
                 <div class="card_header">
                     <h3>Team</h3>
                     <hr class="thin">
@@ -62,10 +63,11 @@
                     <div id ="member_card_content" class="header_card_content">
                    </div>
             </div>
-        </div>
+        
+        
 
               <!--Charts-->
-            <div id ="charts" class="centered_card">
+            <div id ="charts" class="classic_card header_type_card">
                     <div class="card_header">
                         <h3 id ="charts_card_heading"> Progress Charts </h3>
                     </div>
@@ -88,7 +90,7 @@
                     </div>
             </div>
 
-            <div id="task_card" class="content_card">
+            <div id="task_card" class="classic_card content_card">
                 <div class="card_header">
                       <h3> Tasks </h3>
                           <hr class="thin">
@@ -99,7 +101,7 @@
                     <button class="button_with_symbol" id="new_task_button" onclick="openConfigurableModal(create_edit_task, true, true, task_name_input, task_desc_input)" style="display:none">+</button>
                     <div class="clr"></div>      <!-- Clearing Float-->
 
-                    <div class="task" id="template" style="display:none">
+                    <div class="task" id="task_template" style="display:none">
                             <div class="dash_project">
                                 <h2 class="dash_project_head" id="task_heading">Task 1</h2>
 
@@ -126,6 +128,7 @@
                 </div>
                 <div class="clr"></div>
             </div>
+     </div>
 
 
 
@@ -160,14 +163,18 @@
 
                     <form class="input_form">
                         <h3> <span id="create_mode_header"> New task</span> <span id="edit_mode_header"> Edit Task </span>  </h3>
-
-                        <label class="field_elements" for="task_name_input">Task Name :</label>
-                        <input id="task_name_input" class="input_field" type="text"><br>
-
+                        
+                        <div class="form_control">
+                            <label class="field_elements" for="task_name_input">Task Name :</label>
+                            <input id="task_name_input" class="input_field" type="text"><br>
+                            <small class="error" id="task_name_error">Error Message</small>
+                        </div>
+                      
                         <label class="field_elements" for="task_desc_input">Description : </label><br>
-                        <textarea id = "task_desc_input" rows="14" cols="120" class="input_field"></textarea>
+                        <textarea id = "task_desc_input" rows="12" cols="120" class="input_field"></textarea>
 
-                        <h3>Start date :</h3>
+                        <div class="date_container">
+                            <h3>Start date :</h3>
                             <!-- ZS: This is the format for now, maybe there will be a better format coming along? -->
                             <input type="number" class="start_day" name="Start Day" id = "task_start_date_input"
                                 min="1" max="31" value="1" required>
@@ -189,8 +196,13 @@
 
                             <input type="number" class="start_year" name="Start Year" id = "task_start_year_input"
                                 min="2020" max="2099" value="2020" required>
-
-                        <h3>End date :</h3>
+                            
+                        </div>
+                        <small class="error" id="task_start_date_error">Error Message</small>
+                        
+                        
+                        <div class="date_container">
+                            <h3>End date :</h3>
                             <input type="number" class="end_day" name="End Day" id = "task_end_date_input"
                                 min="1" max="31" value="1" required>
 
@@ -211,8 +223,16 @@
 
                             <input type="number" class="end_year" name="End Year" id = "task_end_year_input"
                                 min="2020" max="2099" value="2020" required>
-                        </form>
+                        </div>
+                        <small class="error" id="task_end_date_error">Error Message</small>
+                        
+
+                    </form>
                     <div class="modal_footer">
+                        <div class="clr"></div>
+                        <div class="error common_error_div" id="update_task_error"> 
+                            Error <!-- <span>Error</span> -->
+                        </div>
                         <button class="blue_curve_button configurable_container" type="submit"><span id="create_mode_btn"> Add </span> <span id="edit_mode_btn"> Edit </span></button>
                         <div class="clr"></div>
                     </div>
@@ -222,8 +242,8 @@
             <!-- ZS: popup to add student (no button to make it appear for now)
                 this is the version which only adds one student at a time,
                 mainly intended for adding after project is created
-            -->
-            <div class="bg-modal" id="add_student">
+            -->  <!--style="display: flex;"-->
+            <div class="bg-modal" id="add_student" >
                 <div class="modal-content">
                     <div class="close generic_popup_close" onclick="closeModal(add_student)">+</div>
                     <br>
