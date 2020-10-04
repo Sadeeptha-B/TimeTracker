@@ -62,7 +62,7 @@ function updatePage(username, role) {
 	// Remove the add and assign task button for teachers but show for students
 	if (addTaskButton && assignTaskButton) {
 		if (role === 'Teacher') {
-			addTaskButton.style.display = "block"
+			addTaskButton.style.display = "none"
 			assignTaskButton.style.display = "none"
 		}
 		else if (role === 'Student'){
