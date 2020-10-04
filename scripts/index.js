@@ -342,6 +342,11 @@ function addStudentToProject() {
 	firebaseRef.child(`Projects/${projectName}/Members/${newMember}`).set({
 			Username: newMember
 	})
+
+	// Add the projects to the student
+	firebaseRef.child(`Users/${newMember}/Projects/${projectName}`).set({
+		ProjectName: projectName
+	})
 	
 	// This part of the code tries to dynamically place the names of the students as it is added
 	firebaseRef.child(`Projects/${projectName}`)
