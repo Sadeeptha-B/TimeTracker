@@ -72,23 +72,8 @@ function getNewTaskData(project){
         return;
     }
 
-<<<<<<< HEAD
-    var startDateObject ={
-        startDay: taskStartDate,
-        startMonth: taskStartMonth,
-        startYear: taskStartYear
-    }
-
-    var endDateObject ={
-        endDay: taskEndDate,
-        endMonth: taskEndMonth,
-        endYear: taskEndYear
-    }
-
-
-    if (!dateValidation(startDateObject, endDateObject)){
-=======
     var dateValid = true;
+    
     // We can use JS Date objects to verify date and calculate time.
     var start = new Date(taskStartYear, taskStartMonth-1, taskStartDate);
     var end = new Date(taskEndYear, taskEndMonth-1, taskEndDate);
@@ -131,7 +116,6 @@ function getNewTaskData(project){
 	*/
 
     if (!dateValid){
->>>>>>> 095bf9ecf513c2dbef0500798ff77adaf998e346
         displayError("Task cannot end before it starts, or end on the same day as the start date",commonTaskError);
         return;
     }
@@ -140,14 +124,12 @@ function getNewTaskData(project){
         newTaskDesc = "N/A";
     }
 
-    // Putting task start and end date into DD/MM/YYYY format
-    var startEndDate = dateMonthYearFormat(startDateObject, endDateObject);
 
    
     var taskObject = {TaskName: newTaskName,
                       Description: newTaskDesc,
-                      StartDate: startEndDate[0],
-                      EndDate: startEndDate[1],
+                      StartDate: start,
+                      EndDate: end,
                       Project: project}
 
     // Store the task information under Tasks
