@@ -73,6 +73,7 @@ function getNewTaskData(project){
     }
 
     var start = new Date(taskStartYear, taskStartMonth-1, taskStartDate);
+    var startDate = taskStartDate + "/" + taskStartMonth + "/" + taskStartYear;
     var end = new Date(taskEndYear, taskEndMonth-1, taskEndDate);
     var dateValid = end.getTime() > start.getTime();
 
