@@ -72,45 +72,20 @@ function getNewTaskData(project){
         return;
     }
 
-    var dateValid = true;
+    var startDateObject ={
+        startDay: taskStartDate,
+        startMonth: taskStartMonth,
+        startYear: taskStartYear
+    }
 
-	/* 
-	Initially we have valid = true; we change this value according to the criteria below:
-	if taskStartYear > taskEndYear: not valid
-	else:
-		if taskStartYear == taskEndYear:
-			if taskStartMonth > taskEndMonth: not valid
-			else: 
-				if taskStartMonth == taskEndMonth:
-					if taskStartDate > taskEndDate: not valid
-					else: valid
-				else if taskStartMonth < taskEndMonth: valid
-		if taskStartYear < taskEndYear: valid
-	*/
-	if (taskStartYear > taskEndYear){
-        dateValid = false;
-	}
-	else if (taskStartYear == taskEndYear){
-		if (taskStartMonth > taskEndMonth){
-            dateValid = false;
-            
-		}
-		else if (taskStartMonth == taskEndMonth){
-			if (taskStartDate >= taskEndDate){ 
-				dateValid = false;
-            }
-            // replaced > with >= - maybe tasks are not allowed to have the same start and end date?
-		}
-	}
+    var endDateObject ={
+        endDay: taskEndDate,
+        endMonth: taskEndMonth,
+        endYear: taskEndYear
+    }
 
-	/*
-    if (valid = compare(startYear, endYear)){
-        if (valid = compare(startMonth,endMonth))
-            valid = compare(startDay, endDay);
-	}
-	*/
 
-    if (!dateValid){
+    if (!dateValidation(startDateObject, endDateObject)){
         displayError("Task cannot end before it starts, or end on the same day as the start date",commonTaskError);
         return;
     }
@@ -120,12 +95,13 @@ function getNewTaskData(project){
     }
 
     // Putting task start and end date into DD/MM/YYYY format
-    var startDate = taskStartDate + "/" + taskStartMonth + "/" + taskStartYear,
-        endDate = taskEndDate + "/" + taskEndMonth + "/" + taskEndYear,
-        taskObject = {TaskName: newTaskName,
+    var startEndDate = dateMonthYearFormat(startDateObject, endDateObject);
+
+   
+    var taskObject = {TaskName: newTaskName,
                       Description: newTaskDesc,
-                      StartDate: startDate,
-                      EndDate: endDate,
+                      StartDate: startEndDate[0],
+                      EndDate: startEndDate[1],
                       Project: project}
 
     // Store the task information under Tasks

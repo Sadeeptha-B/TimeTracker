@@ -278,20 +278,29 @@ IMPORTANT: Do not add element after modal-content div, within bg-modal, without 
     /* transform: translateY(3rem); */
     padding: 2rem;
     box-shadow: 0 1.4rem 3rem #908f8f33; 
-    /* border: 1px solid #9f9f9f33; */
     border-radius: 1rem;
     text-align: left;
     height: auto;
     position: relative;
     margin-top: 2rem;
     border:1px solid #D3D3D3;
-    
 }
 
 .grid_wrapper{
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
     grid-gap: 1rem;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(190px,1fr);
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    padding: 4px;
+    width: 60%;
+    max-width: 500px;
+    border:1px solid #D3D3D3;
+    margin: 0 auto;
+    border-radius: 10px;
 }
 
 .small_card_wrapper{
@@ -300,7 +309,6 @@ IMPORTANT: Do not add element after modal-content div, within bg-modal, without 
     display:flex;
     overflow: hidden;
     height:auto;
-
 }
 
 
@@ -330,7 +338,7 @@ IMPORTANT: Do not add element after modal-content div, within bg-modal, without 
 
 .small_card_footer{
     grid-area: pane;
-    background-color: orange;
+    background-color: #bcbcff;
 }
 
 
@@ -512,13 +520,27 @@ td{
         justify-items: stretch;
     }
 
-    .body-flex-wrapper-two-col{
+    .body-flex-wrapper-one-third{
         display:grid;
         grid-template-columns: 2fr 1fr;
         grid-gap:1em;
     }
 
+    .body-flex-wrapper-two-col{
+        display:grid;
+        grid-template-columns: 1fr 1fr;
+    }
+
 }
+
+    #my_cont_card {
+        flex: 1;
+      
+    }
+
+    #team_cont_chart{
+      flex:1;
+    }
 
     #project_description_card  #task_description_card{
         align-self: stretch;
@@ -626,5 +648,45 @@ td{
         margin: 0px;
     }
 
+
+    .content_table{
+        border-collapse: collapse;
+        margin: 25px auto;
+        font-size:0.9em;
+        min-width:400px;
+        border-radius: 5px 5px 0 0;
+        overflow:hidden;
+        box-shadow: 0 0 20px rgba(0,0,0,0.15);
+        word-break:break-all;
+    }
+
+    .content_table thead tr{
+        background-color:  #009879;
+        color:#fff;
+        font-weight:bold;
+        text-align: left;
+    }
+
+    .content_table th,
+    .content_table td{
+        padding: 12px 15px;
+    }
+
+    .content_table tbody tr{
+        border-bottom: 1px solid #ddd;
+    }
+
+    .content_table tbody tr:nth-of-type(even){
+        background-color: #f3f3f3;
+    }
+
+    .content_table tbody tr:last-of-type{
+        border-bottom: 2px solid #ddd;
+    }
+
+    .content_table tbody tr.active-row{
+        font-weight:bold;
+        color: #009879;
+    }
 
 
