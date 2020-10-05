@@ -247,8 +247,8 @@ function populateTasks(projectName){
 // ======================================================================
 
 async function createProject(){
-    var projectName = document.getElementById("ProjectName").value,
-        description = document.getElementById("Description").value,
+    var projectName = document.getElementById("project_name").value,
+        description = document.getElementById("project_description").value,
 
         //project start
         startDay =  document.getElementById("start_day").value,

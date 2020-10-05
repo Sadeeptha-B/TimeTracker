@@ -34,6 +34,7 @@ window.myNameSpace ={
     editId: 0
 };
 
+
 // Code for the addition of a individual task
 document.getElementById("create_mode_btn").addEventListener('click',function(){
     clearErrors(taskNameError, commonTaskError);
@@ -46,7 +47,6 @@ document.getElementById("create_mode_btn").addEventListener('click',function(){
 //Code for editing a task
 document.getElementById("edit_mode_btn").addEventListener('click', function(){
     clearErrors(taskNameError, commonTaskError);
-
     var taskData = getNewTaskData(localStorage.getItem("projectName"));  // Get data, validate, and store in backend
     if (taskData != undefined){
         deleteTask(myNameSpace.editId);
@@ -72,50 +72,10 @@ function getNewTaskData(project){
         return;
     }
 
-    var dateValid = true;
-    
-    // We can use JS Date objects to verify date and calculate time.
     var start = new Date(taskStartYear, taskStartMonth-1, taskStartDate);
     var startDate = taskStartDate + "/" + taskStartMonth + "/" + taskStartYear;
     var end = new Date(taskEndYear, taskEndMonth-1, taskEndDate);
-    var endDate = taskEndDate + "/" + taskEndMonth + "/" + taskEndYear;
-
-    dateValid = end.getTime() > start.getTime();
-	/* REDUNDANT SOON: using JS Date objects to compare date/time and calculate time
-	Initially we have valid = true; we change this value according to the criteria below:
-	if taskStartYear > taskEndYear: not valid
-	else:
-		if taskStartYear == taskEndYear:
-			if taskStartMonth > taskEndMonth: not valid
-			else: 
-				if taskStartMonth == taskEndMonth:
-					if taskStartDate > taskEndDate: not valid
-					else: valid
-				else if taskStartMonth < taskEndMonth: valid
-		if taskStartYear < taskEndYear: valid
-    *//*
-	if (taskStartYear > taskEndYear){
-        dateValid = false;
-	}
-	else if (taskStartYear == taskEndYear){
-		if (taskStartMonth > taskEndMonth){
-            dateValid = false;
-            
-		}
-		else if (taskStartMonth == taskEndMonth){
-			if (taskStartDate >= taskEndDate){ 
-				dateValid = false;
-            }
-            // replaced > with >= - maybe tasks are not allowed to have the same start and end date?
-		}
-	}
-
-	/*
-    if (valid = compare(startYear, endYear)){
-        if (valid = compare(startMonth,endMonth))
-            valid = compare(startDay, endDay);
-	}
-	*/
+    var dateValid = end.getTime() > start.getTime();
 
     if (!dateValid){
         displayError("Task cannot end before it starts, or end on the same day as the start date",commonTaskError);
@@ -126,10 +86,15 @@ function getNewTaskData(project){
         newTaskDesc = "N/A";
     }
 
+
+    var startDateString = start.toLocaleDateString('en-GB');
+    var endDateString = end.toLocaleDateString('en-GB');
+   
+   
     var taskObject = {TaskName: newTaskName,
                       Description: newTaskDesc,
-                      StartDate: startDate,
-                      EndDate: endDate,
+                      StartDate: startDateString,
+                      EndDate: endDateString,
                       Project: project}
 
     // Store the task information under Tasks
@@ -216,7 +181,7 @@ document.getElementById("edit_desc").addEventListener('click', function(){
     editNameField.setAttribute("placeholder", projectName.innerHTML);
     editDescField.setAttribute("placeholder", description.innerHTML);
 });
-//ZS: also please save the name and desc in the DB for retrieving later
+//TODO: ZS: also please save the name and desc in the DB for retrieving later
 
 
 //Save new Project Name, Description
@@ -271,7 +236,6 @@ var ctxTimeContPie = document.getElementById('timeContPie');
 var ctxTimeContBar = document.getElementById('timeContBar');
 var students = ["Robyn McNamara", "Campbell Wilson", "Najam Nazar", "Nathan Companez"];
 var times = [4, 7, 3, 5];
-
 
 
 var timeContPie = new Chart(ctxTimeContPie, {
@@ -364,11 +328,9 @@ var customColorFunction = function(schemeColors){
 
 
 /* Helper functions */
-
 function compare(shouldBeSmaller, shouldBeLarger){
     var valid = true;
     if (shouldBeSmaller > shouldBeLarger){
-        //Error message
         valid = false;
     }
     return valid;
@@ -382,6 +344,42 @@ function sameTimeAs(startVal, endVal){
 	return endVal == startVal;
 }
 
+
+
+
+
+
+//Date validation code
+/* REDUNDANT SOON: using JS Date objects to compare date/time and calculate time
+	Initially we have valid = true; we change this value according to the criteria below:
+	if taskStartYear > taskEndYear: not valid
+	else:
+		if taskStartYear == taskEndYear:
+			if taskStartMonth > taskEndMonth: not valid
+			else: 
+				if taskStartMonth == taskEndMonth:
+					if taskStartDate > taskEndDate: not valid
+					else: valid
+				else if taskStartMonth < taskEndMonth: valid
+		if taskStartYear < taskEndYear: valid
+    *//*
+	if (taskStartYear > taskEndYear){
+        dateValid = false;
+	}
+	else if (taskStartYear == taskEndYear){
+		if (taskStartMonth > taskEndMonth){
+            dateValid = false;
+            
+		}
+		else if (taskStartMonth == taskEndMonth){
+			if (taskStartDate >= taskEndDate){ 
+				dateValid = false;
+            }
+            // replaced > with >= - maybe tasks are not allowed to have the same start and end date?
+		}
+    } */
+    
 // /* Searches */
 const searchBar = document.getElementById("search_student");
 searchBar.setAttribute("oninput", "searchSingle(searchBar, students)");    //Use global student list from backend
+
