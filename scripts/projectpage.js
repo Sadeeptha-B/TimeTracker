@@ -72,6 +72,7 @@ function getNewTaskData(project){
         return;
     }
 
+<<<<<<< HEAD
     var startDateObject ={
         startDay: taskStartDate,
         startMonth: taskStartMonth,
@@ -86,6 +87,51 @@ function getNewTaskData(project){
 
 
     if (!dateValidation(startDateObject, endDateObject)){
+=======
+    var dateValid = true;
+    // We can use JS Date objects to verify date and calculate time.
+    var start = new Date(taskStartYear, taskStartMonth-1, taskStartDate);
+    var end = new Date(taskEndYear, taskEndMonth-1, taskEndDate);
+
+    dateValid = end.getTime() > start.getTime();
+	/* REDUNDANT SOON: using JS Date objects to compare date/time and calculate time
+	Initially we have valid = true; we change this value according to the criteria below:
+	if taskStartYear > taskEndYear: not valid
+	else:
+		if taskStartYear == taskEndYear:
+			if taskStartMonth > taskEndMonth: not valid
+			else: 
+				if taskStartMonth == taskEndMonth:
+					if taskStartDate > taskEndDate: not valid
+					else: valid
+				else if taskStartMonth < taskEndMonth: valid
+		if taskStartYear < taskEndYear: valid
+    *//*
+	if (taskStartYear > taskEndYear){
+        dateValid = false;
+	}
+	else if (taskStartYear == taskEndYear){
+		if (taskStartMonth > taskEndMonth){
+            dateValid = false;
+            
+		}
+		else if (taskStartMonth == taskEndMonth){
+			if (taskStartDate >= taskEndDate){ 
+				dateValid = false;
+            }
+            // replaced > with >= - maybe tasks are not allowed to have the same start and end date?
+		}
+	}
+
+	/*
+    if (valid = compare(startYear, endYear)){
+        if (valid = compare(startMonth,endMonth))
+            valid = compare(startDay, endDay);
+	}
+	*/
+
+    if (!dateValid){
+>>>>>>> 095bf9ecf513c2dbef0500798ff77adaf998e346
         displayError("Task cannot end before it starts, or end on the same day as the start date",commonTaskError);
         return;
     }
