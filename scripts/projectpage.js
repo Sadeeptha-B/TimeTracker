@@ -76,7 +76,9 @@ function getNewTaskData(project){
     
     // We can use JS Date objects to verify date and calculate time.
     var start = new Date(taskStartYear, taskStartMonth-1, taskStartDate);
+    var startDate = taskStartDate + "/" + taskStartMonth + "/" + taskStartYear;
     var end = new Date(taskEndYear, taskEndMonth-1, taskEndDate);
+    var endDate = taskEndDate + "/" + taskEndMonth + "/" + taskEndYear;
 
     dateValid = end.getTime() > start.getTime();
 	/* REDUNDANT SOON: using JS Date objects to compare date/time and calculate time
@@ -124,12 +126,10 @@ function getNewTaskData(project){
         newTaskDesc = "N/A";
     }
 
-
-   
     var taskObject = {TaskName: newTaskName,
                       Description: newTaskDesc,
-                      StartDate: start,
-                      EndDate: end,
+                      StartDate: startDate,
+                      EndDate: endDate,
                       Project: project}
 
     // Store the task information under Tasks
