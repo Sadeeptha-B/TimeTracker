@@ -136,6 +136,13 @@ function writeUserData(email, role) {
 			Email: email,
 			Role: role
 		})
+
+		if (role === 'Student') {
+			firebaseRef.child(`Students/${username}`).set({
+				Username: username
+			})
+		}
+		
 	}
 	else if (!isSchoolAccount(email)) {
 		throw 'Please use your school email account. Please try again.'

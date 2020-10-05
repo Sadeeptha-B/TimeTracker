@@ -36,10 +36,8 @@ firebase.auth().onAuthStateChanged(function(user) {
 				}, 1000)
 			}
 		})
-		console.log(localStorage.getItem("members"))
 	}
 	else {
-		window.location.href = "../html/login.html"
 	  // No user is signed in.
 	}
   });
@@ -372,7 +370,7 @@ function addStudentToProject() {
 function displayStudentList() {
   let studentList = document.getElementById("search_student");
   let output = "";
-  firebaseRef.child(`Users`)
+  firebaseRef.child(`Students`)
   .once('value').then(function(snapshot){
     const students = snapshot.val()
 		for (let i = 0; i < Object.entries(students).length; i++){
