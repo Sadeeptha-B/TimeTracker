@@ -90,7 +90,6 @@ function getNewTaskData(project){
     var startDateString = start.toLocaleDateString('en-GB');
     var endDateString = end.toLocaleDateString('en-GB');
    
-
    
     var taskObject = {TaskName: newTaskName,
                       Description: newTaskDesc,
