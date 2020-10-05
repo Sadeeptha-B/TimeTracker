@@ -20,7 +20,7 @@
     </div>
 
     <div class="body">
-        <div class="form_login_signup">
+        <div id="enter_username_container" class="form_login_signup">
 
             <div class="form_header">
                 <h2 class="form_header">Delete Teacher</h2>
@@ -35,8 +35,8 @@
                     </tr>
                     -->
                     <tr>
-                        <th>Email</th>
-                        <td><input type="email" class="email_input" id="Email" name="Email" required></td>
+                        <th>Username</th>
+                        <td><input type="text" class="username_input" id="delete_username_input" name="Username" required></td>
                     </tr>
                 </table>
 
@@ -52,7 +52,7 @@
 
         <!-- Option 1: this form shows up once the email is in the DB -->
         <!-- Maybe you would want to show which user is matched first-->
-        <div class="form_login_signup">
+        <div id="confirm_delete_container" class="form_login_signup" style="display:none">
             <div class="form_centered_container">
                 <h3 class="delete_prompt" style="text-align: center;">Do you want to delete this teacher's data? <br>
                     It cannot be undone.</h3>

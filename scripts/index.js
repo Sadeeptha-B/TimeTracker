@@ -379,3 +379,26 @@ function displayStudentList() {
 		studentList.innerHTML = output;
   })
 }
+
+
+document.getElementById("search_id_button").addEventListener("click", function() {
+	var username = document.getElementById("delete_username_input").value,
+		confirmation_section = document.getElementById("confirm_delete_container"),
+		enter_username_container = document.getElementById("enter_username_container")
+
+	if (username.length === 0) {
+		window.alert("Please enter teacher's username to be deleted")
+	}
+	else {
+		enter_username_container.style.display= 'none'
+		confirmation_section.style.display = 'block'
+	}
+})
+
+document.getElementById("delete_teacher_button").addEventListener("click", function() {
+	var username = document.getElementById("delete_username_input").value
+	
+	firebaseRef.child(`Users/${username}`).remove().then(function() {
+		getHomePage()
+	})
+})
