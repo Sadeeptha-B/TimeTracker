@@ -42,6 +42,8 @@ document.getElementById("create_mode_btn").addEventListener('click',function(){
     if (taskData != undefined){
         populateTask(taskData.TaskName);  // Display data
         closeModal(updateTaskModal);
+        window.location.reload();   // temporary fix for "new task button unclickable" bug
+        // maybe someone can come up with something better
     }
 });
 //Code for editing a task
