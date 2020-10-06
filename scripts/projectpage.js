@@ -40,10 +40,8 @@ document.getElementById("create_mode_btn").addEventListener('click',function(){
     clearErrors(taskNameError, commonTaskError);
     var taskData = getNewTaskData(localStorage.getItem("projectName"));  // Get data, validate, and store in backend
     if (taskData != undefined){
-        populateTask(taskData.TaskName);  // Display data
+        populateTask(localStorage.getItem("projectName"), taskData.TaskName);  // Display data
         closeModal(updateTaskModal);
-        window.location.reload();   // temporary fix for "new task button unclickable" bug
-        // maybe someone can come up with something better
     }
 });
 //Code for editing a task
@@ -52,7 +50,7 @@ document.getElementById("edit_mode_btn").addEventListener('click', function(){
     var taskData = getNewTaskData(localStorage.getItem("projectName"));  // Get data, validate, and store in backend
     if (taskData != undefined){
         deleteTask(myNameSpace.editId);
-        populateTask(taskData.TaskName);  // Display data
+        populateTask(localStorage.getItem("projectName"), taskData.TaskName);  // Display data
         closeModal(updateTaskModal);
     }
 })
@@ -100,12 +98,10 @@ function getNewTaskData(project){
                       Project: project}
 
     // Store the task information under Tasks
-    firebaseRef.child(`Tasks/${newTaskName}`).set(taskObject)
+    // firebaseRef.child(`Tasks/${newTaskName}`).set(taskObject)
 
     // Update tasks the project has
-    firebaseRef.child(`Projects/${project}/Tasks/${newTaskName}`).set({
-        TaskName: newTaskName
-    })
+    firebaseRef.child(`Projects/${project}/Tasks/${newTaskName}`).set(taskObject)
 
     return taskObject;
 }
@@ -113,11 +109,11 @@ function getNewTaskData(project){
 
 
 /* Code to display a new task addition (Display only!) */
-function populateTask(taskName){
+function populateTask(projectName, taskName){
     myNameSpace.taskCount += 1;
     var taskID = myNameSpace.taskCount;
 
-    firebaseRef.child(`Tasks/${taskName}`)
+    firebaseRef.child(`Projects/${projectName}/Tasks/${taskName}`)
     .once('value').then(function(snapshot) {
         const name = snapshot.child('TaskName').val(),
               startDate = snapshot.child('StartDate').val(),
@@ -148,6 +144,7 @@ function populateTask(taskName){
         clone.setAttribute("data-taskName", taskName)
         clone.setAttribute("data-projectName", project)
         tasksCardBody.append(clone);
+        addTasksEventListener(projectName, clone)
     })
 }
 
@@ -157,7 +154,6 @@ function deleteTask(index){
     var task = document.getElementById("task_" + index);
 
     /* Delete from backend */
-    firebaseRef.child(`Tasks/${task.getAttribute("data-taskName")}`).remove()
     firebaseRef.child(`Projects/${task.getAttribute("data-projectName")}/Tasks/${task.getAttribute("data-taskName")}`).remove()
 
     tasksCardBody.removeChild(task);
@@ -168,6 +164,12 @@ function editTask(index){
     event.stopPropagation();
     openConfigurableModal(updateTaskModal, true, false, newTaskName, newTaskDesc);
     myNameSpace.editId = index;
+    var task = document.getElementById("task_" + index);
+
+    document.removeChild(task)
+    getNewTaskData(task.getAttribute("data-projectName"))
+    
+    closeModal(updateTaskModal)
 }
 
 
@@ -225,7 +227,9 @@ document.getElementById("assign_button").addEventListener('click', async functio
     const task = document.getElementById('task_select').value
     var user = await firebase.auth().currentUser
 
-    firebaseRef.child(`Tasks/${task}`).update({AssignedTo: getUsername(user.email)})
+    firebaseRef.child(`Projects/${localStorage.getItem("projectName")}/Tasks/${task}`)
+    .update({AssignedTo: getUsername(user.email)})
+
     closeModal(assign_task_overlay)
     window.location.reload()
 })

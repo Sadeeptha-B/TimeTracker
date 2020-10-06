@@ -66,14 +66,11 @@ async function getHomePage() {
 	.once('value').then(function(snapshot) {
 		const role = snapshot.child("Role").val()
 		
-		if (role === 'Student') {
-			window.location.href = "../html/home.html"
-		}
-		else if (role === 'Teacher') {
-			window.location.href = "../html/home-teacherview.html"
-		}
-		else if (role === 'Admin') {
+		if (role === 'Admin') {
 			window.location.href = "../html/home-adminview.html"
+		}
+		else {
+			window.location.href = "../html/home.html"
 		}
 		
    })

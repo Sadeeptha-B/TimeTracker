@@ -6,7 +6,7 @@ firebase.auth().onAuthStateChanged(function(user) {
 			const username = snapshot.child('Username').val(),
 					role = snapshot.child('Role').val()
 
-			// Update the currnent page such as removing/adding restricted buttons
+			// Update the current page such as removing/adding restricted buttons
 			updatePage(username, role)
 
 			try { updateProjectPage() } catch(err) { ; }
@@ -15,26 +15,9 @@ firebase.auth().onAuthStateChanged(function(user) {
 
 			// Add all the projects of the user to the home page
 			populateProjects(username)
+
+			// Add all the tasks of the project to the project page
 			populateTasks(localStorage.getItem("projectName"));
-		})
-		// Event listener is then set up to see if any projects are trying to be accessed
-		// If yes, alter projectpage.html to suit the called project's information
-		.then(function() {
-			const projects = document.getElementsByClassName("dash_project"),
-				  tasks = document.getElementById("task_card_body")
-			
-			// SetTimeouts are placed as need to give time to load projects/tasks
-			if (projects) {
-				setTimeout(function () {
-					Array.from(projects).forEach(project => addProjectsEventListener(project))
-				}, 1000)
-			}
-				
-			if (tasks) {
-				setTimeout(function() {
-					Array.from(tasks.getElementsByClassName("task")).forEach(task => addTasksEventListener(task))
-				}, 1000)
-			}
 		})
 	}
 	else {
@@ -51,9 +34,20 @@ function updatePage(username, role) {
 		  assignTaskButton = document.getElementById("assign_task_button"),
 		  timeInputButton = document.getElementById("time_input_button"),
 		  addMemberButton = document.getElementById("add_member"),
-		  editDescriptionButton = document.getElementById("edit_desc")
+		  editDescriptionButton = document.getElementById("edit_desc"),
+		  newProjectButton = document.getElementById("new_project_button"),
+		  editTaskDescriptionButton = document.getElementById("edit_task_desc")
 
-	// Upadate username at the top of the screen depending on user
+	if (newProjectButton) {
+		if (role === 'Teacher') {
+			newProjectButton.style.display = "block"
+		}
+		else if (role === 'Student'){
+			newProjectButton.style.display = "none"
+		}
+	}
+
+	// Update username at the top of the screen depending on user
 	if (welcomeText) {
 		welcomeText.innerHTML = "Welcome, " + username
 	}
@@ -91,6 +85,15 @@ function updatePage(username, role) {
 			editDescriptionButton.style.display = "none"
 		}
 	}
+
+	if (editTaskDescriptionButton) {
+		if (role === 'Teacher') {
+			editTaskDescriptionButton.style.display = "none"
+		}
+		else if (role === 'Student') {
+			editTaskDescriptionButton.style.display = "block"
+		}
+	}
 }
 
 // FUNCTIONS TO ADD EVENT LISTENERS TO ALL THE PROJECT/TASK ELEMENTS
@@ -112,12 +115,13 @@ function addProjectsEventListener(project){
 	});
 }
 
-function addTasksEventListener(task){
+function addTasksEventListener(project, task){
 	task.addEventListener("click", function(){
-		firebaseRef.child(`Tasks/${task.getAttribute("data-taskName")}`)
+		firebaseRef.child(`Projects/${project}/Tasks/${task.getAttribute("data-taskName")}`)
 		.once('value').then(function(snapshot) {
 			const taskName = snapshot.child('TaskName').val(),
 				  taskDescription = snapshot.child('Description').val(),
+				  assignedTo = snapshot.child('AssignedTo').val(),
 				  projectName = document.getElementById("project_name").textContent,
 				  projectDescription = document.getElementById("description").textContent,
 				  members = document.getElementById("member_card_content").getElementsByClassName("member")
@@ -129,6 +133,7 @@ function addTasksEventListener(task){
 			localStorage.setItem("description", projectDescription)
 			localStorage.setItem("taskName", taskName)
 			localStorage.setItem("taskDescription", taskDescription)
+			localStorage.setItem("assignedTo", assignedTo)
 			
 			// Get the name of each member and store in the object
 			Array.from(members).forEach(member => {
@@ -170,11 +175,17 @@ function addMembers(member) {
 
 function updateTaskPage() {
 	const taskField = document.getElementById("taskName"),
-		  descriptionField = document.getElementById("description")
+		  descriptionField = document.getElementById("description"),
+		  member_field = document.getElementById("member_card_content"),
+		  newDiv = document.createElement("div")
 
 	// Update the fields with project information
 	taskField.textContent = localStorage.getItem("taskName")
 	descriptionField.textContent = localStorage.getItem("taskDescription")
+	member_field.appendChild(newDiv)
+	newDiv.id = localStorage.getItem("assignedTo")
+	newDiv.className = "member"
+	newDiv.textContent = localStorage.getItem("assignedTo")
 }
 
 // FUNCTIONS TO POPULATE THE PAGE WITH PROJECTS/TASKS BASED ON USER/PROJECT RESPECTIVELY
@@ -218,6 +229,7 @@ function addProject(project) {
 
 		newP.className = "project_summary"
 		newP.textContent = `Lecturer: ${teacher} | Start: ${startDate} | End: ${endDate}`
+		addProjectsEventListener(newDiv)
 		
 		/* Not working
 		footerDiv.className = "action_pane"
@@ -235,10 +247,10 @@ function addProject(project) {
 }
 
 function populateTasks(projectName){
-    firebaseRef.child(`Projects/${projectName}`)
+    firebaseRef.child(`Projects/${projectName}/Tasks`)
     .once('value').then(function(snapshot) {
-		const tasks = snapshot.child('Tasks').val();
-        Object.entries(tasks).map(task => populateTask(task[1].TaskName));
+		const tasks = snapshot.val();
+        Object.entries(tasks).forEach(task => populateTask(projectName, task[1].TaskName));
     })
 }
 
