@@ -93,7 +93,97 @@ var myChart = new Chart(ctxMyCont, {
     }
 });
 
+//JX
+function inputTimeForTask(){
+	//task start time
+	var startDay =  document.getElementById("start_day").value,
+		startMonth = document.getElementById("start_month").value,
+		startYear = document.getElementById("start_year").value,
+		startHour = document.getElementById("start_hr").value,
+		startMinute = document.getElementById("start_min").value,
+		startPeriod = document.getElementById("start_period").value,
+		militaryStartHour = startPeriod+startHour,
 
+		// Putting into DD/MM/YYYY,HH,MM,PP format
+		startTimeFormat = startDay + "/" + startMonth + "/" + startYear + "," + militaryStartHour + ":" + startMinute,
+
+		//project end
+		endDay = document.getElementById("end_day").value,
+		endMonth = document.getElementById("end_month").value,
+		endYear = document.getElementById("end_year").value,
+		endHour = document.getElementById("end_hr").value,
+		endMinute = document.getElementById("end_min").value,
+		endPeriod = document.getElementById("end_period").value,
+		militaryEndHour = endPeriod+endHour,
+
+		// Putting into DD/MM/YYYY,HH,MM,PP format
+		endTimeFormat = endDay + "/" + endMonth + "/" + endYear + "," + militaryEndHour + ":" + endMinute,
+
+	var commonProjError = document.getElementById("create_project_error");
+	var dateValid = true;
+    var oneDayGap = false;
+    /* 
+    oneDayGap is only changed if there is a minimum of 1 day gap between inputs, if not, compare times.
+	Initially we have valid = true; we change this value according to the criteria below:
+	if startYear > endYear: not valid
+	else:
+		if startYear == endYear:
+			if startMonth > endMonth: not valid
+			else: 
+				if startMonth == endMonth:
+					if startDay > endDay: not valid
+					else: valid
+				else if startMonth < endMonth: valid
+		if startYear < endYear: valid
+	*/
+	if (startYear > endYear){
+        dateValid = false;
+	}
+	else if (startYear == endYear){
+		if (startMonth > endMonth){
+            dateValid = false;
+		}
+		else if (startMonth == endMonth){
+			if (startDay > endDay){ 
+                dateValid = false;
+            }
+            else if (startDay < endDay){
+                oneDayGap = true;
+            }
+            else if (startDay == endDay){
+                if (militaryStartHour > militaryEndHour || !oneDayGap){
+                    dateValid = false;
+                }
+                else if (militaryStartHour == militaryEndHour){
+                    if (startMinute > endMinute || !oneDayGap){
+                        dateValid =false;
+                    }
+                }
+            }
+        }
+	}
+
+	/*
+	if (valid = compare(startYear, endYear)){
+		if (valid = compare(startMonth,endMonth))
+			valid = compare(startDay, endDay);
+	}
+	*/
+
+	if (!dateValid){
+		displayError("Task cannot end before it starts, or end at the same time as the start time",commonProjError);
+		return;
+	}
+
+	var user = await firebase.auth().currentUser
+
+	firebaseRef.child(`Projects/${localStorage.getItem(projectName)}/${localStorage.getItem(taskName)}`).set({
+		StartTime = startTimeFormat,
+		EndTime = endTimeFormat
+    })
+    
+    window.alert("Time logged!")
+}
 
 
 
