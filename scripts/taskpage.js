@@ -104,10 +104,10 @@ function inputTimeForTask(){
 		startPeriod = document.getElementById("start_period").value,
 		militaryStartHour = startPeriod+startHour,
 
-		// Putting into DD/MM/YYYY,HH,MM,PP format
+		// Putting into DD/MM/YYYY,HH:MM format
 		startTimeFormat = startDay + "/" + startMonth + "/" + startYear + "," + militaryStartHour + ":" + startMinute,
 
-		//project end
+	//task end time
 		endDay = document.getElementById("end_day").value,
 		endMonth = document.getElementById("end_month").value,
 		endYear = document.getElementById("end_year").value,
@@ -116,7 +116,7 @@ function inputTimeForTask(){
 		endPeriod = document.getElementById("end_period").value,
 		militaryEndHour = endPeriod+endHour,
 
-		// Putting into DD/MM/YYYY,HH,MM,PP format
+		// Putting into DD/MM/YYYY,HH:MM format
 		endTimeFormat = endDay + "/" + endMonth + "/" + endYear + "," + militaryEndHour + ":" + endMinute,
 
 	var commonProjError = document.getElementById("create_project_error");
@@ -177,9 +177,9 @@ function inputTimeForTask(){
 
 	var user = await firebase.auth().currentUser
 
-	firebaseRef.child(`Projects/${localStorage.getItem(projectName)}/${localStorage.getItem(taskName)}`).set({
-		StartTime = startTimeFormat,
-		EndTime = endTimeFormat
+	firebaseRef.child(`Projects/${localStorage.getItem(projectName)}/Tasks/${localStorage.getItem(taskName)}`).update({
+		StartTime : startTimeFormat,
+		EndTime : endTimeFormat
     })
     
     window.alert("Time logged!")
