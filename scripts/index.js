@@ -182,10 +182,13 @@ function updateTaskPage() {
 	// Update the fields with project information
 	taskField.textContent = localStorage.getItem("taskName")
 	descriptionField.textContent = localStorage.getItem("taskDescription")
-	member_field.appendChild(newDiv)
-	newDiv.id = localStorage.getItem("assignedTo")
-	newDiv.className = "member"
-	newDiv.textContent = localStorage.getItem("assignedTo")
+
+	if (localStorage.getItem("assignedTo") !== 'null') {
+		member_field.appendChild(newDiv)
+		newDiv.id = localStorage.getItem("assignedTo")
+		newDiv.className = "member"
+		newDiv.textContent = localStorage.getItem("assignedTo")
+	}
 }
 
 // FUNCTIONS TO POPULATE THE PAGE WITH PROJECTS/TASKS BASED ON USER/PROJECT RESPECTIVELY
