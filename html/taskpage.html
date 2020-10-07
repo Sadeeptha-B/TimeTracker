@@ -43,7 +43,7 @@
                      <p id= "description"></p>
                 </div>
                 <div class="card_footer">
-                 <a href="#" id="edit_task_desc" class="hover_grey_link" onclick="openModal(desc_edit_overlay,true, name_field, desc_field)" style="display:none">Edit description </a>
+                 <a href="#" id="edit_task_desc" class="hover_grey_link" onclick="openModal(desc_edit_overlay,true, desc_field)" style="display:none">Edit description </a>
                 </div>
             </div>
 
@@ -124,7 +124,7 @@
                     <div class="error common_error_div" id="timelog_error"> 
                         Error
                     </div>
-                    <button href="#" class="blue_curve_button float_right_elements" onclick= "inputTimeForTask()" id="save_time_log"> Submit </button>
+                    <button href="#" class="blue_curve_button float_right_elements" id="save_time_log"> Submit </button>
                 </div>
                 <div class="clr"></div>
                 
@@ -287,13 +287,11 @@
             
 
             <!--Modals -->
-            <div class="bg-modal">
-                <div class="modal-content" id="desc_edit_overlay" style="display:flex">
+            <div class="bg-modal" id="desc_edit_overlay" style="display:flex">
+                <div class="modal-content">
                     <div class="close generic_popup_close" onclick="closeModal(desc_edit_overlay)">+</div>
                     <div class = "input_form">
                         <h3>Edit description</h3>
-                        <label class= "field_elements" for="name_field">Task Name :</label> 
-                        <input id = "name_field" class="input"><br>
                         <label class="field_elements" for="desc_field">Description : </label><br>
                         <textarea id = "desc_field" rows="14" cols="120" class="input"></textarea>
                         
