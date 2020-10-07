@@ -18,7 +18,6 @@ Modal open close, after saving, editing, is done in this script.
 
 /* Elements contained within modals */
    // Name, Edit Description
-    var editNameField = document.getElementById("name_field");
     var editDescField = document.getElementById("desc_field");
 
   // New task name, description
@@ -182,28 +181,29 @@ To do all tasks related to clicks except for the opening and closing of modals.
 
 //Edit description
 document.getElementById("edit_desc").addEventListener('click', function(){
-    editNameField.setAttribute("placeholder", projectName.innerHTML);
     editDescField.setAttribute("placeholder", description.innerHTML);
 });
 //TODO: ZS: also please save the name and desc in the DB for retrieving later
 
 
-//Save new Project Name, Description
-document.getElementById("save_desc").addEventListener("click",function(){
-    var newName = editNameField.value.trim();
+//Save new Description
+document.getElementById("save_desc").addEventListener("click", async function(){
     var newDesc = editDescField.value.trim();
 
-// Include code to modify project name and project description on backend
-
-if (newName.length != 0)
-    projectName.innerText = newName;
-
-if (newDesc.length != 0)
-    description.innerText = newDesc;
-
-closeModal(editDescModal);
+    firebaseRef.child(`Projects/${localStorage.getItem("projectName")}`).update({
+        // If the description field is empty, close
+        Description: newDesc.length > 0 ? newDesc : localStorage.getItem("description")
+    })
+    .then(function() {
+        // Rename the local storage values to the new values
+        if (newDesc.length > 0) {
+            localStorage.setItem("description", newDesc)
+        }
+        window.location.reload()
+    })
 });
 
+// Assigning task to students
 document.getElementById("assign_task_button").addEventListener('click', function() {
     const currentProject = localStorage.getItem('projectName')
     
@@ -223,6 +223,7 @@ document.getElementById("assign_task_button").addEventListener('click', function
     })
 })
 
+// Saving new students assigned to specific tasks
 document.getElementById("assign_button").addEventListener('click', async function() {
     const task = document.getElementById('task_select').value
     var user = await firebase.auth().currentUser

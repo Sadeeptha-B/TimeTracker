@@ -189,7 +189,6 @@ function updateTaskPage() {
 		newDiv.className = "member"
 		newDiv.textContent = localStorage.getItem("assignedTo")
 	}
-	
 }
 
 // FUNCTIONS TO POPULATE THE PAGE WITH PROJECTS/TASKS BASED ON USER/PROJECT RESPECTIVELY
