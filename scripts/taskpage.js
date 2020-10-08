@@ -1,7 +1,9 @@
 
 /* DOM elements on page */
-var template = document.getElementById("timelog_template");
-var content = document.getElementById("logs_card_body");
+var timelogCardTemplate = document.getElementById("timelog_card_template");
+var logCardContent = document.getElementById("logs_card_body");
+
+
 var commonTaskError = document.getElementById("timelog_error")
 
 
@@ -75,6 +77,10 @@ async function getDataforPopulation(){
             })
         }
     })
+}
+
+function populateTimelogs(){
+    
 }
 
 
