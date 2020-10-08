@@ -18,7 +18,7 @@ document.getElementById("save_time_log").addEventListener('click', function(){
 
 
 
-function getDataforPopulation(){
+async function getDataforPopulation(){
     var startDate = document.getElementById("start_day").value,
         startMonth = document.getElementById("start_month").value,
         startYear = document.getElementById("start_year").value,
@@ -35,14 +35,57 @@ function getDataforPopulation(){
         endPeriod = document.getElementById('end_period').value;
 
 
-    var startDate = new Date(startYear, startMonth-1, startDate, startHr,startMin, startPeriod);
-    var endDate = new Date(endYear, endMonth-1, endDate, endHr,endMin, endPeriod);
-    var dateValid = end.getTime() > start.getTime();
+
+    var startDateFormat = new Date(startYear, startMonth-1, startDate, parseInt(startHr) + parseInt(startPeriod)  , startMin);
+    var endDateFormat = new Date(endYear, endMonth-1, endDate, parseInt(endHr) + parseInt(endPeriod) , endMin );
+    var dateValid = endDateFormat.getTime() > startDateFormat.getTime();
 
     if (!dateValid){
         displayError("Task cannot end before it starts, or end on the same day as the start date",commonTaskError);
         return;
     }
+
+    var user = await firebase.auth().currentUser
+
+    firebaseRef.child(`Projects/${localStorage.getItem("projectName")}/Tasks/${localStorage.getItem("taskName")}`).once('value').then(function(snapshot) {
+        var amount = snapshot.child(getUsername(user.email)).val()
+
+    var startTimeObject = {     Month :  startDateFormat.getMonth() + 1 , 
+                                Date : startDateFormat.getDate() , 
+                                Year : startDateFormat.getFullYear() , 
+                                Hour : startDateFormat.getHours(),
+                                Minute : startDateFormat.getMinutes() },
+
+        endTimeObject = {       Month :  endDateFormat.getMonth() + 1 , 
+                                Date : endDateFormat.getDate() , 
+                                Year : endDateFormat.getFullYear() , 
+                                Hour : endDateFormat.getHours(),
+                                Minute : endDateFormat.getMinutes()   }
+
+        if (amount==null){
+            firebaseRef.child(`Projects/${localStorage.getItem("projectName")}/Tasks/${localStorage.getItem("taskName")}/${getUsername(user.email)}/Time1`).set({
+                StartTime : startTimeObject,
+                EndTime : endTimeObject
+            }).then(function(){
+                window.alert("Time logged!");
+                window.location.reload();
+            })
+        }
+
+        else{
+            amount = Object.entries(amount)
+            firebaseRef.child(`Projects/${localStorage.getItem("projectName")}/Tasks/${localStorage.getItem("taskName")}/${getUsername(user.email)}/Time${amount.length + 1}`).set({
+                StartTime : startTimeObject,
+                EndTime : endTimeObject
+            }).then(function(){
+                window.alert("Time logged!");
+                window.location.reload();
+            })
+        }
+
+
+
+    })
 }
 
 
