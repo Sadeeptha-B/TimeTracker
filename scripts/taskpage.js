@@ -17,7 +17,6 @@ document.getElementById("save_time_log").addEventListener('click', function(){
 });
 
 
-
 async function getDataforPopulation(){
     var startDate = document.getElementById("start_day").value,
         startMonth = document.getElementById("start_month").value,
@@ -82,13 +81,8 @@ async function getDataforPopulation(){
                 window.location.reload();
             })
         }
-
-
-
     })
 }
-
-
 
 
 /* Chart */
