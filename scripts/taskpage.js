@@ -28,10 +28,25 @@ async function getDataforPopulation(){
         endMin = document.getElementById('end_min').value,
         endPeriod = document.getElementById('end_period').value;
 
+    function timeCheck(hour, period){
+        if (hour == 12){
+            if (period == 0){
+                return 0;   // 12am = 0000hrs
+            }
+            else if (period == 12){
+                return 12;  // 12pm = 1200hrs;
+            }
+        }
+        else {
+            return hour + period;
+        }
+    }
 
+    var startHrParsed = timeCheck(parseInt(startHr), parseInt(startPeriod));
+    var endHrParsed = timeCheck(parseInt(endHr), parseInt(endPeriod));
 
-    var startDateFormat = new Date(startYear, startMonth-1, startDate, parseInt(startHr) + parseInt(startPeriod)  , startMin),
-        endDateFormat = new Date(endYear, endMonth-1, endDate, parseInt(endHr) + parseInt(endPeriod) , endMin ),
+    var startDateFormat = new Date(startYear, startMonth-1, startDate, startHrParsed, startMin),
+        endDateFormat = new Date(endYear, endMonth-1, endDate, endHrParsed, endMin ),
         dateValid = endDateFormat.getTime() > startDateFormat.getTime()
 
         
