@@ -270,33 +270,24 @@ async function createProject(){
         startMonth = document.getElementById("start_month").value,
         startYear = document.getElementById("start_year").value,
         
-        // Putting into DD/MM/YYYY format
-        startDate = startDay + "/" + startMonth + "/" + startYear,
+        // Putting into DD/MM/YYYY format - OBSOLETE (using JS Date object now)
+		// startDate = startDay + "/" + startMonth + "/" + startYear,
 
         //project end
         endDay = document.getElementById("end_day").value,
         endMonth = document.getElementById("end_month").value,
         endYear = document.getElementById("end_year").value,
 
-        // Putting into DD/MM/YYYY format
-        endDate = endDay + "/" + endMonth + "/" + endYear
+        // Putting into DD/MM/YYYY format - OBSOLETE (using JS Date object now)
+		// endDate = endDay + "/" + endMonth + "/" + endYear;
+		
+		var start = new Date(startYear, startMonth-1, startDay);
+		var end = new Date(endYear, endMonth-1, endDay);
 
 	var commonProjError = document.getElementById("create_project_error");
-	var dateValid = true;
+    var dateValid = end.getTime() > start.getTime();
 
-    /* 
-	Initially we have valid = true; we change this value according to the criteria below:
-	if startYear > endYear: not valid
-	else:
-		if startYear == endYear:
-			if startMonth > endMonth: not valid
-			else: 
-				if startMonth == endMonth:
-					if startDay > endDay: not valid
-					else: valid
-				else if startMonth < endMonth: valid
-		if startYear < endYear: valid
-	*/
+	/*
 	if (startYear > endYear){
 		dateValid = false;
 	}
@@ -310,12 +301,6 @@ async function createProject(){
 			}
 		}
 	}
-
-	/*
-    if (valid = compare(startYear, endYear)){
-        if (valid = compare(startMonth,endMonth))
-            valid = compare(startDay, endDay);
-	}
 	*/
 
     if (!dateValid){
@@ -327,14 +312,18 @@ async function createProject(){
         description = "N/A";
 	}
 
+	// Putting into DD/MM/YYYY format
+	var startDateString = start.toLocaleDateString('en-GB');
+    var endDateString = end.toLocaleDateString('en-GB');
+
 	var user = await firebase.auth().currentUser
 
 	// Store project information under Projects
 	firebaseRef.child(`Projects/${projectName}`).set({
 		ProjectName: projectName,
         Description: description,
-        StartDate: startDate,
-        EndDate: endDate,
+        StartDate: startDateString,
+        EndDate: endDateString,
         TeacherInCharge: getUsername(user.email)
 	})
 	

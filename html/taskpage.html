@@ -59,6 +59,12 @@
                     <!--Template for adding members-->
                 <div id ="member_card_content" class="header_card_content">
                </div>
+               <div>
+                   <!-- Should be accessible to students in final product (but we'll hide it for now) -->
+                <a href="#" onclick="openModal(contribution_overlay, false)" style="left: 14px;">
+                    <button id="assign_task_button" class="button_generic" style="display:none">Set workload percentage</button>
+                </a>
+               </div>
             </div>
 
             <div class="classic_card header_type_card" id="logtime_card">
@@ -300,6 +306,22 @@
                         <button href="#" class="blue_curve_button" id="save_desc"> Save </button>
                     </div>
                        
+                </div>
+            </div>
+
+            <!-- EXTRA: Workload popup, used to set expected workload percentage-->
+            <div class="bg-modal" id="contribution_overlay">
+                <div class="modal-content">
+                    <div class="close generic_popup_close" onclick="closeModal(contribution_overlay)">+</div>
+                    <div class="input_form">
+                        <h3>Set workload percentage</h3>
+                        <label class="field_elements" for="percentage">Expected workload (%):</label>
+                        <input type="number" width="20px" class="percentage" name="Workload Percentage" id = "percentage"
+                        min="1" max="100" required>
+                    </div>
+                    <div class= "desc_footer">
+                        <button href="#" class="blue_curve_button" id="save_contribution"> Save </button>
+                    </div>
                 </div>
             </div>
 

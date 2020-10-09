@@ -39,6 +39,15 @@ async function getDataforPopulation(){
         return;
     }
 
+    // the work time, in hours, mins and secs:
+    if (dateValid) {
+        var timeInSecs = (endDateFormat.getTime() - startDateFormat.getTime())/1000;
+        var timeInMins = timeInSecs/60;
+        var timeInHrs = timeInMins/60;
+        var timeFormatMins = timeInMins%60;
+        var timeFormatHrs = Math.floor(timeInHrs);
+    }
+
     var user = await firebase.auth().currentUser
 
     firebaseRef.child(`Projects/${localStorage.getItem("projectName")}/Tasks/${localStorage.getItem("taskName")}`).once('value').then(function(snapshot) {
