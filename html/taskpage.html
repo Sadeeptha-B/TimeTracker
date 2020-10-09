@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+        <meta name="mobile-web-app-capable" content="yes" />
+        <title>Task Page</title>  
+        <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-auth.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-database.js"></script>  
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js" integrity="sha512-s+xg36jbIujB2S2VKfpGmlC3T5V2TF3lY48DX7u2r9XzGzgPsa6wTpOQA7J9iffvdeBN0q9tKzRxVxw1JviZPg==" crossorigin="anonymous"></script>
+
+        <link rel="stylesheet" href="generic_style.css"></link>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
+        
+    </head>
+    
+    <body>        
+    <div class="header">
+        <div class="header_content_wrapper">
+            <div class="header_word_wrapper">
+                <h1 id="taskName"></h1>
+            </div>
+            <div class="header_links_wrapper">
+                <a><button class="button_generic" id="homepage_button" onclick="getHomePage()">Home Page</button></a>
+                <a href="login.html"><button id="signout_button" class="button_generic" onclick="logout()">Log Out</button></a>
+            </div>
+        </div>
+    </div>
+
+    <div class="body">
+
+        <div class="body-flex-wrapper-one-third">
+            <div class="classic_card header_type_card" id="task_description_card">
+                <div class="card_header">
+                    <h3> Description <h3>
+                        <hr class="thin">
+                </div>
+                <div id ="description_card_content" class="header_card_content">
+                     <p id= "description"></p>
+                </div>
+                <div class="card_footer">
+                 <a href="#" id="edit_task_desc" class="hover_grey_link" onclick="openModal(desc_edit_overlay,true, desc_field)" style="display:none">Edit description </a>
+                </div>
+            </div>
+
+            <div class="classic_card header_type_card" id="task_team_card">
+                <div class="card_header">
+                    <h3>Assigned to</h3>
+                    <hr class="thin">
+                </div>
+                <!-- Make accessible to students-->
+                    <a href="#" id ="add_member" class="hover_grey_link float_right_elements" onclick="openModal(add_student, false),displayStudentList()"  style="display:none">
+                        Add member
+                    </a>
+                    <!--Template for adding members-->
+                <div id ="member_card_content" class="header_card_content">
+               </div>
+            </div>
+
+            <div class="classic_card header_type_card" id="logtime_card">
+                <div class = "time_input_form">
+                    <h3>Time input</h3>
+                    <label class="field_elements">Start time :</label><br>
+                    <!-- ZS: This is the format for now, maybe there will be a better format coming along? -->
+                    <!-- Time input now includes am/pm option, which is in the ID 'start_period' and 'end_period'-->
+                    <input type="number" width="20px" class="start_day" name="Start Day" id = "start_day"
+                        min="1" max="31" value="1" required>
+                    <select name="start_month" class="start_month" id = "start_month">
+                        <option value="1">January</option>
+                        <option value="2">February</option>
+                        <option value="3">March</option>
+                        <option value="4">April</option>
+                        <option value="5">May</option>
+                        <option value="6">June</option>
+                        <option value="7">July</option>
+                        <option value="8">August</option>
+                        <option value="9">September</option>
+                        <option value="10">October</option>
+                        <option value="11">November</option>
+                        <option value="12">December</option>
+                    </select>
+                    <input type="number" width="40px" class="start_year" name="Start Year" id = "start_year"
+                        min="2020" max="2099" value="2020" required><br>
+
+                    <input type="number" id="start_hr" min="1" max="12" required>
+                    <input type="number" id="start_min" min="0" max="59" required>
+                    <select name="Start Period" class="start_period" id="start_period">
+                        <option value="0">a.m.</option>
+                        <option value="12">p.m.</option>
+                    </select><br>
+
+                    <label class="field_elements">End time :</label><br>
+                    <input type="number" width="20px" class="end_day" name="End Day" id = "end_day"
+                        min="1" max="31" value="1" required>
+                    <select name="End Month" class="end_month" id = "end_month">
+                        <option value="1">January</option>
+                        <option value="2">February</option>
+                        <option value="3">March</option>
+                        <option value="4">April</option>
+                        <option value="5">May</option>
+                        <option value="6">June</option>
+                        <option value="7">July</option>
+                        <option value="8">August</option>
+                        <option value="9">September</option>
+                        <option value="10">October</option>
+                        <option value="11">November</option>
+                        <option value="12">December</option>
+                    </select>
+                    <input type="number" width="40px" class="end_year" name="End Year" id = "end_year"
+                        min="2020" max="2099" value="2020" required><br>
+                    <input type="number" id="end_hr" min="1" max="12" required>
+                    <input type="number" id="end_min" min="0" max="59" required>
+                    <select name="End Period" class="end_period" id="end_period">
+                        <option value="0">a.m.</option>
+                        <option value="12">p.m.</option>
+                    </select>
+                </div>
+                <br>
+                <div class= "time_input_footer">
+                    <div class="error common_error_div" id="timelog_error"> 
+                        Error
+                    </div>
+                    <button href="#" class="blue_curve_button float_right_elements" id="save_time_log"> Submit </button>
+                </div>
+                <div class="clr"></div>
+                
+            </div>
+
+        </div>
+           
+            <!--  Change this to show the people to whom the task is assigned to?
+            <div class="header_type_card" id="assigned_members">
+                <h3>Team</h3>
+                 <hr class="thin">
+
+            </div> -->
+
+
+            <!--Charts-->
+            <div class="body-flex-wrapper-two-col">
+                <div class="header_type_card" id="my_cont_card">
+                    <div class="card_header">
+                        <h3> My Contributions </h3>
+                        <hr class="thin">
+                    </div>
+                    <div class="content_card_body">
+                    <!-- Zhe Sheng: section for (preferably) task overview (in table) -->
+                        
+                            <h4> Most Recent Timelogs </h4>
+                            <div class="grid_wrapper" id="logs_card_body">
+                                <div class="small_card_wrapper" id="timelog_template">
+                                    <div class="classic_card small_card" >
+                                        <div class="small_card_header">
+                                            <h4 id="timelog_date"> 25th September 2020</h4>
+                                        </div>
+                                        <div class="small_card_content"><br>
+                                            <span> Duration: </span>
+                                            <span class="duration" id="time_period">  1 hour</span><br>
+                                            <span>From <span id="start_time"> 5pm</span> to  <span id="end_time">6pm </span></span>
+                                        </div>
+                                        <div class="small_card_footer">
+                                            <input type="image" id="delete_time_log" src="../imgs/delete-16.png" class="std_component float_right_elements">
+                                            <input type="image" src="../imgs/edit-16.png" id="edit_time_log"  class="std_component float_right_elements">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br><br>
+    
+                            <h4> Timelogs </h4>
+                            <table class="content_table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Date</th>
+                                        <th scope="col">Begin</th>
+                                        <th scope="col">End</th>
+                                        <th scope="col">Duration</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>  
+                                        <td>25/09/2020</td>
+                                        <td>5pm</td>
+                                        <td>6pm</td>
+                                        <td>1 hr</td>
+                                    </tr>
+                                    <tr>
+                                        <td>26/09/2020</td>
+                                        <td>3pm</td>
+                                        <td>6pm</td>
+                                        <td>3 hrs</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                    </div>
+                </div>
+                <div class="header_type_card" id="team_cont_card">
+                    <div class="card_header">
+                        <h3> Team Contributions</h3>
+                        <hr class="thin">
+                    </div>
+                    <div class="content_card_body">
+                        
+                        <h4> Most Recent Timelogs </h4>
+                         <div class="grid_wrapper" id="team_logs_card_body">
+                            <div class="small_card_wrapper">
+                                <div class="classic_card small_card" id="timelog_card_template">
+                                    <div class="small_card_header">
+                                        <h4 id="timelog_date"> 25th September 2020</h4>
+                                    </div>
+                                    <div class="small_card_content">
+                                        <h5 id="assignee"> Member </h5> <br>
+                                        <span> Duration: </span>
+                                        <span class="duration" id="time_period">  1 hour</span><br>
+                                        <span>From <span id="start_time"> 5pm</span> to  <span id="end_time">6pm </span></span>
+                                    </div>
+                                    <div class="small_card_footer">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br><br>
+
+                        <h4> Timelogs </h4>
+                        <table class="content_table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Member</th>
+                                    <th scope="col">Date</th>
+                                    <th scope="col">Begin</th>
+                                    <th scope="col">End</th>
+                                    <th scope="col">Duration</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>  
+                                    <td>Robyn</td>
+                                    <td>25/09/2020</td>
+                                    <td>5pm</td>
+                                    <td>6pm</td>
+                                    <td>1 hr</td>
+                                </tr>
+                                <tr>
+                                    <td>Campbell</td>
+                                    <td>26/09/2020</td>
+                                    <td>3pm</td>
+                                    <td>6pm</td>
+                                    <td>3 hrs</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    <div class="card_footer">
+    
+                    </div>
+                </div>
+            </div>
+           
+                        
+
+            <!--
+                <div class="card_footer">
+                    <!-- Zhe Sheng: section for task time input -->
+                    <!-- HIDDEN from teacher -->
+                       <!-- <button id="time_input_button" class="button_generic" style="display:none" onclick="openModal(time_input, false)"> Time Input </button>
+                    <div class="clr"></div>
+                    <table>
+                         and then maybe a table which shows the time contributed? 
+                    </table>
+                </div>
+            </div> -->
+            
+            <div class="content_card" id =charts>
+                    <h3> Progress Charts </h3>
+                    <div class="time_contribution">
+                        <h4 id ="timeCont"> Time Contribution</h4>
+                        <div class="chart_container">
+                            <canvas id="myContChart"></canvas>
+                        </div>
+                    </div>
+                    
+            </div>
+            
+
+            <!--Modals -->
+            <div class="bg-modal" id="desc_edit_overlay">
+                <div class="modal-content">
+                    <div class="close generic_popup_close" onclick="closeModal(desc_edit_overlay)">+</div>
+                    <div class = "input_form">
+                        <h3>Edit description</h3>
+                        <label class="field_elements" for="desc_field">Description : </label><br>
+                        <textarea id = "desc_field" rows="14" cols="120" class="input_field"></textarea>
+                        
+                    </div>
+                    <div class= "desc_footer">
+                        <button href="#" class="blue_curve_button" id="save_desc"> Save </button>
+                    </div>
+                       
+                </div>
+            </div>
+
+            <div class="bg-modal" id="time_input">
+                <div class="modal-content">
+                    <div class="close generic_popup_close" onclick="closeModal(time_input)">+</div>
+                    <div class = "time_input_form">
+                        <h3>Time input</h3>
+                        <label class="field_elements">Start time :</label><br>
+                        <!-- ZS: This is the format for now, maybe there will be a better format coming along? -->
+                        <!-- Time input now includes am/pm option, which is in the ID 'start_period' and 'end_period'-->
+                        <input type="number" width="20px" class="start_day" name="Start Day" id = "start_day"
+                            min="1" max="31" value="1" required>
+                        <select name="start_month" class="start_month" id = "start_month">
+                            <option value="1">January</option>
+                            <option value="2">February</option>
+                            <option value="3">March</option>
+                            <option value="4">April</option>
+                            <option value="5">May</option>
+                            <option value="6">June</option>
+                            <option value="7">July</option>
+                            <option value="8">August</option>
+                            <option value="9">September</option>
+                            <option value="10">October</option>
+                            <option value="11">November</option>
+                            <option value="12">December</option>
+                        </select>
+                        <input type="number" width="40px" class="start_year" name="Start Year" id = "start_year"
+                            min="2020" max="2099" value="2020" required><br>
+
+                        <input type="number" id="start_hr" min="1" max="12" required>
+                        <input type="number" id="start_min" min="0" max="59" required>
+                        <select name="Start Period" class="start_period" id="start_period">
+                            <option value="0">a.m.</option>
+                            <option value="12">p.m.</option>
+                        </select><br>
+
+                        <label class="field_elements">End time :</label><br>
+                        <input type="number" width="20px" class="end_day" name="End Day" id = "end_day"
+                            min="1" max="31" value="1" required>
+                        <select name="End Month" class="end_month" id = "end_month">
+                            <option value="1">January</option>
+                            <option value="2">February</option>
+                            <option value="3">March</option>
+                            <option value="4">April</option>
+                            <option value="5">May</option>
+                            <option value="6">June</option>
+                            <option value="7">July</option>
+                            <option value="8">August</option>
+                            <option value="9">September</option>
+                            <option value="10">October</option>
+                            <option value="11">November</option>
+                            <option value="12">December</option>
+                        </select>
+                        <input type="number" width="40px" class="end_year" name="End Year" id = "end_year"
+                            min="2020" max="2099" value="2020" required><br>
+                        <input type="number" id="end_hr" min="1" max="12" required>
+                        <input type="number" id="end_min" min="0" max="59" required>
+                        <select name="End Period" class="end_period" id="end_period">
+                            <option value="0">a.m.</option>
+                            <option value="12">p.m.</option>
+                        </select>
+                    </div>
+                    <div class= "time_input_footer">
+                        <button href="#" class="blue_curve_button" id="save_desc"> Submit </button>
+                    </div>
+                       
+                </div>
+            </div> 
+        </div>
+         
+         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+         <script src="../scripts/shared.js"></script>
+         <script src="../scripts/auth.js"></script>
+         <script src="../scripts/index.js"></script>
+         <script src= "../scripts/taskpage.js"></script>
+    </body>
+</html>

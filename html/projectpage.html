@@ -1,79 +1,311 @@
 <!doctype html>
 <html lang="en">
 
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
-        <meta name="mobile-web-app-capable" content="yes" />
-        <title>Project Page</title>  
-        <link rel="stylesheet" href="generic_style.css"></link>
-        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
-    </head>
-    
-    <body>        
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes"/>
+
+    <title>Project Page</title>
+    <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-database.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-colorschemes"></script>
+
+
+    <link rel="stylesheet" href="generic_style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
+</head>
+    <body>
         <div class="header">
             <div class="header_content_wrapper">
                 <div class="header_word_wrapper">
-                    <h1 id="projectName">Project Name</h1>
+                    <h1 id="project_name"></h1>
                 </div>
+            </div>
+            <div class="header_links_wrapper">
+                <a><button class="button_generic" id="homepage_button" onclick="getHomePage()">Home Page</button></a>
+                <a href="login.html"><button id="signout_button" class="button_generic" onclick="logout()">Log Out</button></a>
             </div>
         </div>
 
         <div class="body">
-           <div class="description_card">
-                    <div class="description_header">
-                        <h3> Description <h3>
+
+        <div class="body-flex-wrapper-three-col">
+           <div id= "project_description_card" class="classic_card header_type_card">
+                    <div class="card_header">
+                        <h3> Description </h3>
                             <hr class="thin">
                     </div>
-                    <div class="description_content">
-                         <p id= "description">Project Description content</p>
+                    <div id="description_footer" class= "card_footer">
+                        <a href="#" id ="edit_desc" class="hover_grey_link float_right_elements" onclick="openModal(desc_edit_overlay, true, desc_field)" style="display:none">
+                            Edit description
+                        </a>
+                        <!-- <div class="clr"></div> -->
                     </div>
-                    <div class="description_footer">
-                     <a href="#" id ="edit_desc" class="edit_prompt">Edit description </a>
+                    <div id ="description_card_content" class="header_card_content">
+                         <span id= "description">
+                         </span>
                     </div>
             </div>
-<!-- 
-            <div class="card" id="team">
-                <h3>Team</h3>
-                 <hr class="thin">
 
-            </div> -->
-
-            <!--Charts-->
-            <div class="card" id =charts>
-                    <h3> Progress Charts </h3>
-                    <div class="time_contribution">
-                        <h4 id ="timeCont"> Time Contribution</h4>
-                        <canvas id="myChart"></canvas>
-                    </div>
-                    
+            <div class="classic_card header_type_card" id="project_team_card">
+                <div class="card_header">
+                    <h3>Team</h3>
+                    <hr class="thin">
+                </div>
+                    <a href="#" id ="add_member" class="hover_grey_link float_right_elements" onclick="openModal(add_student, false),displayStudentList()"  style="display:none">
+                        Add member
+                    </a>
+                    <!--Template for adding members-->
+                    <div id ="member_card_content" class="header_card_content">
+                   </div>
             </div>
-            
-            <!--Modal -->
-            <div class="bg-modal">
+        
+        
+
+              <!--Charts-->
+            <div id ="charts" class="classic_card header_type_card">
+                    <div class="card_header">
+                        <h3 id ="charts_card_heading"> Progress Charts </h3>
+                    </div>
+
+                    <div class="centered_card_content">
+
+                        <div id="time_contribution" class="chart">
+                            <h4 class ="chart_heading"> Time Contribution Percentage </h4>
+                            <div class= "chart_container">
+                                <canvas id="timeContPie"></canvas>
+                            </div>
+                        </div>
+                        <br>
+                        <div id="time_contribution" class="chart">
+                            <h4 class ="chart_heading"> Time Contribution By Hour </h4>
+                            <div class= "chart_container">
+                                <canvas id="timeContBar"></canvas>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+
+            <div id="task_card" class="classic_card content_card">
+                <div class="card_header">
+                      <h3> Tasks </h3>
+                          <hr class="thin">
+                </div>
+                <div class="content_card_body" id= "task_card_body">
+                <!-- Zhe Sheng: section for (preferably) task overview (in table) -->
+
+                    <button class="button_with_symbol" id="new_task_button" onclick="openConfigurableModal(create_edit_task, true, true, task_name_input, task_desc_input)" style="display:none">+</button>
+                    <div class="clr"></div>      <!-- Clearing Float-->
+
+                    <div class="task" id="task_template" style="display:none">
+                            <div class="dash_project">
+                                <h2 class="dash_project_head" id="task_heading">Task 1</h2>
+
+                                <p class="project_summary">Start: <span id="task_start_date">DD/MM/YY</span>
+                                                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                           End:   <span id="task_end_date">DD/MM/YY</span>
+                                                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                                                           Assignee:  <span id="assignee">No user is assigned to this task yet</span>
+                                </p>
+                                <div class="action_pane">
+                                    <input type="image" src="../imgs/edit-16.png" id="edit_task"  class="std_component">
+                                    <input type="image" id="delete_task" src="../imgs/delete-16.png" class="std_component">
+                                </div>
+                                <div class="clr"></div>
+                            </div>
+                    </div>
+                            <!-- END OF AUTO GENERATED HTML SECTION -->
+
+                </div>
+                <div id="task_card_footer" class= "card_footer">
+                    <a href="#" onclick="openModal(assign_task_overlay, false)" style="left: 14px;">
+                        <button id="assign_task_button" class="button_generic" style="display:none">Assign task</button>
+                    </a>
+                </div>
+                <div class="clr"></div>
+            </div>
+     </div>
+
+
+
+
+            <!--Modals -->
+            <!-- TODO: Larger modal sizes for smaller screens -->
+
+            <!-- Edit description-->
+            <div class="bg-modal" id="desc_edit_overlay">
                 <div class="modal-content">
-                    <div class="close">+</div>
-                    <div class = "desc_edit_form">
+                    <div class="close generic_popup_close" onclick="closeModal(desc_edit_overlay)">+</div>
+                    <div class = "input_form">
                         <h3>Edit description</h3>
-                        <label class= "field_elements" for="name_field">Project Name :</label> 
-                        <input id = "name_field" class="input"><br>
                         <label class="field_elements" for="desc_field">Description : </label><br>
-                        <textarea id = "desc_field" rows="14" cols="120" class="input"></textarea>
-                        
+                        <textarea id = "desc_field" rows="14" cols="120" class="input_field"></textarea>
                     </div>
-                    <div class= "desc_footer">
-                        <button href="#" class="blue_curve_button" id="save_desc"> Save </button>
+
+                    <div class= "modal_footer">
+                        <button class="blue_curve_button" id="save_desc" type="submit"> Save </button>
+                        <div class="clr"></div>       <!-- Spacer div in case using float causes issue in auto height adjustment-->
                     </div>
-                       
+
                 </div>
             </div>
+
+            <!-- Create New Task -->
+            <div class="bg-modal" id="create_edit_task">
+                <div class= "modal-content">
+                    <div class="close generic_popup_close" onclick="closeModal(create_edit_task)">+</div>
+
+                    <form class="input_form">
+                        <h3> <span id="create_mode_header"> New task</span> <span id="edit_mode_header"> Edit Task </span>  </h3>
+                        
+                        <div class="form_control">
+                            <label class="field_elements" for="task_name_input">Task Name :</label>
+                            <input id="task_name_input" class="input_field" type="text"><br>
+                            <small class="error" id="task_name_error">Error Message</small>
+                        </div>
+                      
+                        <label class="field_elements" for="task_desc_input">Description : </label><br>
+                        <textarea id = "task_desc_input" rows="12" cols="120" class="input_field"></textarea>
+
+                        <div class="date_container">
+                            <h3>Start date :</h3>
+                            <!-- ZS: This is the format for now, maybe there will be a better format coming along? -->
+                            <input type="number" class="start_day" name="Start Day" id = "task_start_date_input"
+                                min="1" max="31" value="1" required>
+
+                            <select name="start_month" class="select_month" id = "task_start_month_input">
+                                <option value="1">January</option>
+                                <option value="2">February</option>
+                                <option value="3">March</option>
+                                <option value="4">April</option>
+                                <option value="5">May</option>
+                                <option value="6">June</option>
+                                <option value="7">July</option>
+                                <option value="8">August</option>
+                                <option value="9">September</option>
+                                <option value="10">October</option>
+                                <option value="11">November</option>
+                                <option value="12">December</option>
+                            </select>
+
+                            <input type="number" class="start_year" name="Start Year" id = "task_start_year_input"
+                                min="2020" max="2099" value="2020" required>
+                            
+                        </div>
+                        <small class="error" id="task_start_date_error">Error Message</small>
+                        
+                        
+                        <div class="date_container">
+                            <h3>End date :</h3>
+                            <input type="number" class="end_day" name="End Day" id = "task_end_date_input"
+                                min="1" max="31" value="1" required>
+
+                            <select name="End Month" class="select_month" id = "task_end_month_input">
+                                <option value="1">January</option>
+                                <option value="2">February</option>
+                                <option value="3">March</option>
+                                <option value="4">April</option>
+                                <option value="5">May</option>
+                                <option value="6">June</option>
+                                <option value="7">July</option>
+                                <option value="8">August</option>
+                                <option value="9">September</option>
+                                <option value="10">October</option>
+                                <option value="11">November</option>
+                                <option value="12">December</option>
+                            </select>
+
+                            <input type="number" class="end_year" name="End Year" id = "task_end_year_input"
+                                min="2020" max="2099" value="2020" required>
+                        </div>
+                        <small class="error" id="task_end_date_error">Error Message</small>
+                        
+
+                    </form>
+                    <div class="modal_footer">
+                        <div class="clr"></div>
+                        <div class="error common_error_div" id="update_task_error"> 
+                            Error <!-- <span>Error</span> -->
+                        </div>
+                        <button class="blue_curve_button configurable_container" type="submit"><span id="create_mode_btn"> Add </span> <span id="edit_mode_btn"> Edit </span></button>
+                        <div class="clr"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ZS: popup to add student (no button to make it appear for now)
+                this is the version which only adds one student at a time,
+                mainly intended for adding after project is created
+            -->  <!--style="display: flex;"-->
+            <div class="bg-modal" id="add_student" >
+                <div class="modal-content">
+                    <div class="close generic_popup_close" onclick="closeModal(add_student)">+</div>
+                    <br>
+                        <h3>Add Student</h3>
+                            <hr class="thin">
+                            <!--<h4> Select </h4>
+
+                        <div class="search_wrapper">
+                            <input type="text" class="search_field" id= "search_student"  placeholder="Search Student...">
+                            <div class="suggestions">
+                                <div> Content 1</div>
+                                <div> Content 2</div>
+                            </div>
+                        </div>-->
+
+                        <label class="field_elements" for="search_student">Student :</label>
+                        <select id = "search_student" ></select>
+                        <ul id="students_list" ></ul>
+
+                    <div class="new_task_footer">
+                        <button class="blue_curve_button" id="add_new_student" onclick = "addStudentToProject()"> Add </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-modal" id="assign_task_overlay">
+                <div class="modal-content">
+                    <div class="close generic_popup_close" onclick="closeModal(assign_task_overlay)">+</div>
+                    <br>
+                        <h3>Assign Task</h3>
+                        <label class="field_elements" for="students_list">Task :</label>
+
+                        <!-- Updated in real time/dynamically -->
+                        <!-- Option 1: use select element -->
+                        <select name="task_name" class="select_task_panel" id="task_select">
+                            </select>
+
+                            <!-- Option 2: use div list (does not use add button) -->
+                            <!-- Issue: Duplicated ID not detected by script-->
+                            <!--
+                            <div class="task" id="template" style="display: none">
+                                <a class="dash_project" href="taskpage.html">
+                                    <div class="dash_project">
+                                        <h2 class="dash_project_head" id="task_heading">Task 1</h2>
+                                    </div>
+                                </a>
+                            </div>
+                            -->
+
+                    <div class="modal_footer">
+                        <button class="blue_curve_button" id="assign_button"> Assign </button>
+                    </div>
+                </div>
+            </div>
+
+
         </div>
-         
-            
-         
-         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
-         <script src="../scripts/shared.js"></script>
-         <script src= "../scripts/projectpage.js"></script>
+
+
+        <!-- The core Firebase JS SDK is always required and must be listed first -->
+        <!-- The core Firebase JS SDK is always required and must be listed first -->
+        <script src="../scripts/shared.js"></script>
+        <script src= "../scripts/auth.js"></script>
+        <script src= "../scripts/index.js"></script>
+        <script src= "../scripts/projectpage.js"></script>
     </body>
 </html>
