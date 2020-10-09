@@ -1,14 +1,25 @@
 
 /* DOM elements on page */
-var timelogCardTemplate = document.getElementById("timelog_card_template");
+var timeLogCardTemplate = document.getElementById("timelog_card_template");
 var logCardContent = document.getElementById("logs_card_body");
+var logContent = document.getElementById("log_content");
+
+var timeLogTableRow = document.getElementById("template_table_row");
+var timeLogTableBody = document.getElementById("timelog_table_body");
 
 
+var statusColumn = document.getElementById("log_time_status")
 var commonTaskError = document.getElementById("timelog_error")
 
 
+
+
+
 document.getElementById("save_time_log").addEventListener('click', function(){
+    clearErrors(commonTaskError);
     getDataforPopulation();
+    setDisplayNone(statusColumn);
+    setDisplayFlex(logContent);
 });
 
 
@@ -34,6 +45,7 @@ async function getDataforPopulation(){
         endDateFormat = new Date(endYear, endMonth-1, endDate, parseInt(endHr) + parseInt(endPeriod) , endMin ),
         dateValid = endDateFormat.getTime() > startDateFormat.getTime()
 
+    console.log(startDateFormat.getDate());
         
 
     if (!dateValid){
@@ -48,17 +60,20 @@ async function getDataforPopulation(){
         timeFormatHrs = Math.floor(timeInHrs),
         timeFormatMins = timeInMins % 60
 
-        startTimeObject = { Date : startDateFormat.getDate(), 
-                            Month :  startDateFormat.getMonth() + 1, 
+        startTimeObject = { Date : startDateFormat.getDate().toString().padStart(2,"0"), 
+                            Month : (startDateFormat.getMonth() + 1).toString().padStart(2,"0"), 
                             Year : startDateFormat.getFullYear(), 
                             Hour : startDateFormat.getHours(),
                             Minute : startDateFormat.getMinutes() },
 
-        endTimeObject = {   Date : startDateFormat.getDate(), 
-                            Month :  startDateFormat.getMonth() + 1, 
+        endTimeObject = {   Date : endDateFormat.getDate().toString().padStart(2,"0"), 
+                            Month : (endDateFormat.getMonth() + 1).toString().padStart(2,"0"), 
                             Year : endDateFormat.getFullYear(), 
                             Hour : endDateFormat.getHours(),
                             Minute : endDateFormat.getMinutes() }
+
+    populateTable(startTimeObject, endTimeObject);
+    // populateRecentTimeLogs();
 
     var user = await firebase.auth().currentUser
 
@@ -78,13 +93,22 @@ async function getDataforPopulation(){
         })
         .then(function(){
             window.alert("Time logged!");
-            window.location.reload();
+            // window.location.reload();
         })
     })
 }
 
-function populateTimelogs(){
-    
+function populateTable(startTimeObject, endTimeObject){
+    var startDateString = startTimeObject.Date + "/" + startTimeObject.Month + "/" + startTimeObject.Year;
+    var endDateString = endTimeObject.Date + "/" + endTimeObject.Month + "/" + endTimeObject.Year;
+
+    document.getElementById("table_start_date").innerText = startDateString;
+    document.getElementById("table_end_date").innerText = endDateString;
+    document.getElementById("table_start").innerText = startTimeObject.Hour +":" + startTimeObject.Minute;
+    document.getElementById("table_end").innerText = endTimeObject.Hour +":" + endTimeObject.Minute;
+
+    var clone = cloneElement(timeLogTableRow, timeLogTableBody);
+    clone.removeAttribute("style");
 }
 
 

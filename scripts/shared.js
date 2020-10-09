@@ -62,9 +62,12 @@ function searchMultiple(searchBar, objArray){
     return foundArray;
 }
 
-
-/* Populate Element */
-
+function cloneElement(elem, parent){
+    var clone = elem.cloneNode(true);
+    // clone.removeAttribute("style");
+    parent.appendChild(clone);
+    return clone;
+}
 
 
 
@@ -105,6 +108,10 @@ function closeModal(modalElem){
 
 function setDisplayNone(elem){
     elem.style.display = "none";
+}
+
+function setDisplayFlex(elem){
+    elem.style.display="flex";
 }
 
 function displayError(errorMsg, errorElement){

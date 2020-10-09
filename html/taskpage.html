@@ -148,14 +148,27 @@
 
             <!--Charts-->
             <div class="body-flex-wrapper-two-col">
-                <div class="header_type_card" id="my_cont_card">
+                <div class="content_card" id="cont_card">
                     <div class="card_header">
-                        <h3> My Contributions </h3>
+                        <h3> Contributions </h3>
                         <hr class="thin">
                     </div>
                     <div class="content_card_body">
                     <!-- Zhe Sheng: section for (preferably) task overview (in table) -->
-                        
+
+                        <div class="status_column centered_card" id="log_time_status" >
+                            <div class="status_column_content">
+                                    Log your time to track progress
+                            </div>
+                            <div class="clr"></div>
+                            
+                            <div class="status_column_deco">
+                                <div class="image_container">
+                                    <img src="../imgs/alarm-clock-32.png">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex_div" id="log_content" style="display:none">
                             <h4> Most Recent Timelogs </h4>
                             <div class="grid_wrapper" id="logs_card_body">
                                 <div class="small_card_wrapper" id="timelog_template">
@@ -175,94 +188,44 @@
                                     </div>
                                 </div>
                             </div>
+                        
                             <br><br>
     
                             <h4> Timelogs </h4>
-                            <table class="content_table">
+                                
+                            <!-- <span>  Log your time to track progress </span> -->
+                            <table class="content_table" id="timelog_table">
                                 <thead>
                                     <tr>
-                                        <th scope="col">Date</th>
+                                        <th scope="col">Start Date</th>
+                                        <th scope="col">End Date</th>
                                         <th scope="col">Begin</th>
                                         <th scope="col">End</th>
                                         <th scope="col">Duration</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr>  
-                                        <td>25/09/2020</td>
-                                        <td>5pm</td>
-                                        <td>6pm</td>
-                                        <td>1 hr</td>
-                                    </tr>
-                                    <tr>
-                                        <td>26/09/2020</td>
-                                        <td>3pm</td>
-                                        <td>6pm</td>
-                                        <td>3 hrs</td>
-                                    </tr>
-                                </tbody>
+                                    <tbody id="timelog_table_body">
+                                        <tr id="template_table_row" style="display:none">  
+                                            <td id="table_start_date"> 25/09/2020</td>
+                                            <td id="table_end_date">25/09/2020 </td>
+                                            <td id="table_start"> 5pm</td>
+                                            <td id="table_end"> 6pm </td>
+                                            <td id="table_duration"> 7pm</td>
+                                        </tr>
+                                    </tbody>
                             </table>
-                    </div>
-                </div>
-                <div class="header_type_card" id="team_cont_card">
-                    <div class="card_header">
-                        <h3> Team Contributions</h3>
-                        <hr class="thin">
-                    </div>
-                    <div class="content_card_body">
-                        
-                        <h4> Most Recent Timelogs </h4>
-                         <div class="grid_wrapper" id="team_logs_card_body">
-                            <div class="small_card_wrapper">
-                                <div class="classic_card small_card" id="timelog_card_template">
-                                    <div class="small_card_header">
-                                        <h4 id="timelog_date"> 25th September 2020</h4>
-                                    </div>
-                                    <div class="small_card_content">
-                                        <h5 id="assignee"> Member </h5> <br>
-                                        <span> Duration: </span>
-                                        <span class="duration" id="time_period">  1 hour</span><br>
-                                        <span>From <span id="start_time"> 5pm</span> to  <span id="end_time">6pm </span></span>
-                                    </div>
-                                    <div class="small_card_footer">
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
-                    <br><br>
-
-                        <h4> Timelogs </h4>
-                        <table class="content_table">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Member</th>
-                                    <th scope="col">Date</th>
-                                    <th scope="col">Begin</th>
-                                    <th scope="col">End</th>
-                                    <th scope="col">Duration</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>  
-                                    <td>Robyn</td>
-                                    <td>25/09/2020</td>
-                                    <td>5pm</td>
-                                    <td>6pm</td>
-                                    <td>1 hr</td>
-                                </tr>
-                                <tr>
-                                    <td>Campbell</td>
-                                    <td>26/09/2020</td>
-                                    <td>3pm</td>
-                                    <td>6pm</td>
-                                    <td>3 hrs</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    <div class="card_footer">
-    
-                    </div>
+                </div>
+                
+                <div class="content_card">
+                    <h3> Progress Charts </h3>
+                    <div class="time_contribution">
+                        <h4 id ="timeCont"> Time Contribution</h4>
+                        <div class="chart_container">
+                            <canvas id="myContChart"></canvas>
+                        </div>
+                    </div>    
                 </div>
             </div>
            
@@ -280,16 +243,6 @@
                 </div>
             </div> -->
             
-            <div class="content_card" id =charts>
-                    <h3> Progress Charts </h3>
-                    <div class="time_contribution">
-                        <h4 id ="timeCont"> Time Contribution</h4>
-                        <div class="chart_container">
-                            <canvas id="myContChart"></canvas>
-                        </div>
-                    </div>
-                    
-            </div>
             
 
             <!--Modals -->
@@ -392,6 +345,9 @@
                 </div>
             </div> 
         </div>
+
+
+       
          
          <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
          <script src="../scripts/shared.js"></script>
