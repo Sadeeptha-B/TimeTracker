@@ -39,6 +39,7 @@ document.getElementById("create_mode_btn").addEventListener('click',function(){
     clearErrors(taskNameError, commonTaskError);
     var taskData = getNewTaskData(localStorage.getItem("projectName"));  // Get data, validate, and store in backend
     if (taskData != undefined){
+        console.log("I run");
         populateTask(localStorage.getItem("projectName"), taskData.TaskName);  // Display data
         closeModal(updateTaskModal);
     }
@@ -146,12 +147,11 @@ function populateTask(projectName, taskName){
         deleteButton.setAttribute("onclick","deleteTask("+taskID+")");
         editButton.setAttribute("onclick", "editTask("+taskID+")")
 
-        var clone = taskTemplate.cloneNode(true);
+        var clone = cloneElement(taskTemplate, tasksCardBody);
         clone.removeAttribute("style");
         clone.id = "task_" + taskID
         clone.setAttribute("data-taskName", taskName)
         clone.setAttribute("data-projectName", project)
-        tasksCardBody.append(clone);
         addTasksEventListener(projectName, clone)
     })
 }
