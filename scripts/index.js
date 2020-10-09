@@ -77,7 +77,7 @@ function addTasksEventListener(project, task){
 					const name = member.textContent
 					assignedToObject[name] = {"Username": name}
 				})
-				localStorage.setItem("assignedTo", JSON.stringify(assignedTo))
+				localStorage.setItem("assignedTo", JSON.stringify(assignedToObject))
 			}
 		})
 		.then(function() {
