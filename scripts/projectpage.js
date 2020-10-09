@@ -180,6 +180,11 @@ function editTask(index){
     closeModal(updateTaskModal)
 }
 
+function markTaskAsComplete(){
+    event.stopPropagation();
+    //TODO: Have a string marked as complete
+}
+
 
 /*
 Click Event Listeners

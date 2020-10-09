@@ -149,9 +149,10 @@ function updateTaskPage(username, role) {
 	const taskField = document.getElementById("taskName"),
 		  descriptionField = document.getElementById("description"),
 		  editTaskDescriptionButton = document.getElementById("edit_task_desc"),
-		  logTimeField = document.getElementById("logtime_card"),
-		  submitTimeButton = document.getElementById("save_time_log")
-
+		  submitTimeButton = document.getElementById("save_time_log"),
+		  planContBtn = document.getElementById("plan_cont_btn"),
+		  newLogBtn   = document.getElementById("new_log_btn"),
+		  markCompltBtn = document.getElementById("mark_complt_btn")
 
 	// Update the fields with project information
 	taskField.textContent = localStorage.getItem("taskName")
@@ -160,28 +161,36 @@ function updateTaskPage(username, role) {
 
 	// Remove task description button for teachers but show for students
 	// Remove time input button for teachers but show for students
-	if (editTaskDescriptionButton && logTimeField && submitTimeButton) {
+	if (editTaskDescriptionButton && submitTimeButton) {
 		if (role === 'Teacher') {
-			logTimeField.style.display = "none"
+			markCompltBtn.style.display="inline-block";
+			planContBtn.style.display = "none"
+			newLogBtn.style.display = "none"
 			editTaskDescriptionButton.style.display = "none"
 			submitTimeButton.style.display = "none"
+			
 		}
 		else if (role === 'Student') {
 			firebaseRef.child(`Projects/${localStorage.getItem("projectName")}/Tasks/${localStorage.getItem("taskName")}/AssignedTo/${username}`)
 			.once('value').then(function(snapshot) {
 				if (snapshot.val()) {
-					logTimeField.style.display = "block"
-					editTaskDescriptionButton.style.display = "block"
-					submitTimeButton.style.display = "block"
+					markCompltBtn.style.display="inline-block";
+					newLogBtn.style.display = "inline-block"
+					planContBtn.style.display="inline-block"
+					editTaskDescriptionButton.style.display = "inline-block"
+					submitTimeButton.style.display = "inline-block"
 				}
 				else {
-					logTimeField.style.display = "none"
+					markCompltBtn.style.display="none";
+					newLogBtn.style.display = "none"
+					planContBtn.style.display="none"
 					editTaskDescriptionButton.style.display = "none"
 					submitTimeButton.style.display = "none"
 				}
 			})
 		}
 	}
+
 }
 
 function addMembers(member) {

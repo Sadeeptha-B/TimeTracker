@@ -1,25 +1,33 @@
 
-/* DOM elements on page */
+/* Recent timelogs */
 var timeLogCardTemplate = document.getElementById("timelog_card_template");
 var logCardContent = document.getElementById("logs_card_body");
-var logContent = document.getElementById("log_content");
 
-var timeLogTableRow = document.getElementById("template_table_row");
-var timeLogTableBody = document.getElementById("timelog_table_body");
+/* Timelogs table */
+var timeLogs = document.getElementById("timelogs");   //Container div
+var timeLogTableRow = document.getElementById("template_table_row");   //Table row
+var timeLogTableBody = document.getElementById("timelog_table_body");   // Table body
 
+/* Modals*/
+var timeInput = document.getElementById("time_input");
 
-var statusColumn = document.getElementById("log_time_status")
+/* Chart */
+var timeTrackChart = document.getElementById("time_track_chart")
+
+var statusColumn = document.getElementById("logtime_status")
 var commonTaskError = document.getElementById("timelog_error")
 
 
-
+function logTimeDisplayNone(){
+    setDisplayNone(logTimeField);
+    var descTeam = document.getElementById("description_team_wrapper");
+    descTeam.toggle("body-flex-wrapper-one-third", true);
+}
 
 
 document.getElementById("save_time_log").addEventListener('click', function(){
     clearErrors(commonTaskError);
     getDataforPopulation();
-    setDisplayNone(statusColumn);
-    setDisplayFlex(logContent);
 });
 
 
@@ -43,15 +51,19 @@ async function getDataforPopulation(){
 
     var startDateFormat = new Date(startYear, startMonth-1, startDate, parseInt(startHr) + parseInt(startPeriod)  , startMin),
         endDateFormat = new Date(endYear, endMonth-1, endDate, parseInt(endHr) + parseInt(endPeriod) , endMin ),
+        hourNotEntered = isNaN(startDateFormat.getTime()) || isNaN(endDateFormat.getTime())
         dateValid = endDateFormat.getTime() > startDateFormat.getTime()
+    
 
-    console.log(startDateFormat.getDate());
-        
+    if (hourNotEntered){
+        displayError("Hour minute input must be provided", commonTaskError);
+        return;
+    }
 
     if (!dateValid){
         displayError("Start time should be before end time",commonTaskError);
         return;
-    }
+    } 
 
     // the work time, in hours, mins and secs:
     var timeInSecs = (endDateFormat.getTime() - startDateFormat.getTime())/1000,
@@ -73,7 +85,9 @@ async function getDataforPopulation(){
                             Minute : endDateFormat.getMinutes() }
 
     populateTable(startTimeObject, endTimeObject);
-    // populateRecentTimeLogs();
+    setDisplayNone(statusColumn);
+    setDisplayFlex(timeLogs);
+    closeModal(timeInput);
 
     var user = await firebase.auth().currentUser
 
@@ -93,7 +107,6 @@ async function getDataforPopulation(){
         })
         .then(function(){
             window.alert("Time logged!");
-            // window.location.reload();
         })
     })
 }
@@ -179,6 +192,20 @@ document.getElementById("save_desc").addEventListener("click", async function(){
         window.location.reload()
     })
 });
+
+document.getElementById("mark_complt_btn").addEventListener('click', function(){
+    document.getElementById("marked_cmplt").style.display = "flex";   // This must be grid
+    document.getElementById("mark_complt_btn").style.display = "none";   
+    document.getElementById("set_active_btn").style.display = "flex";
+});
+
+document.getElementById("set_active_btn").addEventListener('click', function(){
+    document.getElementById("marked_cmplt").style.display = "none";
+    document.getElementById("mark_complt_btn").style.display = "flex";   
+    document.getElementById("set_active_btn").style.display = "none";
+});
+
+
 
 
 
