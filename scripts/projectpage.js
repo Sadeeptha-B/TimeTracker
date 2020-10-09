@@ -120,12 +120,21 @@ function populateTask(projectName, taskName){
               assignedTo = snapshot.child('AssignedTo').val(),
               project = snapshot.child('Project').val()
 
-        document.getElementById("task_heading").innerHTML = name;
-        document.getElementById("task_start_date").innerHTML = startDate;
-        document.getElementById("task_end_date").innerHTML = endDate;
+        var taskHeading = document.getElementById("task_heading"),
+            taskStartDate = document.getElementById("task_start_date"),
+            taskEndDate = document.getElementById("task_end_date")
+
+        taskHeading.innerHTML = name;
+        taskStartDate.innerHTML = startDate;
+        taskEndDate.innerHTML = endDate;
         
+        
+
         if (assignedTo) {
-            document.getElementById("assignee").innerHTML = assignedTo;
+            document.getElementById("assignee").innerHTML = ""
+            Object.entries(assignedTo).forEach(member => {
+                document.getElementById("assignee").innerHTML = member[1].Username + " " + document.getElementById("assignee").innerHTML
+            })
         }
         else {
             document.getElementById("assignee").innerHTML = "No user is assigned to this task yet";
@@ -212,7 +221,6 @@ document.getElementById("assign_task_button").addEventListener('click', function
         const tasks = snapshot.child('Tasks').val(),
               selectField = document.getElementById('task_select')
               
-
         Object.entries(tasks).forEach(task => {
             const newOption = document.createElement('option')
             selectField.appendChild(newOption)
@@ -228,11 +236,14 @@ document.getElementById("assign_button").addEventListener('click', async functio
     const task = document.getElementById('task_select').value
     var user = await firebase.auth().currentUser
 
-    firebaseRef.child(`Projects/${localStorage.getItem("projectName")}/Tasks/${task}`)
-    .update({AssignedTo: getUsername(user.email)})
-
-    closeModal(assign_task_overlay)
-    window.location.reload()
+    firebaseRef.child(`Projects/${localStorage.getItem("projectName")}/Tasks/${task}/AssignedTo/${getUsername(user.email)}`)
+    .set({
+        Username: getUsername(user.email)
+    })
+    .then(function() {
+        closeModal(assign_task_overlay)
+        window.location.reload()
+    })
 })
     
 

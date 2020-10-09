@@ -6,12 +6,12 @@ firebase.auth().onAuthStateChanged(function(user) {
 			const username = snapshot.child('Username').val(),
 					role = snapshot.child('Role').val()
 
-			// Update the current page such as removing/adding restricted buttons
-			updatePage(username, role)
+			// Update the pages based on the user such as removing/adding restricted fucntionality
+			try { updateHomePage(username, role) } catch(err) { ; }
 
-			try { updateProjectPage() } catch(err) { ; }
+			try { updateProjectPage(role) } catch(err) { ; }
 
-			try { updateTaskPage() } catch(err) { ; }
+			try { updateTaskPage(username, role) } catch(err) { ; }
 
 			// Add all the projects of the user to the home page
 			populateProjects(username)
@@ -24,77 +24,6 @@ firebase.auth().onAuthStateChanged(function(user) {
 	  // No user is signed in.
 	}
   });
-
-// FUNCTION TO ALTER THE PAGE BASED ON THE CURRENT USER LOGGED IN
-// ======================================================================
-
-function updatePage(username, role) {
-	const welcomeText = document.getElementById("welcome_text"),
-		  addTaskButton = document.getElementById("new_task_button"),
-		  assignTaskButton = document.getElementById("assign_task_button"),
-		  timeInputButton = document.getElementById("time_input_button"),
-		  addMemberButton = document.getElementById("add_member"),
-		  editDescriptionButton = document.getElementById("edit_desc"),
-		  newProjectButton = document.getElementById("new_project_button"),
-		  editTaskDescriptionButton = document.getElementById("edit_task_desc")
-
-	if (newProjectButton) {
-		if (role === 'Teacher') {
-			newProjectButton.style.display = "block"
-		}
-		else if (role === 'Student'){
-			newProjectButton.style.display = "none"
-		}
-	}
-
-	// Update username at the top of the screen depending on user
-	if (welcomeText) {
-		welcomeText.innerHTML = "Welcome, " + username
-	}
-
-	// Remove the add and assign task button for teachers but show for students
-	if (addTaskButton && assignTaskButton) {
-		if (role === 'Teacher') {
-			addTaskButton.style.display = "none"
-			assignTaskButton.style.display = "none"
-		}
-		else if (role === 'Student'){
-			addTaskButton.style.display = "block"
-			assignTaskButton.style.display = "block"
-		}
-	}
-
-	// Remove time input button for teachers but show for students
-	if (timeInputButton) {
-		if (role === 'Teacher') {
-			timeInputButton.style.display = "none"
-		}
-		else if (role === 'Student') {
-			timeInputButton.style.display = "block"
-		}
-	}
-
-	// Remove add member button for students but show for teachers
-	if (addMemberButton && editDescriptionButton) {
-		if (role === 'Teacher') {
-			addMemberButton.style.display = "block"
-			editDescriptionButton.style.display = "block"
-		}
-		else if (role === 'Student') {
-			addMemberButton.style.display = "none"
-			editDescriptionButton.style.display = "none"
-		}
-	}
-
-	if (editTaskDescriptionButton) {
-		if (role === 'Teacher') {
-			editTaskDescriptionButton.style.display = "none"
-		}
-		else if (role === 'Student') {
-			editTaskDescriptionButton.style.display = "block"
-		}
-	}
-}
 
 // FUNCTIONS TO ADD EVENT LISTENERS TO ALL THE PROJECT/TASK ELEMENTS
 // ======================================================================
@@ -127,13 +56,13 @@ function addTasksEventListener(project, task){
 				  members = document.getElementById("member_card_content").getElementsByClassName("member")
 			
 			// To store the names of the members in the project in the form of an objecy
-			var membersObject = {}
+			var membersObject = {},
+				assignedToObject = {}
 
 			localStorage.setItem("projectName", projectName)
 			localStorage.setItem("description", projectDescription)
 			localStorage.setItem("taskName", taskName)
 			localStorage.setItem("taskDescription", taskDescription)
-			localStorage.setItem("assignedTo", assignedTo)
 			
 			// Get the name of each member and store in the object
 			Array.from(members).forEach(member => {
@@ -141,7 +70,17 @@ function addTasksEventListener(project, task){
 				membersObject[name] = {"Username": name}
 			})
 			localStorage.setItem("members", JSON.stringify(membersObject))
-		}).then(function() {
+
+			// Get the name of each member that is assigned to the task and store in the object
+			if (assignedTo != null) {
+				Array.from(assignedTo).forEach(member => {
+					const name = member.textContent
+					assignedToObject[name] = {"Username": name}
+				})
+				localStorage.setItem("assignedTo", JSON.stringify(assignedTo))
+			}
+		})
+		.then(function() {
 			// Move to the task page once data has been stored
 			window.location.href = "../html/taskpage.html"
 		})
@@ -149,18 +88,100 @@ function addTasksEventListener(project, task){
 }
 
 
-// FUNCTIONS TO UPDATE PAGES/TASKS BASED ON THE CURRENT TASK/PROJECT SELECTED
+// FUNCTIONS TO UPDATE THE PAGES BASED ON THE USER
 // ======================================================================
+function updateHomePage(username, role) {
+	const welcomeText = document.getElementById("welcome_text"),
+		  newProjectButton = document.getElementById("new_project_button")
 
-function updateProjectPage() {
+	if (newProjectButton) {
+		if (role === 'Teacher') {
+			newProjectButton.style.display = "block"
+		}
+		else if (role === 'Student'){
+			newProjectButton.style.display = "none"
+		}
+	}
+
+	// Update username at the top of the screen depending on user
+	if (welcomeText) {
+		welcomeText.innerHTML = "Welcome, " + username
+	}
+
+	
+}
+
+function updateProjectPage(role) {
 	const projectField = document.getElementById("project_name"),
-		  descriptionField = document.getElementById("description")
+		  descriptionField = document.getElementById("description"),
+		  addMemberButton = document.getElementById("add_member"),
+		  editDescriptionButton = document.getElementById("edit_desc"),
+		  addTaskButton = document.getElementById("new_task_button"),
+		  assignTaskButton = document.getElementById("assign_task_button")
 
 	// Update the fields with project information
 	projectField.textContent = localStorage.getItem("projectName")
 	descriptionField.textContent = localStorage.getItem("description")
 
 	Object.entries(JSON.parse(localStorage.getItem("members"))).forEach(member => {addMembers(member)})
+
+	// Remove add member button for students but show for teachers
+	// Remove the add and assign task button for teachers but show for students
+	if (addMemberButton && editDescriptionButton) {
+		if (role === 'Teacher') {
+			addMemberButton.style.display = "block"
+			editDescriptionButton.style.display = "block"
+
+			addTaskButton.style.display = "none"
+			assignTaskButton.style.display = "none"
+		}
+		else if (role === 'Student') {
+			addMemberButton.style.display = "none"
+			editDescriptionButton.style.display = "none"
+
+			addTaskButton.style.display = "block"
+			assignTaskButton.style.display = "block"
+		}
+	}
+}
+
+function updateTaskPage(username, role) {
+	const taskField = document.getElementById("taskName"),
+		  descriptionField = document.getElementById("description"),
+		  editTaskDescriptionButton = document.getElementById("edit_task_desc"),
+		  logTimeField = document.getElementById("logtime_card"),
+		  submitTimeButton = document.getElementById("save_time_log")
+
+
+	// Update the fields with project information
+	taskField.textContent = localStorage.getItem("taskName")
+	descriptionField.textContent = localStorage.getItem("taskDescription")
+	Object.entries(JSON.parse(localStorage.getItem("assignedTo"))).forEach(member => {addMembers(member)})
+
+	// Remove task description button for teachers but show for students
+	// Remove time input button for teachers but show for students
+	if (editTaskDescriptionButton && logTimeField && submitTimeButton) {
+		if (role === 'Teacher') {
+			logTimeField.style.display = "none"
+			editTaskDescriptionButton.style.display = "none"
+			submitTimeButton.style.display = "none"
+		}
+		else if (role === 'Student') {
+			firebaseRef.child(`Projects/${localStorage.getItem("projectName")}/Tasks/${localStorage.getItem("taskName")}/AssignedTo/${username}`)
+			.once('value').then(function(snapshot) {
+				if (snapshot.val()) {
+					logTimeField.style.display = "block"
+					editTaskDescriptionButton.style.display = "block"
+					submitTimeButton.style.display = "block"
+				}
+				else {
+					logTimeField.style.display = "none"
+					editTaskDescriptionButton.style.display = "none"
+					submitTimeButton.style.display = "none"
+				}
+			})
+		}
+	}
 }
 
 function addMembers(member) {
@@ -171,24 +192,6 @@ function addMembers(member) {
 	newDiv.id = member[1].Username
 	newDiv.className = "member"
 	newDiv.textContent = member[1].Username
-}
-
-function updateTaskPage() {
-	const taskField = document.getElementById("taskName"),
-		  descriptionField = document.getElementById("description"),
-		  member_field = document.getElementById("member_card_content"),
-		  newDiv = document.createElement("div")
-
-	// Update the fields with project information
-	taskField.textContent = localStorage.getItem("taskName")
-	descriptionField.textContent = localStorage.getItem("taskDescription")
-
-	if (localStorage.getItem("assignedTo") !== 'null') {
-		member_field.appendChild(newDiv)
-		newDiv.id = localStorage.getItem("assignedTo")
-		newDiv.className = "member"
-		newDiv.textContent = localStorage.getItem("assignedTo")
-	}
 }
 
 // FUNCTIONS TO POPULATE THE PAGE WITH PROJECTS/TASKS BASED ON USER/PROJECT RESPECTIVELY
@@ -276,7 +279,7 @@ async function createProject(){
         //project end
         endDay = document.getElementById("end_day").value,
         endMonth = document.getElementById("end_month").value,
-        endYear = document.getElementById("end_year").value,
+        endYear = document.getElementById("end_year").value
 
         // Putting into DD/MM/YYYY format - OBSOLETE (using JS Date object now)
 		// endDate = endDay + "/" + endMonth + "/" + endYear;

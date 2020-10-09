@@ -30,9 +30,11 @@ async function getDataforPopulation(){
 
 
 
-    var startDateFormat = new Date(startYear, startMonth-1, startDate, parseInt(startHr) + parseInt(startPeriod)  , startMin);
-    var endDateFormat = new Date(endYear, endMonth-1, endDate, parseInt(endHr) + parseInt(endPeriod) , endMin );
-    var dateValid = endDateFormat.getTime() > startDateFormat.getTime();
+    var startDateFormat = new Date(startYear, startMonth-1, startDate, parseInt(startHr) + parseInt(startPeriod)  , startMin),
+        endDateFormat = new Date(endYear, endMonth-1, endDate, parseInt(endHr) + parseInt(endPeriod) , endMin ),
+        dateValid = endDateFormat.getTime() > startDateFormat.getTime()
+
+        
 
     if (!dateValid){
         displayError("Start time should be before end time",commonTaskError);
@@ -40,51 +42,44 @@ async function getDataforPopulation(){
     }
 
     // the work time, in hours, mins and secs:
-    if (dateValid) {
-        var timeInSecs = (endDateFormat.getTime() - startDateFormat.getTime())/1000;
-        var timeInMins = timeInSecs/60;
-        var timeInHrs = timeInMins/60;
-        var timeFormatMins = timeInMins%60;
-        var timeFormatHrs = Math.floor(timeInHrs);
-    }
+    var timeInSecs = (endDateFormat.getTime() - startDateFormat.getTime())/1000,
+        timeInMins = timeInSecs / 60,
+        timeInHrs = timeInMins / 60,
+        timeFormatHrs = Math.floor(timeInHrs),
+        timeFormatMins = timeInMins % 60
+
+        startTimeObject = { Date : startDateFormat.getDate(), 
+                            Month :  startDateFormat.getMonth() + 1, 
+                            Year : startDateFormat.getFullYear(), 
+                            Hour : startDateFormat.getHours(),
+                            Minute : startDateFormat.getMinutes() },
+
+        endTimeObject = {   Date : startDateFormat.getDate(), 
+                            Month :  startDateFormat.getMonth() + 1, 
+                            Year : endDateFormat.getFullYear(), 
+                            Hour : endDateFormat.getHours(),
+                            Minute : endDateFormat.getMinutes() }
 
     var user = await firebase.auth().currentUser
 
-    firebaseRef.child(`Projects/${localStorage.getItem("projectName")}/Tasks/${localStorage.getItem("taskName")}`).once('value').then(function(snapshot) {
-        var amount = snapshot.child(getUsername(user.email)).val()
+    firebaseRef.child(`Projects/${localStorage.getItem("projectName")}/Tasks/${localStorage.getItem("taskName")}/Times`).once('value').then(function(snapshot) {
+        var amount = snapshot.child(getUsername(user.email)).val(),
+            noOfTasks = 1
 
-    var startTimeObject = {     Month :  startDateFormat.getMonth() + 1 , 
-                                Date : startDateFormat.getDate() , 
-                                Year : startDateFormat.getFullYear() , 
-                                Hour : startDateFormat.getHours(),
-                                Minute : startDateFormat.getMinutes() },
-
-        endTimeObject = {       Month :  endDateFormat.getMonth() + 1 , 
-                                Date : endDateFormat.getDate() , 
-                                Year : endDateFormat.getFullYear() , 
-                                Hour : endDateFormat.getHours(),
-                                Minute : endDateFormat.getMinutes()   }
-
-        if (amount==null){
-            firebaseRef.child(`Projects/${localStorage.getItem("projectName")}/Tasks/${localStorage.getItem("taskName")}/${getUsername(user.email)}/Time1`).set({
-                StartTime : startTimeObject,
-                EndTime : endTimeObject
-            }).then(function(){
-                window.alert("Time logged!");
-                window.location.reload();
-            })
-        }
-
-        else{
+        if (amount !== null) {
             amount = Object.entries(amount)
-            firebaseRef.child(`Projects/${localStorage.getItem("projectName")}/Tasks/${localStorage.getItem("taskName")}/${getUsername(user.email)}/Time${amount.length + 1}`).set({
-                StartTime : startTimeObject,
-                EndTime : endTimeObject
-            }).then(function(){
-                window.alert("Time logged!");
-                window.location.reload();
-            })
+            noOfTasks = amount.length + 1
         }
+        
+        firebaseRef.child(`Projects/${localStorage.getItem("projectName")}/Tasks/${localStorage.getItem("taskName")}/Times/${getUsername(user.email)}/Time${noOfTasks}`).set({
+            StartTime : startTimeObject,
+            EndTime : endTimeObject,
+            Duration: `${timeFormatHrs} hour(s) ${timeFormatMins} min(s)`
+        })
+        .then(function(){
+            window.alert("Time logged!");
+            window.location.reload();
+        })
     })
 }
 
