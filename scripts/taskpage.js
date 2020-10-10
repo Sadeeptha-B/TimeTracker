@@ -80,35 +80,35 @@ async function getDataforPopulation(){
         return;
     } 
 
-    // the work time, in hours, mins and secs:
-    var timeInSecs = (endDateFormat.getTime() - startDateFormat.getTime())/1000,
-        timeInMins = timeInSecs / 60,
-        timeInHrs = timeInMins / 60,
-        timeFormatHrs = Math.floor(timeInHrs),
-        timeFormatMins = timeInMins % 60
+    startTimeObject = { Date : startDateFormat.getDate().toString().padStart(2,"0"), 
+                        Month : (startDateFormat.getMonth() + 1).toString().padStart(2,"0"), 
+                        Year : startDateFormat.getFullYear(), 
+                        Hour : startDateFormat.getHours(),
+                        Minute : startDateFormat.getMinutes() },
 
-        startTimeObject = { Date : startDateFormat.getDate().toString().padStart(2,"0"), 
-                            Month : (startDateFormat.getMonth() + 1).toString().padStart(2,"0"), 
-                            Year : startDateFormat.getFullYear(), 
-                            Hour : startDateFormat.getHours(),
-                            Minute : startDateFormat.getMinutes() },
+    endTimeObject = {   Date : endDateFormat.getDate().toString().padStart(2,"0"), 
+                        Month : (endDateFormat.getMonth() + 1).toString().padStart(2,"0"), 
+                        Year : endDateFormat.getFullYear(), 
+                        Hour : endDateFormat.getHours(),
+                        Minute : endDateFormat.getMinutes() }
 
-        endTimeObject = {   Date : endDateFormat.getDate().toString().padStart(2,"0"), 
-                            Month : (endDateFormat.getMonth() + 1).toString().padStart(2,"0"), 
-                            Year : endDateFormat.getFullYear(), 
-                            Hour : endDateFormat.getHours(),
-                            Minute : endDateFormat.getMinutes() }
 
-    populateTable(startTimeObject, endTimeObject);
+    var user = await firebase.auth().currentUser;
+    firebaseRef.child(`Users/${getUsername(user.email)}`)
+		.once('value').then(function(snapshot) {
+            const username = snapshot.child('Username').val();
+            populateTable(username, startTimeObject, endTimeObject);
+    });
+
+    console.log(getTimeDuration(startDateFormat, endDateFormat));
     setDisplayNone(statusColumn);
     setDisplayFlex(timeLogs);
     closeModal(timeInput);
 
-    var user = await firebase.auth().currentUser
-
     firebaseRef.child(`Projects/${localStorage.getItem("projectName")}/Tasks/${localStorage.getItem("taskName")}/Times`).once('value').then(function(snapshot) {
         var amount = snapshot.child(getUsername(user.email)).val(),
             noOfTasks = 1
+        
 
         if (amount !== null) {
             amount = Object.entries(amount)
@@ -126,10 +126,22 @@ async function getDataforPopulation(){
     })
 }
 
-function populateTable(startTimeObject, endTimeObject){
+function getTimeDuration(startDateFormat, endDateFormat){
+    return {
+        timeInSecs:(endDateFormat.getTime() - startDateFormat.getTime())/1000,
+        timeInMins:+this.timeInSecs / 60,
+        timeInHrs:+this.timeInMins / 60,
+        timeFormatHrs: Math.floor(+this.timeInHrs),
+        timeFormatMins : +this.timeInMins % 60
+    }
+}
+
+
+function populateTable(user, startTimeObject, endTimeObject){
     var startDateString = startTimeObject.Date + "/" + startTimeObject.Month + "/" + startTimeObject.Year;
     var endDateString = endTimeObject.Date + "/" + endTimeObject.Month + "/" + endTimeObject.Year;
 
+    document.getElementById("table_member").innerText = user;
     document.getElementById("table_start_date").innerText = startDateString;
     document.getElementById("table_end_date").innerText = endDateString;
     document.getElementById("table_start").innerText = startTimeObject.Hour +":" + startTimeObject.Minute;
@@ -142,18 +154,59 @@ function populateTable(startTimeObject, endTimeObject){
 
 /* Chart */
 var ctxMyCont = document.getElementById("myContChart").getContext('2d');
-var time_Array = ["2018-12-07 15:45:17", "2018-12-07 15:30:17", "2018-12-07 15:15:16", "2018-12-07 15:00:17", "2018-12-07 14:45:16", "2018-12-07 14:30:17", "2018-12-07 14:15:17", "2018-12-07 14:00:17", "2018-12-07 13:45:17", "2018-12-07 13:30:16", "2018-12-07 13:15:17", "2018-12-07 16:00:17"];
+var timeArray = ["2018-12-07 15:45:17", "2018-12-09 15:30:17", "2018-12-15 15:15:16", "2018-12-12 15:00:17", "2018-12-13 14:45:16", "2018-12-14 14:30:17", "2018-12-10 14:15:17", "2018-12-09 14:00:17", "2018-12-08 13:45:17", "2018-12-07 13:30:16", "2018-12-06 13:15:17", "2018-12-10 16:00:17"];
 var hoursContributed = [3, 1, 0.5, 2, 5, 3, 1, 1.5, 1, 2, 4, 3];
 
+var contributors={
+    label:"Team member",
+    borderColor: "orange",
+    data: [
+        {x:"2018-12-07 15:45:17", y: "Robyn"},
+        {x:"2018-12-09 15:30:17", y: "Campbell"},
+        {x: "2018-12-15 15:15:16",y: "Najam"},
+        {x:"2018-12-12 15:00:17", y: "Nathan"},
+        {x: "2018-12-13 14:45:16", y:"Robyn"},
+        {x:"2018-12-14 14:30:17", y:"Najam"},
+        {x:"2018-12-10 14:15:17", y:"Nathan"},
+        {x:"2018-12-09 14:00:17", y: "Campbell"},
+        {x:"2018-12-08 13:45:17", y: "Campbell"},
+        {x: "2018-12-07 13:30:16", y: "Campbell"},
+        {x:"2018-12-06 13:15:17", y:"Robyn"},
+        {x:"2018-12-10 16:00:17", y:"Nathan"}
+    ]
+
+}
+
+
+var dateAndCont = {
+    label:"Dates and Hour contribution",
+    borderColor: "blue",
+    data: [
+        {x:"2018-12-07 15:45:17", y: 3},
+        {x:"2018-12-09 15:30:17", y:1},
+        {x: "2018-12-15 15:15:16", y:0.5},
+        {x:"2018-12-12 15:00:17", y:2},
+        {x: "2018-12-13 14:45:16", y:5},
+        {x:"2018-12-14 14:30:17", y:3},
+        {x:"2018-12-10 14:15:17", y:1},
+        {x:"2018-12-09 14:00:17", y: 1.5},
+        {x:"2018-12-08 13:45:17", y:1},
+        {x: "2018-12-07 13:30:16", y:2},
+        {x:"2018-12-06 13:15:17", y:4},
+        {x:"2018-12-10 16:00:17", y:3}
+    ]
+
+}
+
 var myChart = new Chart(ctxMyCont, {
-    type: 'bar',
+    type: 'line',
     data: {
-        labels: time_Array,
+        labels: timeArray,
         datasets: [{
-            label: 'Hours',
+            label: 'Duration',
             data: hoursContributed,
-            backgroundColor: "rgb(75,192, 192)"
-            }],
+            backgroundColor: "rgb(113, 163, 240)",
+        }],
     },
     options: {
         scales: {
@@ -165,7 +218,7 @@ var myChart = new Chart(ctxMyCont, {
             xAxes: [{
                 type: 'time',
                 time: {
-                    unit: 'minute',
+                    unit: 'day',
                     displayFormats: {
                         // second: 'h:MM:SS',
                         // minute: 'h:MM',
@@ -203,22 +256,30 @@ document.getElementById("save_desc").addEventListener("click", async function(){
         // Rename the local storage values to the new values
         if (newDesc.length > 0) {
             localStorage.setItem("taskDescription", newDesc)
+            document.getElementById("description").innerText = newDesc
         }
-        window.location.reload()
+        // window.location.reload()
     })
+    closeModal(document.getElementById("desc_edit_overlay"));
 });
 
 document.getElementById("mark_complt_btn").addEventListener('click', function(){
     document.getElementById("marked_cmplt").style.display = "flex";   // This must be grid
     document.getElementById("mark_complt_btn").style.display = "none";   
+    document.getElementById("new_log_btn").style.display="none";
+    document.getElementById("plan_cont_btn").style.display="none"
     document.getElementById("set_active_btn").style.display = "flex";
 });
 
 document.getElementById("set_active_btn").addEventListener('click', function(){
     document.getElementById("marked_cmplt").style.display = "none";
+    document.getElementById("new_log_btn").style.display="flex";
+    document.getElementById("plan_cont_btn").style.display="flex"
     document.getElementById("mark_complt_btn").style.display = "flex";   
     document.getElementById("set_active_btn").style.display = "none";
 });
+
+
 
 
 
