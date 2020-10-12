@@ -14,6 +14,7 @@ var statusColumn = document.getElementById("logtime_status")
 var commonTaskError = document.getElementById("timelog_error")
 
 window.taskPageNameSpace = {
+    charts: [],
     members: {
         /* Dummy Data can be deleted once assignees are available in local storage  */
         array : ["hban0006", "josephloo", "student12"],
@@ -41,8 +42,20 @@ Object.entries(JSON.parse(localStorage.getItem("assignedTo"))).forEach(member =>
     memberAccess.member.totalDuration = 0;
 })
 
+addChart("time_duration_bar", "Time Duration spent by each member", "bar", memberDurationChart,);
+addChart("time_duration_pie","Time Percentages","pie", memberDurationChart)
 
-var tallyByMemberChart = memberDurationChart("time_duration", "Time Duration spent by each member");
+function addChart( id,title, type,func){
+    var chart = func(id, title, type);
+    window.taskPageNameSpace.charts.push(chart)
+}
+
+function updateCharts(){
+    var charts = window.taskPageNameSpace.charts;
+    charts.forEach(chart => {
+        updateChart(chart);
+    })
+}
 
 
 document.getElementById("save_time_log").addEventListener('click', function(){
@@ -158,7 +171,7 @@ async function update(formatObject){
             const username = snapshot.child('Username').val();
             window.taskPageNameSpace.members[username].timelogs.push(formatObject);
             window.taskPageNameSpace.members[username].totalDuration += formatObject.durationData.timeInHrs;
-            updateChart(tallyByMemberChart)
+            updateCharts(); 
             populateTable(username, startTimeObject, endTimeObject, duration);
     });
 
@@ -240,12 +253,15 @@ function dynamicallyCreateChart(id, title){
     var header = document.createElement("h4");
     var chartContainer = document.createElement("div");
     var chartCanvas = document.createElement("canvas");
+    var br =  document.createElement("br");
     
     chartCard.appendChild(chartUnit);
     chartUnit.appendChild(header);
     chartUnit.appendChild(chartContainer);
     chartContainer.appendChild(chartCanvas);
-    
+    chartContainer.appendChild(br);
+    chartContainer.appendChild(br);
+
     header.innerText = title;
     chartContainer.class = "chart_container";
     chartCanvas.id = id;
@@ -254,7 +270,7 @@ function dynamicallyCreateChart(id, title){
     return ctx;
 }
 
-function basicChartConfig(type, xAxes, label, yAxes){
+function basicChartConfig(type, xAxes, label, yAxes, tooltipFunction){
     var config = {
         type: type,
         data: {
@@ -275,17 +291,22 @@ function basicChartConfig(type, xAxes, label, yAxes){
                         beginAtZero:true, 
                     }
                 }]
+            },
+            tooltips:{
+                callbacks:{
+                    label: tooltipFunction()
+                }
             }
         }
     }
     return config;
 }
 
-/* Not executing: change */
-  /*p*/
+function tooltipFunction(){
+   /* To modify tooltip */ 
+}
 
-
-function memberDurationChart(id, title){
+function memberDurationChart(id, title, type){
     var ctx = dynamicallyCreateChart(id, title);
     var members = window.taskPageNameSpace.members.array;
     var durationArray = []
@@ -294,7 +315,7 @@ function memberDurationChart(id, title){
     })
 
 
-    var chart = new Chart(ctx, basicChartConfig('bar', members, 'Members', durationArray));
+    var chart = new Chart(ctx, basicChartConfig(type, members, 'Members', durationArray));
 
     return chart;
 }
