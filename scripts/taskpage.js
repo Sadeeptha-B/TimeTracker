@@ -158,7 +158,7 @@ async function update(formatObject){
             const username = snapshot.child('Username').val();
             window.taskPageNameSpace.members[username].timelogs.push(formatObject);
             window.taskPageNameSpace.members[username].totalDuration += formatObject.durationData.timeInHrs;
-            updateChart()
+            updateChart(tallyByMemberChart)
             populateTable(username, startTimeObject, endTimeObject, duration);
     });
 
@@ -193,12 +193,42 @@ function populateTable(user, startTimeObject, endTimeObject, duration){
     var startDateString = startTimeObject.Date + "/" + startTimeObject.Month + "/" + startTimeObject.Year;
     var endDateString = endTimeObject.Date + "/" + endTimeObject.Month + "/" + endTimeObject.Year;
 
+    function timeToStr(num){
+        var numStr = num.toString();
+        if (num < 10){
+            numStr = "0" + num;
+        }
+        return numStr;
+    }
+    
+    var startTimeMinuteString = timeToStr(startTimeObject.Minute);
+    var endTimeMinuteString = timeToStr(endTimeObject.Minute);
+    var startTimeHourString = timeToStr(startTimeObject.Hour);
+    var endTimeHourString = timeToStr(endTimeObject.Hour);
+
+    var startFormatted = new Date (startTimeObject.Year, 
+        parseInt(startTimeObject.Month)-1, 
+        parseInt(startTimeObject.Date), 
+        startTimeObject.Hour, 
+        startTimeObject.Minute);
+
+    var endFormatted = new Date (endTimeObject.Year, 
+        parseInt(endTimeObject.Month)-1, 
+        parseInt(endTimeObject.Date), 
+        endTimeObject.Hour, 
+        endTimeObject.Minute);
+
+    var durationSecs = (endFormatted.getTime() - startFormatted.getTime())/1000;
+    var durationMins = durationSecs / 60;
+    var durationHrs = Math.floor(durationMins / 60);
+    var durationDisplayMins = durationMins % 60;
+
     document.getElementById("table_member").innerText = user;
     document.getElementById("table_start_date").innerText = startDateString;
     document.getElementById("table_end_date").innerText = endDateString;
-    document.getElementById("table_start").innerText = startTimeObject.Hour +":" + startTimeObject.Minute;
-    document.getElementById("table_end").innerText = endTimeObject.Hour +":" + endTimeObject.Minute;
-    document.getElementById("table_duration").innerText = duration + " hr"
+    document.getElementById("table_start").innerText = startTimeHourString +":" + startTimeMinuteString;
+    document.getElementById("table_end").innerText = endTimeHourString +":" + endTimeMinuteString;
+    document.getElementById("table_duration").innerText = durationHrs.toString() + " hrs " + durationDisplayMins.toString() + " mins";
 
     var clone = cloneElement(timeLogTableRow, timeLogTableBody);
     clone.removeAttribute("style");
@@ -232,7 +262,9 @@ function basicChartConfig(type, xAxes, label, yAxes){
             datasets:[{
                 label: label,
                 data: yAxes,
-                backgroundColor:  ['#f2d13a', '#c9deeb', '#cacaca']
+                backgroundColor: palette('tol', xAxes.length).map(function(hex) {
+                    return '#' + hex;
+                })
             }]
         },
         options:{
@@ -240,7 +272,7 @@ function basicChartConfig(type, xAxes, label, yAxes){
                 yAxes: [{
                     display: true,
                     ticks:{
-                        beginAtZero:true
+                        beginAtZero:true, 
                     }
                 }]
             }
@@ -249,8 +281,8 @@ function basicChartConfig(type, xAxes, label, yAxes){
     return config;
 }
 
-  /*palette('tol', myData.length).map(function(hex) {
-                    return '#' + hex;*/
+/* Not executing: change */
+  /*p*/
 
 
 function memberDurationChart(id, title){
