@@ -3,6 +3,7 @@ HTML contains modal open, close for direct button click
 Modal open close, after saving, editing, is done in this script.
 */
 
+
 /* DOM elements on Page */
     var projectName = document.getElementById("project_name");
     var description = document.getElementById("description");
@@ -339,15 +340,7 @@ var timeContBar = new Chart(ctxTimeContBar, {
 });
 
 
-var customColorFunction = function(schemeColors){
-    var myColors = [ "rgba(178, 102, 255)",
-                     "rgba(153, 255, 204)",
-                     "rgba(204, 0, 102)"  ,
-                     "rgba(204, 204, 0)"];
 
-    Array.prototype.push.apply(schemeColors, myColors);
-    return schemeColors;
-}
 
 
 /* Helper functions */

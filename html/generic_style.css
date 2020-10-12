@@ -558,7 +558,7 @@ td{
       flex:1;
     }
 
-    #project_description_card  #task_description_card{
+    #project_description_card {
         align-self: stretch;
         grid-column: 1/2;
         grid-row: 1;
@@ -571,14 +571,14 @@ td{
     }
 
 
-    #task_team_card{
+    /* #task_team_card{
        grid-column: 1;
        grid-row:2;
     }
 
     #recent_logtimes{
       grid-row: 1/3;
-    }
+    } */
 
 /* Chart card*/
     #charts{

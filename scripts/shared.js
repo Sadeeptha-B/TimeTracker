@@ -64,12 +64,19 @@ function searchMultiple(searchBar, objArray){
 
 function cloneElement(elem, parent){
     var clone = elem.cloneNode(true);
-    // clone.removeAttribute("style");
     parent.appendChild(clone);
     return clone;
 }
 
+var customColorFunction = function(schemeColors){
+    var myColors = [ "rgba(178, 102, 255)",
+                     "rgba(153, 255, 204)",
+                     "rgba(204, 0, 102)"  ,
+                     "rgba(204, 204, 0)"];
 
+    Array.prototype.push.apply(schemeColors, myColors);
+    return schemeColors;
+}
 
 
 /* Modal Controls */

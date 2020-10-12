@@ -55,7 +55,7 @@ function addTasksEventListener(project, task){
 				  projectDescription = document.getElementById("description").textContent,
 				  members = document.getElementById("member_card_content").getElementsByClassName("member")
 			
-			// To store the names of the members in the project in the form of an objecy
+			// To store the names of the members in the project in the form of an object
 			var membersObject = {},
 				assignedToObject = {}
 
@@ -201,6 +201,7 @@ function addMembers(member) {
 	newDiv.id = member[1].Username
 	newDiv.className = "member"
 	newDiv.textContent = member[1].Username
+	
 }
 
 // FUNCTIONS TO POPULATE THE PAGE WITH PROJECTS/TASKS BASED ON USER/PROJECT RESPECTIVELY
@@ -268,6 +269,7 @@ function populateTasks(projectName){
         Object.entries(tasks).forEach(task => populateTask(projectName, task[1].TaskName));
     })
 }
+
 
 
 // ONCLICK FUNCTIONS

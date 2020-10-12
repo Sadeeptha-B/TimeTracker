@@ -11,6 +11,7 @@
         <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-database.js"></script>  
         <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js" integrity="sha512-s+xg36jbIujB2S2VKfpGmlC3T5V2TF3lY48DX7u2r9XzGzgPsa6wTpOQA7J9iffvdeBN0q9tKzRxVxw1JviZPg==" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-colorschemes"></script>
 
         <link rel="stylesheet" href="generic_style.css"></link>
         <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap" rel="stylesheet">
@@ -33,7 +34,7 @@
 
     <div class="body">
 
-        <div class="body-flex-wrapper-one-third" id="description_team_wrapper">
+        <div class="body-flex-wrapper-two-col" id="description_team_wrapper">
             <div class="classic_card header_type_card" id="task_description_card">
                 <div class="card_header">
                     <h3> Description <h3>
@@ -67,18 +68,19 @@
                </div>
             </div>
 
-            <div class="classic_card header_type_card" id="recent_logtimes">
+       <!--     <div class="classic_card header_type_card" id="recent_logtimes">
                 <h4> Most Recent Timelogs </h4>
                 <div class="grid_wrapper" id="logs_card_body">
                     <div class="small_card_wrapper" id="timelog_template">
                         <div class="classic_card small_card" >
                             <div class="small_card_header">
-                                <h4 id="timelog_date"> 25th September 2020</h4>
+                                <h5 id="timelog_date"> 25th September 2020</h5>
                             </div>
-                            <div class="small_card_content"><br>
+                            <div class="small_card_content">
+                                <h5 id="timelog_assignee"> Member </h5> 
                                 <span> Duration: </span>
-                                <span class="duration" id="time_period">  1 hour</span><br>
-                                <span>From <span id="start_time"> 5pm</span> to  <span id="end_time">6pm </span></span>
+                                <span  id="timelog_duration">  1 hour</span><br>
+                                <span>From <span id="timelog_start_time"> 5pm</span> to  <span id="timelog_end_time">6pm </span></span>
                             </div>
                             <div class="small_card_footer">
                                 <input type="image" id="delete_time_log" src="../imgs/delete-16.png" class="std_component float_right_elements">
@@ -87,7 +89,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
         </div>
            
@@ -183,14 +185,14 @@
                     </div>
                 </div>
                 
-                <div class="content_card" id="time_track_chart">
+                <div class="content_card" id="chart_card">
                     <h3> Progress Charts </h3>
-                    <div class="time_contribution">
-                        <h4 id ="timeCont"> Time Contribution</h4>
+                    <!-- <div>
+                        <h4> Time Contribution</h4>
                         <div class="chart_container">
                             <canvas id="myContChart"></canvas>
                         </div>
-                    </div>    
+                    </div>     -->
                 </div>
             </div>
            
