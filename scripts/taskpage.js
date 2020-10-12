@@ -16,32 +16,33 @@ var commonTaskError = document.getElementById("timelog_error")
 window.taskPageNameSpace = {
     members: {
         /* Dummy Data can be deleted once assignees are available in local storage  */
+        array : ["hban0006", "josephloo", "student12"],
         hban0006: {
             timelogs: [],
-            totalDuration: 0
+            totalDuration: 5
         },
         josephloo: {
             timelogs: [],
-            totalDuration: 0
+            totalDuration: 5
         },
         student12:{
             timelogs: [], 
-            totalDuration: 0
+            totalDuration: 2
         }
     }
 }
 
-Object.entries(JSON.parse(localStorage.getItem("assignedTo"))).forEach(member => {
-    window.taskPageNameSpace
 
+Object.entries(JSON.parse(localStorage.getItem("assignedTo"))).forEach(member => {
+    var memberAccess =  window.taskPageNameSpace.members;
+    memberAccess.member = {};
+    memberAccess.array.push(member);
+    memberAccess.member.timelogs = [];
+    memberAccess.member.totalDuration = 0;
 })
 
 
-
-
-
-
-var tallyByMemberChart = tallyByMemberChart("time_duration", "Time Duration spent by each member");
+var tallyByMemberChart = memberDurationChart("time_duration", "Time Duration spent by each member");
 
 
 document.getElementById("save_time_log").addEventListener('click', function(){
@@ -223,51 +224,63 @@ function dynamicallyCreateChart(id, title){
     return ctx;
 }
 
-function tallyByMemberChart(id, title){
-    var ctx = dynamicallyCreateChart(id, title);
-    var members = Object.keys(window.taskPageNameSpace.members);
-    var dataArray = []
-    members.forEach((member) => {
-        dataArray.push(window.taskPageNameSpace.members[member].totalDuration)
-    })
-
-    var chart = new Chart(ctx, {
-        type: 'bar',
+function basicChartConfig(type, xAxes, label, yAxes){
+    var config = {
+        type: type,
         data: {
-            labels: Object.keys(window.taskPageNameSpace.members),
+            labels:xAxes,
             datasets:[{
-                label: 'Members',
-                data: dataArray
+                label: label,
+                data: yAxes,
+                backgroundColor:  ['#f2d13a', '#c9deeb', '#cacaca']
             }]
         },
         options:{
-            plugins:{
-                colorschemes:{
-                    scheme: 'office.Slipstream6',
-                    custom: customColorFunction
-                }
+            scales:{
+                yAxes: [{
+                    display: true,
+                    ticks:{
+                        beginAtZero:true
+                    }
+                }]
             }
         }
+    }
+    return config;
+}
+
+  /*palette('tol', myData.length).map(function(hex) {
+                    return '#' + hex;*/
+
+
+function memberDurationChart(id, title){
+    var ctx = dynamicallyCreateChart(id, title);
+    var members = window.taskPageNameSpace.members.array;
+    var durationArray = []
+    members.forEach((member) => {
+        durationArray.push(window.taskPageNameSpace.members[member].totalDuration)
     })
+
+
+    var chart = new Chart(ctx, basicChartConfig('bar', members, 'Members', durationArray));
 
     return chart;
 }
 
 
-function updateChart(){
-    var dataArray = []
-    var members = Object.keys(window.taskPageNameSpace.members);
+function updateChart(chart){
+    var members = window.taskPageNameSpace.members.array;
+    var durationArray = []
     members.forEach((member) => {
-        dataArray.push(window.taskPageNameSpace.members[member].totalDuration)
+        durationArray.push(window.taskPageNameSpace.members[member].totalDuration)
     })
 
-    console.log(dataArray)
     setTimeout(function(){
-        tallyByMemberChart.data.datasets[0].data.pop();
-        tallyByMemberChart.data.datasets[0].data = dataArray;
-        tallyByMemberChart.data.datasets[0].backgroundColor = ['#f2d13a', '#c9deeb', '#cacaca'];
-        tallyByMemberChart.update();
-      }, 0);
+        chart.data.datasets[0].data.pop();
+        chart.data.datasets[0].data = durationArray;
+        // chart.data.datasets[0].backgroundColor = ['#f2d13a', '#c9deeb', '#cacaca'];
+        chart.update();
+    }, 0);
 }
 
 
