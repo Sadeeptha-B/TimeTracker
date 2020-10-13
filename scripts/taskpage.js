@@ -270,7 +270,7 @@ function dynamicallyCreateChart(id, title){
     return ctx;
 }
 
-function basicChartConfig(type, xAxes, label, yAxes, tooltipFunction){
+function basicChartConfig(type, xAxes, label, yAxes){
     var config = {
         type: type,
         data: {
