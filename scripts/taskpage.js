@@ -20,17 +20,32 @@ window.taskPageNameSpace = {
     }
 }
 
-
 Object.entries(JSON.parse(localStorage.getItem("assignedTo"))).forEach(member => {
-    var memberAccess =  window.taskPageNameSpace.members;
-    memberAccess[member[1].Username] = {};
-    memberAccess.array.push(member[1].Username);
-    memberAccess[member[1].Username].timelogs = [];
-    memberAccess[member[1].Username].totalDuration = 0;
-})
+    var memberAccess =  window.taskPageNameSpace.members,
+        username = member[1].Username
+    memberAccess[username] = {};
+    memberAccess.array.push(username);
+    // Later I just need to take the data from firebase and add it the total duration and timelogs
+    firebaseRef.child(`Projects/${localStorage.getItem("projectName")}/Tasks/${localStorage.getItem("taskName")}/Times/${username}`).once("value").then(function(snapshot) {
+        var totalDuration = snapshot.child('TotalTimeSpent').val(),
+            timelogs = snapshot.val()
+        
+        memberAccess[username].totalDuration = totalDuration
 
-addChart("time_duration_bar", "Time Duration spent by each member", "bar", memberDurationChart)
-addChart("time_duration_pie","Time Percentages","pie", memberDurationChart)
+        if (timelogs) {
+            var timelogs = Object.entries(timelogs),
+                length = timelogs.length
+            
+            memberAccess[username].timelogs = timelogs.slice(0, length - 1)
+        }
+        
+    }).then(function() {
+        addChart("time_duration_bar", "Time Duration spent by each member", "bar", memberDurationChart)
+        addChart("time_duration_pie","Time Percentages","pie", memberDurationChart)
+        updateCharts()
+        populateTable()
+    })
+})
 
 function addChart( id,title, type,func){
     var chart = func(id, title, type);
@@ -44,6 +59,13 @@ function updateCharts(){
     })
 }
 
+function populateTable() {
+    var members = window.taskPageNameSpace.members.array;
+    members.forEach((member) => {
+        var timelogs = window.taskPageNameSpace.members[member].timelogs
+        timelogs.forEach(log => {updateTable(member, log[1])})
+    })
+}
 
 document.getElementById("save_time_log").addEventListener('click', function(){
     clearErrors(commonTaskError);
@@ -149,52 +171,71 @@ async function update(formatObject){
         endTimeObject = formatObject.endTimeObject
         
     var user = await firebase.auth().currentUser;
-    firebaseRef.child(`Users/${getUsername(user.email)}`)
-		.once('value').then(function(snapshot) {
-            const username = snapshot.child('Username').val();
-            window.taskPageNameSpace.members[username].timelogs.push(formatObject);
-            window.taskPageNameSpace.members[username].totalDuration += formatObject.durationData.timeInHrs;
-            updateCharts(); 
-            populateTable(username, formatObject);
-    });
+    const username = getUsername(user.email)
+
+    window.taskPageNameSpace.members[username].timelogs.push(formatObject);
+    window.taskPageNameSpace.members[username].totalDuration += formatObject.durationData.timeInHrs;
+    updateCharts(); 
+    updateTable(username, formatObject);
 
     
     setDisplayNone(statusColumn);
     setDisplayFlex(timeLogs);
     closeModal(timeInput);
 
-    firebaseRef.child(`Projects/${localStorage.getItem("projectName")}/Tasks/${localStorage.getItem("taskName")}/Times`).once('value').then(function(snapshot) {
-        var amount = snapshot.child(getUsername(user.email)).val(),
-            noOfTasks = 1,
-            totalTimeSpent = 0
-        
+    var projectName = localStorage.getItem("projectName"),
+            taskName = localStorage.getItem("taskName")
 
-        if (amount !== null) {
+    firebaseRef.child(`Projects/${projectName}`).once('value').then(function(snapshot) {
+        var username = getUsername(user.email),
+            amount = snapshot.child(`Tasks/${taskName}/Times/${username}`).val(),
+            noOfTasks = 1,
+
+            totalTimeSpentProject = snapshot.child(`TotalTimeSpent/${username}/Duration`).val(),
+            totalTimeSpentTask = snapshot.child(`Tasks/${taskName}/Times/${username}/TotalTimeSpent`).val(),
+            timeSpent = formatObject.durationData.timeInHrs
+
+        if (amount) {
             amount = Object.entries(amount)
-            noOfTasks = amount.length + 1
-            totalTimeSpent = snapshot.child(`${getUsername(user.email)}/TotalTimeSpent`)
+            noOfTasks = amount.length
         }
 
-        firebaseRef.child(`Projects/${localStorage.getItem("projectName")}/Tasks/${localStorage.getItem("taskName")}/Times/${getUsername(user.email)}/Time${noOfTasks}`).set({
-            StartTime : startTimeObject,
-            EndTime : endTimeObject,
-            Duration: { Hours: formatObject.durationData.timeFormatHrs, 
-                        Minutes: formatObject.durationData.timeFormatMins }
+        if (totalTimeSpentProject == null) {
+            totalTimeSpentProject = 0
+        }
+        if (totalTimeSpentTask == null) {
+            totalTimeSpentTask = 0
+        }
+
+        firebaseRef.child(`Projects/${projectName}/Tasks/${taskName}/Times/${username}/Time${noOfTasks}`).set({
+            startTimeObject : startTimeObject,
+            endTimeObject : endTimeObject,
+            durationData: {
+                timeInHrs: formatObject.durationData.timeInHrs,
+                timeFormatHrs: formatObject.durationData.timeFormatHrs,
+                timeFormatMins: formatObject.durationData.timeFormatMins
+            }
         })
         .then(function(){
-            if (totalTimeSpent) {
-                firebaseRef.child(`Projects/${localStorage.getItem("projectName")}/Tasks/${localStorage.getItem("taskName")}`).update({
-
-                })
-            }
-        }).then(function() {
+            // Updating the total time spent of the user in the project
+            firebaseRef.child(`Projects/${projectName}/TotalTimeSpent/${username}`).set({
+                Duration: timeSpent + totalTimeSpentProject
+            })
+        })
+        .then(function() {
+            // Updating the total time spent of the user in the specific task
+            firebaseRef.child(`Projects/${projectName}/Tasks/${taskName}/Times/${username}`).update({
+                TotalTimeSpent: timeSpent + totalTimeSpentTask
+            })
+        })
+        .then(function() {
             window.alert("Time logged!");
         })
     })
 }
 
 
-function populateTable(user, formatObject){
+function updateTable(user, formatObject){
     var startTimeObject = formatObject.startTimeObject,
         endTimeObject = formatObject.endTimeObject,
         timeFormatHrs = formatObject.durationData.timeFormatHrs,
@@ -310,7 +351,6 @@ function memberDurationChart(id, title, type){
     members.forEach((member) => {
         durationArray.push(window.taskPageNameSpace.members[member].totalDuration)
     })
-
 
     var chart = new Chart(ctx, basicChartConfig(type, members, 'Members', durationArray));
 

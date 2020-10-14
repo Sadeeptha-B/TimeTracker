@@ -189,7 +189,6 @@ function editTask(index){
     var task = document.getElementById("task_" + index);
 
     document.removeChild(task)
-    getNewTaskData(task.getAttribute("data-projectName"))
 
     closeModal(updateTaskModal)
 }
