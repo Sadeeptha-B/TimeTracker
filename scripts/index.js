@@ -142,6 +142,8 @@ function updateProjectPage(role) {
 	}
 
 	Object.entries(JSON.parse(localStorage.getItem("members"))).forEach(member => {addMembers(member)})
+	
+	updateChartsInProjectPage()
 
 }
 

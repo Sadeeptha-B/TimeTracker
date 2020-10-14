@@ -38,6 +38,9 @@ Object.entries(JSON.parse(localStorage.getItem("assignedTo"))).forEach(member =>
             
             memberAccess[username].timelogs = timelogs.slice(0, length - 1)
         }
+        else {
+            memberAccess[username].timelogs = []
+        }
         
     }).then(function() {
         addChart("time_duration_bar", "Time Duration spent by each member", "bar", memberDurationChart)

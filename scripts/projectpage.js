@@ -267,93 +267,96 @@ document.getElementById("assign_button").addEventListener('click', async functio
 
 /* Chart
 =========================================== */
+function updateChartsInProjectPage() {
+    firebaseRef.child(`Projects/${localStorage.getItem("projectName")}/TotalTimeSpent`).once("value").then(function(snapshot) {
+        const timeSpentArray = snapshot.val(),
+              students = Object.keys(timeSpentArray),
+              timesObject = Object.values(timeSpentArray)
+        var times = []
+        timesObject.forEach(time => {times.push(time.Duration)})
+        var ctxTimeContPie = document.getElementById('timeContPie');
+        var ctxTimeContBar = document.getElementById('timeContBar');
 
-var ctxTimeContPie = document.getElementById('timeContPie');
-var ctxTimeContBar = document.getElementById('timeContBar');
-var students = ["Robyn McNamara", "Campbell Wilson", "Najam Nazar", "Nathan Companez"];
-var times = [4, 7, 3, 5];
-
-
-var timeContPie = new Chart(ctxTimeContPie, {
-    type: 'pie',
-    data:{
-        labels: students,
-        datasets: [{
-            label: 'Numbers',
-            legend: "Time contributed",
-            data: times
-        }],
-    },
-    options: {
-        //  Code for title if needed
-        /*
-        title: {
-            display: true,
-            text: "Time Contribution By Hour",
-            fontFamily: 'Poppins, Verdana, sans-serif',
-            fontSize: 16,
-            fontColor: "black"
-        },
-        */
-        plugins:{
-            colorschemes:{
-                scheme: 'office.Slipstream6',
-                custom: customColorFunction
+        console.log(students)
+        console.log(times)
+        var timeContPie = new Chart(ctxTimeContPie, {
+            type: 'pie',
+            data:{
+                labels: students,
+                datasets: [{
+                    label: 'Numbers',
+                    legend: "Time contributed",
+                    data: times
+                }],
+            },
+            options: {
+                //  Code for title if needed
+                /*
+                title: {
+                    display: true,
+                    text: "Time Contribution By Hour",
+                    fontFamily: 'Poppins, Verdana, sans-serif',
+                    fontSize: 16,
+                    fontColor: "black"
+                },
+                */
+                plugins:{
+                    colorschemes:{
+                        scheme: 'office.Slipstream6',
+                        custom: customColorFunction
+                    }
+                },
+                responsive:true,
+                tooltips: {
+                    callbacks: {
+                      label: function(tooltipItem, data) {
+                        var dataset = data.datasets[tooltipItem.datasetIndex];  //get the concerned dataset
+        
+                        var component = data.labels[tooltipItem.index];
+        
+                        //calculate the total of this data set
+                        var total = dataset.data.reduce(function(previousValue, currentValue) {
+                          return previousValue + currentValue;
+                        });
+        
+                        //get the current items value
+                        var currentValue = dataset.data[tooltipItem.index];
+        
+        
+                        //calculate the precentage based on the total and current item, also this does a rough rounding to give a whole number
+                        var percentage = Math.floor(((currentValue/total) * 100)+0.5);
+        
+                        return component + " : " + percentage + "%";
+                      }
+                    }
+                  }
             }
-        },
-        responsive:true,
-        tooltips: {
-            callbacks: {
-              label: function(tooltipItem, data) {
-                var dataset = data.datasets[tooltipItem.datasetIndex];  //get the concerned dataset
-
-                var component = data.labels[tooltipItem.index];
-
-                //calculate the total of this data set
-                var total = dataset.data.reduce(function(previousValue, currentValue) {
-                  return previousValue + currentValue;
-                });
-
-                //get the current items value
-                var currentValue = dataset.data[tooltipItem.index];
-
-
-                //calculate the precentage based on the total and current item, also this does a rough rounding to give a whole number
-                var percentage = Math.floor(((currentValue/total) * 100)+0.5);
-
-                return component + " : " + percentage + "%";
-              }
-            }
-          }
-    }
-});
-
-var timeContBar = new Chart(ctxTimeContBar, {
-    type:'bar',
-    data:{
-        labels: students,
-        datasets: [{
-            label: 'Hours',
-            legend: "Time contributed",
-            backgroundColor: "rgb(75,192, 192)",
-            data: times
-        }],
-    },
-    options:{
-        scales:{
-            yAxes: [{
-                display: true,
-                ticks:{
-                    beginAtZero:true
+        });
+        
+        var timeContBar = new Chart(ctxTimeContBar, {
+            type:'bar',
+            data:{
+                labels: students,
+                datasets: [{
+                    label: 'Hours',
+                    legend: "Time contributed",
+                    backgroundColor: "rgb(75,192, 192)",
+                    data: times
+                }],
+            },
+            options:{
+                scales:{
+                    yAxes: [{
+                        display: true,
+                        ticks:{
+                            beginAtZero:true
+                        }
+                    }]
                 }
-            }]
-        }
-    }
-});
-
-
-
-
+            }
+        });
+    })
+}
 
 /* Helper functions */
 function compare(shouldBeSmaller, shouldBeLarger){
