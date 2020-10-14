@@ -50,9 +50,22 @@ document.getElementById("edit_mode_btn").addEventListener('click', function(){
     clearErrors(taskNameError, commonTaskError);
     var taskData = getNewTaskData(localStorage.getItem("projectName"));  // Get data, validate, and store in backend
     if (taskData != undefined){
-        deleteTask(myNameSpace.editId);
-        populateTask(localStorage.getItem("projectName"), taskData.TaskName);  // Display data
-        closeModal(updateTaskModal);
+        var task = document.getElementById("task_" + myNameSpace.editId),
+            projectName = task.getAttribute("data-projectName"),
+            taskName = task.getAttribute("data-taskName")
+
+        firebaseRef.child(`Projects/${projectName}/Tasks/${taskName}`).once("value").then(function(snapshot) {
+            const assignedTo = snapshot.child("AssignedTo").val(),
+                times = snapshot.child("Times").val()
+            firebaseRef.child(`Projects/${projectName}/Tasks/${newTaskName.value}`).update({
+                AssignedTo: assignedTo,
+                Times: times
+            })
+        }).then(function() {
+            deleteTask(myNameSpace.editId);
+            populateTask(localStorage.getItem("projectName"), taskData.TaskName);  // Display data
+            closeModal(updateTaskModal);
+        })
     }
 })
 
@@ -177,7 +190,7 @@ function editTask(index){
 
     document.removeChild(task)
     getNewTaskData(task.getAttribute("data-projectName"))
-    
+
     closeModal(updateTaskModal)
 }
 

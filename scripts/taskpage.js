@@ -165,20 +165,29 @@ async function update(formatObject){
 
     firebaseRef.child(`Projects/${localStorage.getItem("projectName")}/Tasks/${localStorage.getItem("taskName")}/Times`).once('value').then(function(snapshot) {
         var amount = snapshot.child(getUsername(user.email)).val(),
-            noOfTasks = 1
+            noOfTasks = 1,
+            totalTimeSpent = 0
         
 
         if (amount !== null) {
             amount = Object.entries(amount)
             noOfTasks = amount.length + 1
+            totalTimeSpent = snapshot.child(`${getUsername(user.email)}/TotalTimeSpent`)
         }
-        
+
         firebaseRef.child(`Projects/${localStorage.getItem("projectName")}/Tasks/${localStorage.getItem("taskName")}/Times/${getUsername(user.email)}/Time${noOfTasks}`).set({
             StartTime : startTimeObject,
             EndTime : endTimeObject,
-            Duration: `${formatObject.durationData.timeFormatHrs} hour(s) ${formatObject.durationData.timeFormatMins} min(s)`
+            Duration: { Hours: formatObject.durationData.timeFormatHrs, 
+                        Minutes: formatObject.durationData.timeFormatMins }
         })
         .then(function(){
+            if (totalTimeSpent) {
+                firebaseRef.child(`Projects/${localStorage.getItem("projectName")}/Tasks/${localStorage.getItem("taskName")}`).update({
+
+                })
+            }
+        }).then(function() {
             window.alert("Time logged!");
         })
     })
