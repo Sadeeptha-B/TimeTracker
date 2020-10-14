@@ -56,8 +56,7 @@ function addTasksEventListener(project, task){
 				  members = document.getElementById("member_card_content").getElementsByClassName("member")
 			
 			// To store the names of the members in the project in the form of an object
-			var membersObject = {},
-				assignedToObject = {}
+			var membersObject = {}
 
 			localStorage.setItem("projectName", projectName)
 			localStorage.setItem("description", projectDescription)
@@ -72,13 +71,13 @@ function addTasksEventListener(project, task){
 			localStorage.setItem("members", JSON.stringify(membersObject))
 
 			// Get the name of each member that is assigned to the task and store in the object
-			if (assignedTo != null) {
-				Array.from(assignedTo).forEach(member => {
-					const name = member.textContent
-					assignedToObject[name] = {"Username": name}
-				})
-				localStorage.setItem("assignedTo", JSON.stringify(assignedToObject))
-			}
+			// if (assignedTo) {
+			// 	Array.from(assignedTo).forEach(member => {
+			// 		const name = member.textContent
+			// 		assignedToObject[name] = {"Username": name}
+			// 	})
+			localStorage.setItem("assignedTo", JSON.stringify(assignedTo))
+			// }
 		})
 		.then(function() {
 			// Move to the task page once data has been stored

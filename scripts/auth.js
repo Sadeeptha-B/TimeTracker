@@ -22,6 +22,7 @@ function login() {
 function logout(){
 	firebase.auth().signOut()
 	.then(function() {
+		removeLocalStorageItem()
 		window.location.href = "../html/login.html";
 	})
 	.catch(function(error) {
@@ -75,13 +76,16 @@ async function getHomePage() {
 		
    })
 
-   // Remove the data once it has been project page has been left
+   removeLocalStorageItem()
+}
+
+function removeLocalStorageItem() {
 	localStorage.removeItem("projectName")
 	localStorage.removeItem("description")
 	localStorage.removeItem("members")
 	localStorage.removeItem("taskName")
 	localStorage.removeItem("taskDescription")
-	
+	localStorage.removeItem("assignedTo")
 }
 
 function createAccount(userEmail, userPass, userRole) {

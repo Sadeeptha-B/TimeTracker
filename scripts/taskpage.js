@@ -16,33 +16,20 @@ var commonTaskError = document.getElementById("timelog_error")
 window.taskPageNameSpace = {
     charts: [],
     members: {
-        /* Dummy Data can be deleted once assignees are available in local storage  */
-        array : ["hban0006", "josephloo", "student12"],
-        hban0006: {
-            timelogs: [],
-            totalDuration: 5
-        },
-        josephloo: {
-            timelogs: [],
-            totalDuration: 5
-        },
-        student12:{
-            timelogs: [], 
-            totalDuration: 2
-        }
+        array : []
     }
 }
 
 
 Object.entries(JSON.parse(localStorage.getItem("assignedTo"))).forEach(member => {
     var memberAccess =  window.taskPageNameSpace.members;
-    memberAccess.member = {};
-    memberAccess.array.push(member);
-    memberAccess.member.timelogs = [];
-    memberAccess.member.totalDuration = 0;
+    memberAccess[member[1].Username] = {};
+    memberAccess.array.push(member[1].Username);
+    memberAccess[member[1].Username].timelogs = [];
+    memberAccess[member[1].Username].totalDuration = 0;
 })
 
-addChart("time_duration_bar", "Time Duration spent by each member", "bar", memberDurationChart,);
+addChart("time_duration_bar", "Time Duration spent by each member", "bar", memberDurationChart)
 addChart("time_duration_pie","Time Percentages","pie", memberDurationChart)
 
 function addChart( id,title, type,func){
@@ -146,8 +133,6 @@ function format(startDateFormat, endDateFormat){
     var duration = timeFormatHrs + ":" + timeFormatMins
 
     var formatObject = {
-        startDateFormat : startDateFormat,
-        endDateFormat: endDateFormat,
         startTimeObject: startTimeObject, 
         endTimeObject: endTimeObject,
         durationData: {
@@ -159,11 +144,9 @@ function format(startDateFormat, endDateFormat){
     return formatObject;
 }
 
-
 async function update(formatObject){
     var startTimeObject = formatObject.startTimeObject, 
-        endTimeObject = formatObject.endTimeObject,
-        duration = formatObject.durationData.timeFormatHrs + ":" + formatObject.durationData.timeFormatMins
+        endTimeObject = formatObject.endTimeObject
         
     var user = await firebase.auth().currentUser;
     firebaseRef.child(`Users/${getUsername(user.email)}`)
@@ -172,7 +155,7 @@ async function update(formatObject){
             window.taskPageNameSpace.members[username].timelogs.push(formatObject);
             window.taskPageNameSpace.members[username].totalDuration += formatObject.durationData.timeInHrs;
             updateCharts(); 
-            populateTable(username, startTimeObject, endTimeObject, duration);
+            populateTable(username, formatObject);
     });
 
     
@@ -202,7 +185,12 @@ async function update(formatObject){
 }
 
 
-function populateTable(user, startTimeObject, endTimeObject, duration){
+function populateTable(user, formatObject){
+    var startTimeObject = formatObject.startTimeObject,
+        endTimeObject = formatObject.endTimeObject,
+        timeFormatHrs = formatObject.durationData.timeFormatHrs,
+        timeFormatMins = formatObject.durationData.timeFormatMins
+
     var startDateString = startTimeObject.Date + "/" + startTimeObject.Month + "/" + startTimeObject.Year;
     var endDateString = endTimeObject.Date + "/" + endTimeObject.Month + "/" + endTimeObject.Year;
 
@@ -219,29 +207,29 @@ function populateTable(user, startTimeObject, endTimeObject, duration){
     var startTimeHourString = timeToStr(startTimeObject.Hour);
     var endTimeHourString = timeToStr(endTimeObject.Hour);
 
-    var startFormatted = new Date (startTimeObject.Year, 
-        parseInt(startTimeObject.Month)-1, 
-        parseInt(startTimeObject.Date), 
-        startTimeObject.Hour, 
-        startTimeObject.Minute);
+    // var startFormatted = new Date (startTimeObject.Year, 
+    //     parseInt(startTimeObject.Month)-1, 
+    //     parseInt(startTimeObject.Date), 
+    //     startTimeObject.Hour, 
+    //     startTimeObject.Minute);
 
-    var endFormatted = new Date (endTimeObject.Year, 
-        parseInt(endTimeObject.Month)-1, 
-        parseInt(endTimeObject.Date), 
-        endTimeObject.Hour, 
-        endTimeObject.Minute);
+    // var endFormatted = new Date (endTimeObject.Year, 
+    //     parseInt(endTimeObject.Month)-1, 
+    //     parseInt(endTimeObject.Date), 
+    //     endTimeObject.Hour, 
+    //     endTimeObject.Minute);
 
-    var durationSecs = (endFormatted.getTime() - startFormatted.getTime())/1000;
-    var durationMins = durationSecs / 60;
-    var durationHrs = Math.floor(durationMins / 60);
-    var durationDisplayMins = durationMins % 60;
+    // var durationSecs = (endFormatted.getTime() - startFormatted.getTime())/1000;
+    // var durationMins = durationSecs / 60;
+    // var durationHrs = Math.floor(durationMins / 60);
+    // var durationDisplayMins = durationMins % 60;
 
     document.getElementById("table_member").innerText = user;
     document.getElementById("table_start_date").innerText = startDateString;
     document.getElementById("table_end_date").innerText = endDateString;
     document.getElementById("table_start").innerText = startTimeHourString +":" + startTimeMinuteString;
     document.getElementById("table_end").innerText = endTimeHourString +":" + endTimeMinuteString;
-    document.getElementById("table_duration").innerText = durationHrs.toString() + " hrs " + durationDisplayMins.toString() + " mins";
+    document.getElementById("table_duration").innerText = timeFormatHrs + " hrs " + timeFormatMins + " mins";
 
     var clone = cloneElement(timeLogTableRow, timeLogTableBody);
     clone.removeAttribute("style");
