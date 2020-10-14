@@ -51,19 +51,31 @@ document.getElementById("edit_mode_btn").addEventListener('click', function(){
     var taskData = getNewTaskData(localStorage.getItem("projectName"));  // Get data, validate, and store in backend
     if (taskData != undefined){
         var oldTask = document.getElementById("task_" + myNameSpace.editId);
+        //retrieveNameList(oldTask, taskData);
         firebaseRef
-                .child(`Projects/${oldTask.getAttribute("data-projectName")}/Tasks/${oldTask.getAttribute("data-taskName")}`)
-                .once('value').then(function(snapshot) {
-                    const carryOver = {
-                        AssignedTo: snapshot.child('AssignedTo').val()
-                    }
-                    firebaseRef.child(`Projects/${oldTask.getAttribute("data-projectName")}/Tasks/${taskData.TaskName}`).set(carryOver)
-                })
+        .child(`Projects/${oldTask.getAttribute("data-projectName")}/Tasks/${oldTask.getAttribute("data-taskName")}`)
+        .once('value').then(function(snapshot) {
+            const carryOver = {
+                AssignedTo: snapshot.child('AssignedTo').val()
+            }
+            firebaseRef.child(`Projects/${oldTask.getAttribute("data-projectName")}/Tasks/${taskData.TaskName}`).set(carryOver)
+        })
         deleteTask(myNameSpace.editId);
         populateTask(localStorage.getItem("projectName"), taskData.TaskName);  // Display data
         closeModal(updateTaskModal);
     }
 })
+
+function retrieveNameList(oldTask, newData){
+    firebaseRef
+    .child(`Projects/${oldTask.getAttribute("data-projectName")}/Tasks/${oldTask.getAttribute("data-taskName")}`)
+    .once('value').then(function(snapshot) {
+        const carryOver = {
+            AssignedTo: snapshot.child('AssignedTo').val()
+        }
+        firebaseRef.child(`Projects/${oldTask.getAttribute("data-projectName")}/Tasks/${newData.TaskName}`).set(carryOver)
+    })
+}
 
 function getNewTaskData(project){
     var newTaskName = document.getElementById("task_name_input").value,
