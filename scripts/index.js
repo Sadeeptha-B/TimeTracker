@@ -122,26 +122,27 @@ function updateProjectPage(role) {
 	projectField.textContent = localStorage.getItem("projectName")
 	descriptionField.textContent = localStorage.getItem("description")
 
-	Object.entries(JSON.parse(localStorage.getItem("members"))).forEach(member => {addMembers(member)})
-
 	// Remove add member button for students but show for teachers
 	// Remove the add and assign task button for teachers but show for students
 	if (addMemberButton && editDescriptionButton) {
 		if (role === 'Teacher') {
-			addMemberButton.style.display = "block"
-			editDescriptionButton.style.display = "block"
+			addMemberButton.style.display = "block";
+			editDescriptionButton.style.display = "block";
 
-			addTaskButton.style.display = "none"
-			assignTaskButton.style.display = "none"
+			addTaskButton.style.display = "none";
+			assignTaskButton.style.display = "none";
 		}
 		else if (role === 'Student') {
-			addMemberButton.style.display = "none"
-			editDescriptionButton.style.display = "none"
+			addMemberButton.style.display = "none";
+			editDescriptionButton.style.display = "none";
 
-			addTaskButton.style.display = "block"
-			assignTaskButton.style.display = "block"
+			addTaskButton.style.display = "block";
+			assignTaskButton.style.display = "block";
 		}
 	}
+
+	Object.entries(JSON.parse(localStorage.getItem("members"))).forEach(member => {addMembers(member)})
+
 }
 
 function updateTaskPage(username, role) {
