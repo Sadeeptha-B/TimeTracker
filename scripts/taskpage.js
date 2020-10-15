@@ -43,12 +43,13 @@ Object.entries(JSON.parse(localStorage.getItem("assignedTo"))).forEach(member =>
         }
         
     }).then(function() {
-        addChart("time_duration_bar", "Time Duration spent by each member", "bar", memberDurationChart)
-        addChart("time_duration_pie","Time Percentages","pie", memberDurationChart)
         updateCharts()
-        populateTable()
+        populateTable(username)
     })
 })
+
+addChart("time_duration_bar", "Time Duration spent by each member", "bar", memberDurationChart)
+addChart("time_duration_pie","Time Percentages","pie", memberDurationChart)
 
 function addChart( id,title, type,func){
     var chart = func(id, title, type);
@@ -62,12 +63,14 @@ function updateCharts(){
     })
 }
 
-function populateTable() {
-    var members = window.taskPageNameSpace.members.array;
-    members.forEach((member) => {
-        var timelogs = window.taskPageNameSpace.members[member].timelogs
+function populateTable(member) {
+    var timelogs = window.taskPageNameSpace.members[member].timelogs
+    
+    if (timelogs) {
         timelogs.forEach(log => {updateTable(member, log[1])})
-    })
+        setDisplayNone(statusColumn);
+        setDisplayFlex(timeLogs);
+    }
 }
 
 document.getElementById("save_time_log").addEventListener('click', function(){
@@ -312,39 +315,63 @@ function dynamicallyCreateChart(id, title){
 }
 
 function basicChartConfig(type, xAxes, label, yAxes){
-    var config = {
-        type: type,
-        data: {
-            labels:xAxes,
-            datasets:[{
-                label: label,
-                data: yAxes,
-                backgroundColor: palette('tol', xAxes.length).map(function(hex) {
-                    return '#' + hex;
-                })
-            }]
-        },
-        options:{
-            scales:{
-                yAxes: [{
-                    display: true,
-                    ticks:{
-                        beginAtZero:true, 
+    var config = {  type: type,
+                    data: {
+                        labels:xAxes,
+                        datasets:[{
+                            label: type === "bar" ? "Hours" : "Numbers",
+                            data: yAxes,
+                            backgroundColor: palette('tol', xAxes.length).map(function(hex) {
+                                return '#' + hex;
+                            })
+                        }]
                     }
-                }]
-            },
-            tooltips:{
-                callbacks:{
-                    label: tooltipFunction()
                 }
-            }
-        }
+    
+    if (type === "bar") {
+        config.options = {
+                            scales:{
+                                yAxes: [{
+                                    display: true,
+                                    ticks:{
+                                        beginAtZero:true, 
+                                    }
+                                }]
+                            }
+                        }
     }
+    else if(type === "pie") {
+        config.options = {
+                            tooltips:{
+                                callbacks:{
+                                    label: tooltipFunction()
+                                }
+                            }
+                        }
+        }
     return config;
 }
 
 function tooltipFunction(){
-   /* To modify tooltip */ 
+    return function(tooltipItem, data) {
+        var dataset = data.datasets[tooltipItem.datasetIndex];  //get the concerned dataset
+    
+        var component = data.labels[tooltipItem.index];
+    
+        //calculate the total of this data set
+        var total = dataset.data.reduce(function(previousValue, currentValue) {
+            return previousValue + currentValue;
+        });
+    
+        //get the current items value
+        var currentValue = dataset.data[tooltipItem.index];
+    
+    
+        //calculate the precentage based on the total and current item, also this does a rough rounding to give a whole number
+        var percentage = Math.floor(((currentValue/total) * 100)+0.5);
+    
+        return component + " : " + percentage + "%";
+    }
 }
 
 function memberDurationChart(id, title, type){

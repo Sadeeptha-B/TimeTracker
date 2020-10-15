@@ -277,8 +277,6 @@ function updateChartsInProjectPage() {
         var ctxTimeContPie = document.getElementById('timeContPie');
         var ctxTimeContBar = document.getElementById('timeContBar');
 
-        console.log(students)
-        console.log(times)
         var timeContPie = new Chart(ctxTimeContPie, {
             type: 'pie',
             data:{
