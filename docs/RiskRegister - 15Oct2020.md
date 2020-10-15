@@ -139,5 +139,37 @@ Feeling ill
    <td>Communicate to the client of the possible delays and pros and cons of implementing a particular feature. 
    </td>
   </tr>
+  <tr>
+   <td>Requirements from the product owner are not fulfilled causing the final product to be rejected
+   </td>
+   <td>Delayed project delivery or even misunderstanding in the requirements from the product owner
+   </td>
+   <td>Failure to deliver the product wanted by the product owner which will result in dissatisfaction of the client 
+   </td>
+   <td>4
+   </td>
+   <td>4
+   </td>
+   <td>Make sure that the requirements from the product owner are all understood correctly by all team members during Sprint planning 
+   </td>
+   <td>Prioritize the main essential requirements of the product and ask for an extension for the date of product delivery from the client.
+   </td>
+  </tr>
+    <tr>
+   <td>There is no enough time in the QA process to validate equally on all browsers on all operating systems
+   </td>
+   <td>The time given is not sufficient for us to validate all browsers on all operating systems
+   </td>
+   <td>Errors may be encountered in product review with the client  
+   </td>
+   <td>3
+   </td>
+   <td>4
+   </td>
+   <td>Squeeze out some additional time to validate on more browsers on more operating systems
+   </td>
+   <td>Validate on more browsers along the sprints so that the risk can be lowered.
+   </td>
+  </tr>
 </table>
 
