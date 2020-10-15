@@ -18,7 +18,7 @@ Please sign in with your Monash account to access.
 * [Communication Alternatives](https://docs.google.com/document/d/1e682hJ5Ihb4NtmajFDF4Czx5DFaU317jK4qU-kfrgtE/edit?usp=sharing)  
  *Last Formal Update : Sep 4, 2020*
 
-* [Risk Register](https://docs.google.com/document/d/1cYTCJumeUxHQcLV7btwY65Uj28GaUE-SAw6FZIt0b-Y/edit?usp=sharing)  
+* [Risk Register](https://docs.google.com/document/d/1qtmx-OLzTgIbw9Ptu4FE-932eSBRn9-JG5eFctz7vmU/edit)  
  *Last Formal Update : Oct 15, 2020*
           
 
