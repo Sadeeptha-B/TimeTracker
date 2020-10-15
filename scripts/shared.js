@@ -62,11 +62,21 @@ function searchMultiple(searchBar, objArray){
     return foundArray;
 }
 
+function cloneElement(elem, parent){
+    var clone = elem.cloneNode(true);
+    parent.appendChild(clone);
+    return clone;
+}
 
-/* Populate Element */
+var customColorFunction = function(schemeColors){
+    var myColors = [ "rgba(178, 102, 255)",
+                     "rgba(153, 255, 204)",
+                     "rgba(204, 0, 102)"  ,
+                     "rgba(204, 204, 0)"];
 
-
-
+    Array.prototype.push.apply(schemeColors, myColors);
+    return schemeColors;
+}
 
 
 /* Modal Controls */
@@ -107,6 +117,10 @@ function setDisplayNone(elem){
     elem.style.display = "none";
 }
 
+function setDisplayFlex(elem){
+    elem.style.display="flex";
+}
+
 function displayError(errorMsg, errorElement){
     errorElement.innerText = errorMsg;
     errorElement.style.display="block";
@@ -118,6 +132,14 @@ function clearErrors(...errorDivs){
         setDisplayNone(errorDivs[i]);
     }
 }
+
+
+Date.prototype.onlyDate = function () {
+    var d = new Date(this);
+    d.setHours(0, 0, 0, 0);
+    return d;
+}
+
 
 /* Helper function */
 function indexToBoolean(index){

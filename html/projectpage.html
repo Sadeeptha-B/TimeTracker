@@ -13,7 +13,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-colorschemes"></script>
 
-
     <link rel="stylesheet" href="generic_style.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
@@ -109,9 +108,10 @@
                                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                            End:   <span id="task_end_date">DD/MM/YY</span>
                                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-                                                           Assignee:  <span id="assignee">No user is assigned to this task yet</span>
+                                                           Assignee:  <span id="assignee"></span>
                                 </p>
                                 <div class="action_pane">
+                                    <input type="image" src="../imgs/check-mark-12-24.png" id="mark_cmplt_task"  class="std_component">
                                     <input type="image" src="../imgs/edit-16.png" id="edit_task"  class="std_component">
                                     <input type="image" id="delete_task" src="../imgs/delete-16.png" class="std_component">
                                 </div>
