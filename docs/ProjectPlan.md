@@ -434,7 +434,7 @@ While the above is the definition of done, in general, we expect the following c
   <tr>
    <td>Project View
    </td>
-   <td>Users can view all projects they are currently a part of.
+   <td>Users can view all projects they are currently a part of. 
    </td>
   </tr>
   <tr>
@@ -446,7 +446,7 @@ While the above is the definition of done, in general, we expect the following c
   <tr>
    <td>Set due dates for projects
    </td>
-   <td>Teachers are able to add start and end dates for a project to the database successfully
+   <td>Teachers are able to add start and end dates for a project to the database successfully. Projects with date errors are not created.
    </td>
   </tr>
   <tr>
@@ -458,7 +458,7 @@ While the above is the definition of done, in general, we expect the following c
   <tr>
    <td>Task time input and update
    </td>
-   <td>Students can input start and end time; all input errors are handled correctly. Task time data should be updated correctly to reflect these changes.
+   <td>Students can input start and end time; all input errors (date errors) are handled correctly. Task time data should be updated correctly to reflect these changes.
    </td>
   </tr>
   <tr>
