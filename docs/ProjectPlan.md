@@ -384,7 +384,7 @@ While the above is the definition of done, in general, we expect the following c
   <tr>
    <td>Graphical user interface
    </td>
-   <td>Consistent design and layout across all pages.
+   <td>Consistent design and layout across all pages. Fonts should be in Sans Serif font types, and formatted correctly.
    </td>
   </tr>
   <tr>
@@ -420,7 +420,7 @@ While the above is the definition of done, in general, we expect the following c
   <tr>
    <td>Data visualization
    </td>
-   <td>Graphs must be clear and easy to read; visualization must accurately reflect the data. Graphs must be updated whenever new data is entered.
+   <td>Two graphs are shown in project page and task page, one bar chart for time contributed and one pie chart for percentage of contribution. Graphs must be clear and easy to read; visualization must accurately reflect the data. Graphs must be updated whenever new data is entered.
    </td>
   </tr>
   <tr>
