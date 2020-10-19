@@ -157,9 +157,11 @@ function populateTask(projectName, taskName){
         
         var deleteButton = document.getElementById("delete_task");
         var editButton = document.getElementById("edit_task");
+        var markAsCmpltBtn = document.getElementById("mark_cmplt_task");
 
         deleteButton.setAttribute("onclick","deleteTask("+taskID+")");
         editButton.setAttribute("onclick", "editTask("+taskID+")")
+        markAsCmpltBtn.setAttribute("onclick", "markTaskAsComplete("+taskID+")")
 
         var clone = cloneElement(taskTemplate, tasksCardBody);
         clone.removeAttribute("style");
@@ -193,8 +195,11 @@ function editTask(index){
     closeModal(updateTaskModal)
 }
 
-function markTaskAsComplete(){
+function markTaskAsComplete(index){
     event.stopPropagation();
+    var task = document.getElementById("task_" + index);
+
+    tasksCardBody.removeChild(task);
     //TODO: Have a string marked as complete
 }
 
