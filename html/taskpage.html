@@ -230,15 +230,18 @@
                 </div>
             </div>
 
-            <!-- EXTRA: Workload popup, used to set expected workload percentage-->
+            <!-- EXTRA: Workload popup, used to set expected workload hours-->
             <div class="bg-modal" id="contribution_overlay">
                 <div class="modal-content">
                     <div class="close generic_popup_close" onclick="closeModal(contribution_overlay)">+</div>
                     <div class="input_form">
-                        <h3>Set workload percentage</h3>
-                        <label class="field_elements" for="percentage">Expected workload (%):</label>
-                        <input type="number" width="20px" class="percentage" name="Workload Percentage" id = "percentage"
-                        min="1" max="100" required>
+                        <h3>Plan out task</h3>
+                        <label class="field_elements" for="percentage">Expected work hours:</label>
+                        <input type="number" width="20px" class="work_hours" name="Work Hours" id = "work_hours"
+                        min="1" required>
+                    </div>
+                    <div class="error common_error_div" id="contribute_error"> 
+                        Error
                     </div>
                     <div class= "desc_footer">
                         <button href="#" class="blue_curve_button" id="save_contribution"> Save </button>
