@@ -62,6 +62,39 @@ function searchMultiple(searchBar, objArray){
     return foundArray;
 }
 
+
+/* Alerts */
+    function displayConfirmAlert(msg){
+        var elem = document.querySelector("div[class^='alert confirmation_alert']")
+        document.getElementById("confirm_msg").innerText = msg;
+
+        elem.setAttribute("class", "alert confirmation_alert show")
+        setTimeout(function(){
+            elem.setAttribute("class", "alert confirmation_alert hide")
+        }, 5000);
+    }
+
+    function displayErrorAlert(msg){
+        var elem = document.querySelector("div[class^='alert error_alert']")
+        document.getElementById("error_msg").innerText = msg;
+
+        elem.setAttribute("class", "alert error_alert show")
+
+        //Will be removed once close is clickable
+        setTimeout(function(){
+            elem.setAttribute("class", "alert confirmation_alert hide")
+        }, 5000);
+    }
+
+    function closeAlert(){
+        var elems = document.querySelectorAll("div[class^='alert']")
+
+        for (i=0; i < elems.length; i++){
+            elems[i].classList.toggle("hide")
+        }
+    }
+
+
 function cloneElement(elem, parent){
     var clone = elem.cloneNode(true);
     parent.appendChild(clone);
@@ -113,6 +146,9 @@ function closeModal(modalElem){
 }
 
 
+
+
+/* Display Controls */
 function setDisplayNone(elem){
     elem.style.display = "none";
 }

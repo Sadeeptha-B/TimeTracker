@@ -347,8 +347,16 @@ async function createProject(){
 	firebaseRef.child(`Users/${getUsername(user.email)}/Projects/${projectName}`).update({
 		ProjectName: projectName
 	})
+
+	// ScriptManager.RegisterStartupScript(
+	// displayConfirmAlert("Project Created!"), window.location =' "../html/home-teacherview.html",
+	// true);
 	
-    window.alert("Project Created!")
+
+
+	displayConfirmAlert("Project Created!")
+	setTimeout(3000);
+    // window.alert("Project Created!")
     // Bring the user to the home page after successful sign up
     window.location.href = "../html/home-teacherview.html";
 }
@@ -407,7 +415,8 @@ document.getElementById("search_id_button").addEventListener("click", function()
 		enter_username_container = document.getElementById("enter_username_container")
 
 	if (username.length === 0) {
-		window.alert("Please enter teacher's username to be deleted")
+		displayErrorAlert("Please enter teacher's username to be deleted")
+		// window.alert("Please enter teacher's username to be deleted")
 	}
 	else {
 		enter_username_container.style.display= 'none'

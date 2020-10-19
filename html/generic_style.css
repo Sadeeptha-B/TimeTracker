@@ -12,6 +12,7 @@ html{
 /*Elements */
 div.body{
     font-family: 'Poppins', Verdana, sans-serif; 
+    overflow:hidden;
 }
 
 div.header{
@@ -168,9 +169,82 @@ button.blue_curve_button:hover{
 
 
 .std_component{
-    position: relative;
+    position: relative; 
     padding: 5px;
     z-index: 10; 
+}
+
+
+.alert{
+    padding: 20px 40px;
+    min-width: 420px;
+    position:absolute;
+    right:0px;
+    bottom: 20px;
+    border-radius: 4px;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.error_alert{
+    border-left: 4px solid rgba(255, 0, 0, 0.3);
+    background: rgba(255, 0, 0, 0.3);
+}
+
+.confirmation_alert{
+    background: #4BBF6B;
+    border-left: 4px solid #4BBF6B;
+    color: #fff;
+}
+
+.alert .msg{
+    font-weight: bolder;
+    padding: 10px;
+}
+
+.alert.show{
+    animation: show_slide 1s ease forwards;
+}
+
+.hide{
+    animation: hide_slide 1s ease backwards; 
+    display:none;
+}
+
+
+@keyframes show_slide{
+    0%{
+        transform: translateX(100%)
+    }
+    40%{
+        transform: translateX(-10%)
+    }
+    80%{
+        transform: translateX(0%);
+    }
+    100%{
+        transform: translateX(-10px);
+    }
+}
+
+@keyframes hide_slide{
+    0%{
+        transform: translateX(-10px)
+    }
+    40%{
+        transform: translateX(0%)
+    }
+    80%{
+        transform: translateX(-10%);
+    }
+    100%{
+        transform: translateX(100%));
+    }
+}
+
+
+.alert .msg{
+    padding: 10px;
 }
 
 /*Popups*/
