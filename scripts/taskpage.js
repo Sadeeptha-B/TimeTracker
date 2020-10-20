@@ -199,6 +199,7 @@ async function update(formatObject){
     firebaseRef.child(`Projects/${projectName}`).once('value').then(function(snapshot) {
         var username = getUsername(user.email),
             amount = snapshot.child(`Tasks/${taskName}/Times/${username}`).val(),
+            plannedTimePresent = snapshot.child(`Tasks/${taskName}/Times/${username}/PlannedTime`).val(),
             noOfTasks = 1,
 
             totalTimeSpentProject = snapshot.child(`TotalTimeSpent/${username}/Duration`).val(),
@@ -207,7 +208,12 @@ async function update(formatObject){
 
         if (amount) {
             amount = Object.entries(amount)
-            noOfTasks = amount.length
+            if (plannedTimePresent) {
+                noOfTasks = amount.length - 1
+            }
+            else {
+                noOfTasks = amount.length
+            }
         }
 
         if (totalTimeSpentProject == null) {
@@ -371,7 +377,7 @@ function basicChartConfig(type, xAxes, label, yAxes){
                     data: {
                         labels:xAxes,
                         datasets:[{
-                            label: type === "bar" ? "Hours" : "Numbers",
+                            label: type === "bar" ? "Actual Time in Hours" : "Numbers",
                             data: yAxes,
                             backgroundColor: palette('tol', xAxes.length).map(function(hex) {
                                 return '#' + hex;
