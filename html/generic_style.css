@@ -178,12 +178,13 @@ button.blue_curve_button:hover{
 .alert{
     padding: 20px 40px;
     min-width: 420px;
-    position:absolute;
+    position:fixed;
     right:0px;
     bottom: 20px;
     border-radius: 4px;
     overflow: hidden;
     pointer-events: none;
+    vertical-align: bottom;
 }
 
 .error_alert{
@@ -813,7 +814,7 @@ td{
         flex-direction: column;
     }
 
-    #mark_cmplt_task{
+    .mark_cmplt_size{
         width:16px;
         height:16px;
     }
