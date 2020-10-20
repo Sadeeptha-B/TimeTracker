@@ -13,6 +13,8 @@ firebase.auth().onAuthStateChanged(function(user) {
 
 			try { updateTaskPage(username, role) } catch(err) { ; }
 
+			try { updateArchivesPage(username, role) } catch(err) { ; } 
+
 			// Add all the projects of the user to the home page
 			populateProjects(username)
 
@@ -212,12 +214,13 @@ function addMembers(member) {
 function populateProjects(username) {
     firebaseRef.child(`Users/${username}`)
 	.once('value').then(function(snapshot) {
-		const projects = snapshot.child('Projects').val()
-		Object.entries(projects).forEach(project => {addProject(project)})
+		const projects = snapshot.child('Projects').val(),
+			  role = snapshot.child('Role').val()
+		Object.entries(projects).forEach(project => {addProject(project, role)})
 	})
 }
 
-function addProject(project) {
+async function addProject(project, role) {
 	firebaseRef.child(`Projects/${project[1].ProjectName}`).once("value").then(function(snapshot) {
 		const projectName = snapshot.child('ProjectName').val(),
 			  startDate = snapshot.child('StartDate').val(),
@@ -225,8 +228,9 @@ function addProject(project) {
 			  teacher = snapshot.child('TeacherInCharge').val(),
 			  completed  = snapshot.child('Completed').val()
 
-		// Only add project to home page if it is not completed
-		if (completed === null) {
+		// If project is not completed, add the project to home page regardless of teacher/student
+		// If project completed, add the project to home page only for student
+		if (completed === null || (role === 'Student' && completed)) {
 			var	dashboard = document.getElementById("dash_container"),
 				newDiv = document.createElement("div"),
 				newH2 = document.createElement("h2"),
