@@ -5,6 +5,7 @@ var timeLogTableBody = document.getElementById("timelog_table_body");   // Table
 
 /* Modals*/
 var timeInput = document.getElementById("time_input");
+var contribution = document.getElementById("contribution_overlay");
 
 /* Chart */
 var chartCard = document.getElementById("chart_card")  
@@ -12,6 +13,7 @@ var statusColumn = document.getElementById("logtime_status")
 
 /* Error Messages */
 var commonTaskError = document.getElementById("timelog_error")
+var contributeError = document.getElementById("contribute_error")
 
 window.taskPageNameSpace = {
     charts: [],
@@ -21,16 +23,18 @@ window.taskPageNameSpace = {
 }
 
 Object.entries(JSON.parse(localStorage.getItem("assignedTo"))).forEach(member => {
-    var memberAccess =  window.taskPageNameSpace.members,
+    var memberAccess = window.taskPageNameSpace.members,
         username = member[1].Username
     memberAccess[username] = {};
     memberAccess.array.push(username);
     // Later I just need to take the data from firebase and add it the total duration and timelogs
     firebaseRef.child(`Projects/${localStorage.getItem("projectName")}/Tasks/${localStorage.getItem("taskName")}/Times/${username}`).once("value").then(function(snapshot) {
         var totalDuration = snapshot.child('TotalTimeSpent').val(),
+            plannedDuration = snapshot.child('PlannedTime').val(),
             timelogs = snapshot.val()
         
-        memberAccess[username].totalDuration = totalDuration
+        memberAccess[username].totalDuration = totalDuration;
+        memberAccess[username].plannedTime = plannedDuration;
 
         if (timelogs) {
             var timelogs = Object.entries(timelogs),
@@ -240,6 +244,54 @@ async function update(formatObject){
     })
 }
 
+document.getElementById("save_contribution").addEventListener('click', function(){
+    clearErrors(commonTaskError);
+    var hrsObj = updatePlannedTime();
+    if (hrsObj != undefined){
+        change_contribution(hrsObj);
+    }
+});
+
+function updatePlannedTime(){
+    var workHours = document.getElementById("work_hours").value;
+    var hrsObj = parseInt(workHours);
+
+    var dateFormat = new Date(2020, 0, 1, hrsObj, 0)
+    workHourNotGiven = isNaN(dateFormat.getTime());
+
+    if (workHourNotGiven){
+        displayError("Hour input must be provided", contributeError);
+        return;
+    }
+
+    return hrsObj;
+}
+
+async function change_contribution(hrsObject){
+    var user = await firebase.auth().currentUser;
+    const username = getUsername(user.email)
+
+    window.taskPageNameSpace.members[username].plannedTime = hrsObject;
+    updateCharts(); 
+    
+    setDisplayNone(statusColumn);
+    setDisplayFlex(timeLogs);
+    closeModal(contribution);
+
+    var projectName = localStorage.getItem("projectName"),
+            taskName = localStorage.getItem("taskName")
+
+    firebaseRef.child(`Projects/${projectName}`).once('value').then(function(snapshot) {
+        var username = getUsername(user.email)
+
+        firebaseRef.child(`Projects/${projectName}/Tasks/${taskName}/Times/${username}`).update({
+            PlannedTime: hrsObject
+        })
+        .then(function() {
+            window.alert("Workload expectation logged!");
+        })
+    })
+}
 
 function updateTable(user, formatObject){
     var startTimeObject = formatObject.startTimeObject,
