@@ -89,63 +89,13 @@ function updateProjectPage(role) {
 	updateChartsInProjectPage()
 }
 
-// FUNCTIONALITY FUNCTIONS
-function getNewTaskData(project){
-    var newTaskName = document.getElementById("task_name_input").value,
-        newTaskDesc = document.getElementById("task_desc_input").value,
-        taskStartDate = document.getElementById("task_start_date_input").value,
-        taskStartMonth = document.getElementById("task_start_month_input").value,
-        taskStartYear = document.getElementById("task_start_year_input").value,
-        taskEndDate = document.getElementById("task_end_date_input").value,
-        taskEndMonth = document.getElementById("task_end_month_input").value,
-        taskEndYear = document.getElementById("task_end_year_input").value
-
-    // Validation Code
-    newTaskName = newTaskName.trim();
-    if (newTaskName == ""){
-        displayError("Task Name cannot be empty", taskNameError);
-        return;
-    }
-
-    var start = new Date(taskStartYear, taskStartMonth-1, taskStartDate);
-    var startDate = taskStartDate + "/" + taskStartMonth + "/" + taskStartYear;
-    var end = new Date(taskEndYear, taskEndMonth-1, taskEndDate);
-    var dateValid = end.getTime() > start.getTime();
-
-    if (!dateValid){
-        displayError("Task cannot end before it starts, or end on the same day as the start date",commonTaskError);
-        return;
-    }
-
-    if (newTaskDesc.trim().length == 0){
-        newTaskDesc = "N/A";
-    }
-
-
-    var startDateString = start.toLocaleDateString('en-GB');
-    var endDateString = end.toLocaleDateString('en-GB');
-   
-   
-    var taskObject = {TaskName: newTaskName,
-                      Description: newTaskDesc,
-                      StartDate: startDateString,
-                      EndDate: endDateString,
-                      Project: project}
-
-    // Store the task information under Tasks
-    // firebaseRef.child(`Tasks/${newTaskName}`).set(taskObject)
-
-    // Update tasks the project has
-    firebaseRef.child(`Projects/${project}/Tasks/${newTaskName}`).set(taskObject)
-
-    return taskObject;
-}
-
 function populateTasks(projectName){
     firebaseRef.child(`Projects/${projectName}/Tasks`)
     .once('value').then(function(snapshot) {
-		const tasks = snapshot.val();
-        Object.entries(tasks).forEach(task => populateTask(projectName, task[1].TaskName));
+        const tasks = snapshot.val();
+        if (tasks) {
+            Object.entries(tasks).forEach(task => populateTask(projectName, task[1].TaskName));
+        }
     })
 }
 
@@ -197,6 +147,58 @@ function populateTask(projectName, taskName){
         clone.setAttribute("data-projectName", project)
         addTasksEventListener(projectName, clone)
     })
+}
+
+// FUNCTIONALITY FUNCTIONS
+function getNewTaskData(project){
+    var newTaskName = document.getElementById("task_name_input").value,
+        newTaskDesc = document.getElementById("task_desc_input").value,
+        taskStartDate = document.getElementById("task_start_date_input").value,
+        taskStartMonth = document.getElementById("task_start_month_input").value,
+        taskStartYear = document.getElementById("task_start_year_input").value,
+        taskEndDate = document.getElementById("task_end_date_input").value,
+        taskEndMonth = document.getElementById("task_end_month_input").value,
+        taskEndYear = document.getElementById("task_end_year_input").value
+
+    // Validation Code
+    newTaskName = newTaskName.trim();
+    if (newTaskName == ""){
+        displayError("Task Name cannot be empty", taskNameError);
+        return;
+    }
+
+    var start = new Date(taskStartYear, taskStartMonth-1, taskStartDate);
+    var startDate = taskStartDate + "/" + taskStartMonth + "/" + taskStartYear;
+    var end = new Date(taskEndYear, taskEndMonth-1, taskEndDate);
+    var dateValid = end.getTime() > start.getTime();
+
+    if (!dateValid){
+        displayError("Task cannot end before it starts, or end on the same day as the start date",commonTaskError);
+        return;
+    }
+
+    if (newTaskDesc.trim().length == 0){
+        newTaskDesc = "N/A";
+    }
+
+
+    var startDateString = start.toLocaleDateString('en-GB');
+    var endDateString = end.toLocaleDateString('en-GB');
+   
+   
+    var taskObject = {TaskName: newTaskName,
+                      Description: newTaskDesc,
+                      StartDate: startDateString,
+                      EndDate: endDateString,
+                      Project: project}
+
+    // Store the task information under Tasks
+    // firebaseRef.child(`Tasks/${newTaskName}`).set(taskObject)
+
+    // Update tasks the project has
+    firebaseRef.child(`Projects/${project}/Tasks/${newTaskName}`).set(taskObject)
+
+    return taskObject;
 }
 
 function addStudentToProject() {

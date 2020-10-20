@@ -256,3 +256,64 @@ function addMembers(member) {
 	newDiv.textContent = member[1].Username
 	
 }
+
+// Function used by archives and index to populate projects
+function addProject(project, projectData, role) {
+	const projectName = projectData.ProjectName,
+			startDate = projectData.StartDate,
+			endDate = projectData.EndDate,
+			teacher = projectData.TeacherInCharge,
+			completed  = projectData.Completed
+
+	var	dashboard = document.getElementById("dash_container"),
+		newDiv = document.createElement("div"),
+		newH2 = document.createElement("h2"),
+		newP = document.createElement("p"),
+		//imgEdit = document.createElement("input"),
+		imgDelete = document.createElement("input"),
+		footerDiv = document.createElement("div"),
+		clr = document.createElement("div")
+
+	dashboard.appendChild(newDiv)
+	newDiv.appendChild(newH2)
+	newDiv.appendChild(newP)
+	
+	newDiv.className = "dash_project"
+	newDiv.id = `${projectName}`
+	newH2.className = "dash_project_head"
+	
+	if (completed) {
+		newH2.innerHTML = project[0] + " - Completed "
+	}
+	else {
+		newH2.innerHTML = project[0]
+	}
+
+	newP.className = "project_summary"
+	newP.textContent = `Lecturer: ${teacher} | Start: ${startDate} | End: ${endDate}`
+	
+	// Only teachers has acccess to delete project button
+	if (role === 'Teacher') {
+		newDiv.appendChild(footerDiv)
+		newDiv.appendChild(clr)
+		//footerDiv.appendChild(imgEdit)
+		footerDiv.appendChild(imgDelete)
+
+		footerDiv.className = "action_pane"
+		/*
+		imgEdit.type="image"
+		imgEdit.src="../imgs/edit-16.png"
+		imgEdit.id="edit_project"
+		imgEdit.className="std_component"
+		*/
+
+		imgDelete.type="image"
+		imgDelete.src="../imgs/delete-16.png"
+		imgDelete.id="delete_task"
+		imgDelete.className="std_component"
+
+		clr.className = "clr"
+	}
+	
+	addProjectsEventListener(newDiv)
+}
