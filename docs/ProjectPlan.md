@@ -35,7 +35,7 @@ A product owner and scrum master have been chosen from within the team and are p
 
 
 
-1. Work will be done in sprints, with a sprint planning meeting at the start of the sprint and a sprint retrospective and a prod	uct review, at the end of it
+1. Work will be done in sprints, with a sprint planning meeting at the start of the sprint and a sprint retrospective and a product review, at the end of it
 2. A sprint backlog and a product backlog is maintained, with the usual workflow of moving items from the sprint backlog to the product backlog at the start of each sprint at the sprint planning meeting
 3. Requirements are gauged in the form of user stories, as is followed by most agile practices, allowing the developer to think of the software from the perspective of a client and 
 4. Backlog items/user stories will be under constant review, and will be refined as needed, as the project grows.
@@ -368,8 +368,6 @@ The code is expected to adhere to a reasonable standard of quality, and the team
 
 For a task to be considered done, 
 
-
-
 *   It needs to pass all test cases devised for the tasks
 *   Needs to be approved by a Merge Request (preferably by a teammate who is responsible for the relevant backlog items)
 
@@ -386,7 +384,7 @@ While the above is the definition of done, in general, we expect the following c
   <tr>
    <td>Graphical user interface
    </td>
-   <td>Consistent design and layout across all pages.
+   <td>Consistent design and layout across all pages. Fonts should be in Sans Serif font types, and formatted correctly.
    </td>
   </tr>
   <tr>
@@ -410,7 +408,7 @@ While the above is the definition of done, in general, we expect the following c
   <tr>
    <td>Student identification
    </td>
-   <td>Each student (and teacher) is assigned a username and is stored in the database.
+   <td>Each student (and teacher) is assigned a username and is stored in the database. System can identify users' identity and update pages accordingly.
    </td>
   </tr>
   <tr>
@@ -422,19 +420,19 @@ While the above is the definition of done, in general, we expect the following c
   <tr>
    <td>Data visualization
    </td>
-   <td>Graphs must be clear and easy to read; visualization must accurately reflect the data. 
+   <td>Two graphs are shown in project page and task page, one bar chart for time contributed and one pie chart for percentage of contribution. Graphs must be clear and easy to read; visualization must accurately reflect the data. Graphs must be updated whenever new data is entered.
    </td>
   </tr>
   <tr>
    <td>Project creation
    </td>
-   <td>Teachers are able to add projects successfully to the database.
+   <td>Teachers are able to add projects successfully to the database. Projects can then be accessed from the home page.
    </td>
   </tr>
   <tr>
    <td>Project View
    </td>
-   <td>Users can view all projects they are currently a part of.
+   <td>Users can view all projects they are currently a part of. Projects that the user are not involved in are not shown in the home page, and are not accessible.
    </td>
   </tr>
   <tr>
@@ -446,7 +444,7 @@ While the above is the definition of done, in general, we expect the following c
   <tr>
    <td>Set due dates for projects
    </td>
-   <td>Teachers are able to add start and end dates for a project to the database successfully
+   <td>Teachers are able to add start and end dates for a project to the database successfully. Projects with date errors are not created.
    </td>
   </tr>
   <tr>
@@ -458,7 +456,7 @@ While the above is the definition of done, in general, we expect the following c
   <tr>
    <td>Task time input and update
    </td>
-   <td>Students can input start and end time; all input errors are handled correctly. Task time data should be updated correctly to reflect these changes.
+   <td>Students can input start and end time; all input errors (date errors) are handled correctly. Task time data should be updated correctly to reflect these changes.
    </td>
   </tr>
   <tr>

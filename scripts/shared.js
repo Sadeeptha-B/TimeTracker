@@ -146,8 +146,6 @@ function closeModal(modalElem){
 }
 
 
-
-
 /* Display Controls */
 function setDisplayNone(elem){
     elem.style.display = "none";
@@ -188,16 +186,73 @@ function indexToBoolean(index){
      return value;
  };
 
+// FUNCTIONS TO ADD EVENT LISTENERS TO ALL THE PROJECT/TASK ELEMENTS
+// ======================================================================
+function addProjectsEventListener(project){
+	project.addEventListener("click", function(){
+		firebaseRef.child(`Projects/${project.id}`)
+		.once('value').then(function(snapshot) {
+			const projectName = snapshot.child('ProjectName').val(),
+				  description = snapshot.child('Description').val(),
+				  members = snapshot.child('Members').val()  // Object containing all the students
+				  
+			localStorage.setItem("projectName", projectName)
+			localStorage.setItem("description", description)
+			localStorage.setItem("members", JSON.stringify(members))
+			window.location.href = "../html/projectpage.html"
+		})
+	});
+}
 
+function addTasksEventListener(project, task){
+	task.addEventListener("click", function(){
+		firebaseRef.child(`Projects/${project}/Tasks/${task.getAttribute("data-taskName")}`)
+		.once('value').then(function(snapshot) {
+			const taskName = snapshot.child('TaskName').val(),
+				  taskDescription = snapshot.child('Description').val(),
+				  assignedTo = snapshot.child('AssignedTo').val(),
+				  projectName = document.getElementById("project_name").textContent,
+				  projectDescription = document.getElementById("description").textContent,
+				  members = document.getElementById("member_card_content").getElementsByClassName("member")
+			
+			// To store the names of the members in the project in the form of an object
+			var membersObject = {}
 
+			localStorage.setItem("projectName", projectName)
+			localStorage.setItem("description", projectDescription)
+			localStorage.setItem("taskName", taskName)
+			localStorage.setItem("taskDescription", taskDescription)
+			
+			// Get the name of each member and store in the object
+			Array.from(members).forEach(member => {
+				const name = member.textContent
+				membersObject[name] = {"Username": name}
+			})
+			localStorage.setItem("members", JSON.stringify(membersObject))
 
+			// Get the name of each member that is assigned to the task and store in the object
+			// if (assignedTo) {
+			// 	Array.from(assignedTo).forEach(member => {
+			// 		const name = member.textContent
+			// 		assignedToObject[name] = {"Username": name}
+			// 	})
+			localStorage.setItem("assignedTo", JSON.stringify(assignedTo))
+			// }
+		})
+		.then(function() {
+			// Move to the task page once data has been stored
+			window.location.href = "../html/taskpage.html"
+		})
+	});
+}
 
+function addMembers(member) {
+	var member_field = document.getElementById('member_card_content'),
+		newDiv = document.createElement("div")
 
-
-
-
-
-
-
-
-
+	member_field.appendChild(newDiv)
+	newDiv.id = member[1].Username
+	newDiv.className = "member"
+	newDiv.textContent = member[1].Username
+	
+}

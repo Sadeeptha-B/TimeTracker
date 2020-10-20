@@ -3,7 +3,6 @@ HTML contains modal open, close for direct button click
 Modal open close, after saving, editing, is done in this script.
 */
 
-
 /* DOM elements on Page */
     var projectName = document.getElementById("project_name");
     var description = document.getElementById("description");
@@ -34,41 +33,63 @@ window.myNameSpace ={
     editId: 0
 };
 
+firebase.auth().onAuthStateChanged(function(user) {
+	if (user) {
+		// Adds all the projects the logged in user is a part of to the his/her homepage
+		firebaseRef.child(`Users/${getUsername(user.email)}`)
+		.once('value').then(function(snapshot) {
+			const role = snapshot.child('Role').val()
 
-// Code for the addition of a individual task
-document.getElementById("create_mode_btn").addEventListener('click',function(){
-    clearErrors(taskNameError, commonTaskError);
-    var taskData = getNewTaskData(localStorage.getItem("projectName"));  // Get data, validate, and store in backend
-    if (taskData != undefined){
-        console.log("I run");
-        populateTask(localStorage.getItem("projectName"), taskData.TaskName);  // Display data
-        closeModal(updateTaskModal);
-    }
+			updateProjectPage(role)
+		})
+	}
+	else {
+	  // No user is signed in.
+	}
 });
-//Code for editing a task
-document.getElementById("edit_mode_btn").addEventListener('click', function(){
-    clearErrors(taskNameError, commonTaskError);
-    var taskData = getNewTaskData(localStorage.getItem("projectName"));  // Get data, validate, and store in backend
-    if (taskData != undefined){
-        var task = document.getElementById("task_" + myNameSpace.editId),
-            projectName = task.getAttribute("data-projectName"),
-            taskName = task.getAttribute("data-taskName")
 
-        firebaseRef.child(`Projects/${projectName}/Tasks/${taskName}`).once("value").then(function(snapshot) {
-            const assignedTo = snapshot.child("AssignedTo").val(),
-                times = snapshot.child("Times").val()
-            firebaseRef.child(`Projects/${projectName}/Tasks/${newTaskName.value}`).update({
-                AssignedTo: assignedTo,
-                Times: times
-            })
-        }).then(function() {
-            deleteTask(myNameSpace.editId);
-            populateTask(localStorage.getItem("projectName"), taskData.TaskName);  // Display data
-            closeModal(updateTaskModal);
-        })
-    }
-})
+// FUNCTION TO UPDATE PROJECT PAGE
+function updateProjectPage(role) {
+	const projectField = document.getElementById("project_name"),
+		  descriptionField = document.getElementById("description"),
+		  addMemberButton = document.getElementById("add_member"),
+		  editDescriptionButton = document.getElementById("edit_desc"),
+		  addTaskButton = document.getElementById("new_task_button"),
+		  assignTaskButton = document.getElementById("assign_task_button")
 
+	// Update the fields with project information
+	projectField.textContent = localStorage.getItem("projectName")
+	descriptionField.textContent = localStorage.getItem("description")
+
+	// Remove add member button for students but show for teachers
+	// Remove the add and assign task button for teachers but show for students
+	if (addMemberButton && editDescriptionButton) {
+		if (role === 'Teacher') {
+			addMemberButton.style.display = "block";
+			editDescriptionButton.style.display = "block";
+
+			addTaskButton.style.display = "none";
+			assignTaskButton.style.display = "none";
+		}
+		else if (role === 'Student') {
+			addMemberButton.style.display = "none";
+			editDescriptionButton.style.display = "none";
+
+			addTaskButton.style.display = "block";
+			assignTaskButton.style.display = "block";
+		}
+	}
+
+	Object.entries(JSON.parse(localStorage.getItem("members"))).forEach(member => {addMembers(member)})
+	
+	// Add all the tasks of the project to the project page
+	populateTasks(localStorage.getItem("projectName"));
+
+	// Update the charts of contribution
+	updateChartsInProjectPage()
+}
+
+// FUNCTIONALITY FUNCTIONS
 function getNewTaskData(project){
     var newTaskName = document.getElementById("task_name_input").value,
         newTaskDesc = document.getElementById("task_desc_input").value,
@@ -120,7 +141,13 @@ function getNewTaskData(project){
     return taskObject;
 }
 
-
+function populateTasks(projectName){
+    firebaseRef.child(`Projects/${projectName}/Tasks`)
+    .once('value').then(function(snapshot) {
+		const tasks = snapshot.val();
+        Object.entries(tasks).forEach(task => populateTask(projectName, task[1].TaskName));
+    })
+}
 
 /* Code to display a new task addition (Display only!) */
 function populateTask(projectName, taskName){
@@ -172,6 +199,53 @@ function populateTask(projectName, taskName){
     })
 }
 
+function addStudentToProject() {
+	var projectName = document.getElementById("project_name").textContent,
+		newMember = document.getElementById("search_student").value;
+
+	firebaseRef.child(`Projects/${projectName}/Members/${newMember}`).set({
+			Username: newMember
+	})
+
+	// Add the projects to the student
+	firebaseRef.child(`Users/${newMember}/Projects/${projectName}`).set({
+		ProjectName: projectName
+	})
+	
+	// This part of the code tries to dynamically place the names of the students as it is added
+	firebaseRef.child(`Projects/${projectName}`)
+	.once('value').then(function(snapshot) {
+		const members = snapshot.child('Members').val()
+
+		var membersObject = {}
+		
+		Object.entries(members).forEach(member => {
+			const name = member[1].Username
+
+			membersObject[name] = {"Username": name}
+		})
+		
+		localStorage.setItem("members", JSON.stringify(membersObject))
+	}).then(function() {
+		closeModal(add_student)
+
+		window.location.reload()
+	})
+}
+
+function displayStudentList() {
+  let studentList = document.getElementById("search_student");
+  let output = "";
+  firebaseRef.child(`Students`)
+  .once('value').then(function(snapshot){
+    const students = snapshot.val()
+		for (let i = 0; i < Object.entries(students).length; i++){
+			output += `<option value = "${Object.entries(students)[i][0]}" style = "font-color:black">${Object.entries(students)[i][0]}</option>`
+		}
+		studentList.innerHTML = output;
+  })
+}
+
 /* Delete a task */
 function deleteTask(index){
     event.stopPropagation();       // Check if there is a better way to make an element clickable within a clickable div
@@ -210,6 +284,39 @@ Click Event Listeners
 To do all tasks related to clicks except for the opening and closing of modals.
 
 */
+// Code for the addition of a individual task
+document.getElementById("create_mode_btn").addEventListener('click',function(){
+    clearErrors(taskNameError, commonTaskError);
+    var taskData = getNewTaskData(localStorage.getItem("projectName"));  // Get data, validate, and store in backend
+    if (taskData != undefined){
+        console.log("I run");
+        populateTask(localStorage.getItem("projectName"), taskData.TaskName);  // Display data
+        closeModal(updateTaskModal);
+    }
+});
+//Code for editing a task
+document.getElementById("edit_mode_btn").addEventListener('click', function(){
+    clearErrors(taskNameError, commonTaskError);
+    var taskData = getNewTaskData(localStorage.getItem("projectName"));  // Get data, validate, and store in backend
+    if (taskData != undefined){
+        var task = document.getElementById("task_" + myNameSpace.editId),
+            projectName = task.getAttribute("data-projectName"),
+            taskName = task.getAttribute("data-taskName")
+
+        firebaseRef.child(`Projects/${projectName}/Tasks/${taskName}`).once("value").then(function(snapshot) {
+            const assignedTo = snapshot.child("AssignedTo").val(),
+                times = snapshot.child("Times").val()
+            firebaseRef.child(`Projects/${projectName}/Tasks/${newTaskName.value}`).update({
+                AssignedTo: assignedTo,
+                Times: times
+            })
+        }).then(function() {
+            deleteTask(myNameSpace.editId);
+            populateTask(localStorage.getItem("projectName"), taskData.TaskName);  // Display data
+            closeModal(updateTaskModal);
+        })
+    }
+})
 
 //Edit description
 document.getElementById("edit_desc").addEventListener('click', function(){
