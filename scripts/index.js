@@ -6,7 +6,6 @@ firebase.auth().onAuthStateChanged(function(user) {
 			const username = snapshot.child('Username').val(),
 					role = snapshot.child('Role').val()
 
-			// Update the pages based on the user such as removing/adding restricted fucntionality
 			updateHomePage(username, role)
 		})
 	}
@@ -15,7 +14,7 @@ firebase.auth().onAuthStateChanged(function(user) {
 	}
   });
 
-// FUNCTIONS TO UPDATE THE PAGES BASED ON THE USER
+// FUNCTIONS TO UPDATE HOME PAGE
 // =================================================
 function updateHomePage(username, role) {
 	const welcomeText = document.getElementById("welcome_text"),
@@ -36,88 +35,28 @@ function updateHomePage(username, role) {
 	}
 
 	// // Add all the projects of the user to the home page
-	// if (role === 'Student') {
-		populateProjects(username)
-	// }
-	
-
-	
-	// If project is not completed, add the project to home page regardless of teacher/student
-	// If project completed, add the project to home page only for student
-	// if (completed === null || (role === 'Student' && completed)) {
-		
-	// }
+	populateProjectsToHome(username)
 }
 
-// FUNCTIONS TO POPULATE THE PAGE WITH PROJECTS BASED ON USER
-// ======================================================================
-
-function populateProjects(username) {
+function populateProjectsToHome(username) {
     firebaseRef.child(`Users/${username}`)
 	.once('value').then(function(snapshot) {
 		const projects = snapshot.child('Projects').val(),
 			  role = snapshot.child('Role').val()
 
-		Object.entries(projects).forEach(project => {addProject(project, role)})
+		Object.entries(projects).forEach(project => {
+			firebaseRef.child(`Projects/${project[1].ProjectName}`).once("value").then(function(snapshot) {
+				var projectData = snapshot.val()
+
+				if (!projectData.Completed || (projectData.Completed && role === 'Student')) {
+					addProject(project, projectData, role)
+				}
+			})
+		})
 	})
 }
 
-async function addProject(project, role) {
-	firebaseRef.child(`Projects/${project[1].ProjectName}`).once("value").then(function(snapshot) {
-		const projectName = snapshot.child('ProjectName').val(),
-			  startDate = snapshot.child('StartDate').val(),
-			  endDate = snapshot.child('EndDate').val(),
-			  teacher = snapshot.child('TeacherInCharge').val(),
-			  completed  = snapshot.child('Completed').val()
-
-		if (completed === null || (role === 'Student' && completed)) {
-			var	dashboard = document.getElementById("dash_container"),
-				newDiv = document.createElement("div"),
-				newH2 = document.createElement("h2"),
-				newP = document.createElement("p"),
-				//imgEdit = document.createElement("input"),
-				imgDelete = document.createElement("input"),
-				footerDiv = document.createElement("div"),
-				clr = document.createElement("div")
-
-			dashboard.appendChild(newDiv)
-			newDiv.appendChild(newH2)
-			newDiv.appendChild(newP)
-			newDiv.appendChild(footerDiv)
-			newDiv.appendChild(clr)
-			//footerDiv.appendChild(imgEdit)
-			footerDiv.appendChild(imgDelete)
-
-			newDiv.className = "dash_project"
-			newDiv.id = `${projectName}`
-			newH2.className = "dash_project_head"
-			newH2.textContent = project[0]
-
-			newP.className = "project_summary"
-			newP.textContent = `Lecturer: ${teacher} | Start: ${startDate} | End: ${endDate}`
-			
-			footerDiv.className = "action_pane"
-			/*
-			imgEdit.type="image"
-			imgEdit.src="../imgs/edit-16.png"
-			imgEdit.id="edit_project"
-			imgEdit.className="std_component"
-			*/
-
-			imgDelete.type="image"
-			imgDelete.src="../imgs/delete-16.png"
-			imgDelete.id="delete_task"
-			imgDelete.className="std_component"
-
-			clr.className = "clr"
-			
-			addProjectsEventListener(newDiv)
-		
-		}
-	})
-}
-
-// ONCLICK FUNCTIONS
+// FUNCTIONALITY FUNCTIONS
 // ======================================================================
 
 async function createProject(){
@@ -204,6 +143,8 @@ async function createProject(){
     window.location.href = "../html/home-teacherview.html";
 }
 
+
+// ONCLICK BUTTONS
 document.getElementById("search_id_button").addEventListener("click", function() {
 	var username = document.getElementById("delete_username_input").value,
 		confirmation_section = document.getElementById("confirm_delete_container"),
