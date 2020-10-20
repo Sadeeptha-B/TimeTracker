@@ -33,6 +33,17 @@
                 <!-- END OF AUTO GENERATED HTML SECTION -->
             </div>
         </div>
+        <div class = "alert error_alert hide">
+            <span class ="fas fa-exclamation-circle"></span>
+            <span class="msg" id="error_msg"> Warning: This is a warning alert </span>
+            <div class="close generic_popup_close" onclick=closeAlert()>+</div>
+        </div>
+
+        <div class = "alert confirmation_alert hide">
+            <span class="fas fa-check"></span>
+            <span class="msg" id="confirm_msg"> Confirmation message </span>
+            <div class="close  generic_popup_close" onclick=closeAlert()>+</div>
+        </div>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>

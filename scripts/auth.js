@@ -15,7 +15,7 @@ function login() {
 		var errorMessage = error.message;
 		// ...
 		console.log(errorCode)
-		window.alert("Error :" + errorMessage);
+		displayErrorAlert("Error :" + errorMessage);
 	});
 }
 
@@ -26,7 +26,7 @@ function logout(){
 		window.location.href = "../html/login.html";
 	})
 	.catch(function(error) {
-		window.alert('Sign Out Error', error)
+		displayErrorAlert("Sign Out Error" + error);
 	});
 }
 
@@ -48,16 +48,18 @@ async function signup() {
 			}
 		}
 		catch(err) {
-			window.alert(err)
+			displayErrorAlert(err)
 			location.reload()
 		}
 			
 	}
 	else if (userPass.length < 6) {
-		window.alert("Password needs to be at least 6 characters long")
+		displayErrorAlert("Password needs to be at least 6 characters long")
+		// window.alert("Password needs to be at least 6 characters long")
 	}
 	else if (userPass !== userConfirmPass) {
-		window.alert("Password does not match Confirm Password")
+		displayErrorAlert("Password does not match Confirm Password")
+		// window.alert("Password does not match Confirm Password")
 	}
 }
 
@@ -99,7 +101,8 @@ function createAccount(userEmail, userPass, userRole) {
 		.then(function() {
 			firebase.auth().signOut()
 			.then(function() {
-				window.alert("Sign Up Successful")
+				displayConfirmAlert("Sign Up Successful")
+				// window.alert("Sign Up Successful")
 
 				// This means Admin is creating a teacher account
 				if (userRole === 'Teacher') {
@@ -120,7 +123,8 @@ function createAccount(userEmail, userPass, userRole) {
 			var errorMessage = error.message
 
 			console.log(errorCode)
-			window.alert(errorMessage)
+			displayErrorAlert(errorMessage);
+			// window.alert(errorMessage)
 		})
 	}
 	catch(err) {
