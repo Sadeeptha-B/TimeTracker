@@ -223,44 +223,52 @@ function addProject(project) {
 			  startDate = snapshot.child('StartDate').val(),
 			  endDate = snapshot.child('EndDate').val(),
 			  teacher = snapshot.child('TeacherInCharge').val(),
+			  completed  = snapshot.child('Completed').val()
 
-			  dashboard = document.getElementById("dash_container"),
-			  newDiv = document.createElement("div"),
-			  newH2 = document.createElement("h2"),
-			  newP = document.createElement("p")
-			  imgEdit = document.createElement("input")
-			  imgDelete = document.createElement("delete")
-			  footerDiv = document.createElement("div")
+		// Only add project to home page if it is not completed
+		if (completed === null) {
+			var	dashboard = document.getElementById("dash_container"),
+				newDiv = document.createElement("div"),
+				newH2 = document.createElement("h2"),
+				newP = document.createElement("p"),
+				//imgEdit = document.createElement("input"),
+				imgDelete = document.createElement("input"),
+				footerDiv = document.createElement("div"),
+				clr = document.createElement("div")
 
+			dashboard.appendChild(newDiv)
+			newDiv.appendChild(newH2)
+			newDiv.appendChild(newP)
+			newDiv.appendChild(footerDiv)
+			newDiv.appendChild(clr)
+			//footerDiv.appendChild(imgEdit)
+			footerDiv.appendChild(imgDelete)
 
-		dashboard.appendChild(newDiv)
-		dashboard.appendChild(footerDiv)
-		newDiv.appendChild(newH2)
-		newDiv.appendChild(newP)
-		// footerDiv.appendChild(imgEdit)
-		// footerDiv.appendChild(imgDelete)
+			newDiv.className = "dash_project"
+			newDiv.id = `${projectName}`
+			newH2.className = "dash_project_head"
+			newH2.textContent = project[0]
 
-		newDiv.className = "dash_project"
-		newDiv.id = `${projectName}`
-		newH2.className = "dash_project_head"
-		newH2.textContent = project[0]
+			newP.className = "project_summary"
+			newP.textContent = `Lecturer: ${teacher} | Start: ${startDate} | End: ${endDate}`
+			
+			footerDiv.className = "action_pane"
+			/*
+			imgEdit.type="image"
+			imgEdit.src="../imgs/edit-16.png"
+			imgEdit.id="edit_project"
+			imgEdit.className="std_component"
+			*/
 
-		newP.className = "project_summary"
-		newP.textContent = `Lecturer: ${teacher} | Start: ${startDate} | End: ${endDate}`
-		addProjectsEventListener(newDiv)
-		
-		/* Not working
-		footerDiv.className = "action_pane"
-		imgEdit.type="image"
-		imgEdit.src="../imgs/edit-16.png"
-		imgEdit.id="edit_project"
-		imgEdit.class="std_component"
+			imgDelete.type="image"
+			imgDelete.src="../imgs/delete-16.png"
+			imgDelete.id="delete_task"
+			imgDelete.className="std_component"
 
-		imgEdit.type="image"
-		imgDelete.src="../imgs/delete-16.png"
-		imgDelete.id="edit_project"
-		imgDelete.class="std_component"
-		*/
+			clr.className = "clr"
+			
+			addProjectsEventListener(newDiv)
+		}
 	})
 }
 
