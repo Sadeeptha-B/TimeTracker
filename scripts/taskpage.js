@@ -1,3 +1,42 @@
+/*
+Functions : ------
+updateTaskPage : Display according to user
+updateVisuals : Update charts and tables  (Load data upon page load and update)                   
+                    Charts: addChart :   Specify chart type, chart creation function for the type
+                            updateCharts : Calls updateChart for each chart
+
+                   Tables : populateTable : Call updateTable and handle change display
+
+Entering new timelogs: Called by event listener for click "save_time_log" ------
+    getDataforPopulation
+    format
+    update     : updateCharts
+                 updateTable : Put timelog on frontend
+
+Planning Times: Called by event listener for click "save_contribution" ---------
+    updatePlannedTime
+    changeContribution
+
+Chart detailed specifics  ------------------------------------------------------
+    dynamicallyCreateChart - Base chart creation function
+    basicChartConfig       - Standard Chart config
+
+
+    Specific charts   - Calls dynamicallyCreateChart and sets chart config
+      memberDurationChart   - members and duration 
+      updateChart           
+
+Event listeners -----------------------------------
+   save_time_log
+   save_contribution
+   edit_task_desc
+   save_desc
+   mark_complt_btn
+   set_active_btn
+*/
+
+
+
 /* Timelogs table */
 var timeLogs = document.getElementById("timelogs");   //Container div
 var timeLogTableRow = document.getElementById("template_table_row");   //Table row
@@ -35,7 +74,7 @@ firebase.auth().onAuthStateChanged(function(user) {
 		})
 	}
 	else {
-	  // No user is signed in.
+      // No user is signed in.
 	}
 });
 
@@ -253,7 +292,7 @@ async function update(formatObject){
     window.taskPageNameSpace.members[username].timelogs.push(formatObject);
     window.taskPageNameSpace.members[username].totalDuration += formatObject.durationData.timeInHrs;
     updateCharts(); 
-    updateTable(username, formatObject);
+    updateTable(username, formatObject);     // Consider incorporating to populateTable function
 
     
     setDisplayNone(statusColumn);
@@ -312,7 +351,8 @@ async function update(formatObject){
             })
         })
         .then(function() {
-            window.alert("Time logged!");
+            displayConfirmAlert("Time logged    👍")
+            // window.alert("Time logged!");
         })
     })
 }
@@ -321,7 +361,7 @@ document.getElementById("save_contribution").addEventListener('click', function(
     clearErrors(commonTaskError);
     var hrsObj = updatePlannedTime();
     if (hrsObj != undefined){
-        change_contribution(hrsObj);
+        changeContribution(hrsObj);
     }
 });
 
@@ -340,7 +380,7 @@ function updatePlannedTime(){
     return hrsObj;
 }
 
-async function change_contribution(hrsObject){
+async function changeContribution(hrsObject){
     var user = await firebase.auth().currentUser;
     const username = getUsername(user.email)
 
@@ -361,7 +401,8 @@ async function change_contribution(hrsObject){
             PlannedTime: hrsObject
         })
         .then(function() {
-            window.alert("Workload expectation logged!");
+            displayConfirmAlert("Workload expectation logged!");
+            // window.alert("Workload expectation logged!");
         })
     })
 }

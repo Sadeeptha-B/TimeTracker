@@ -75,7 +75,7 @@ async function addProject(project, role) {
 				newDiv = document.createElement("div"),
 				newH2 = document.createElement("h2"),
 				newP = document.createElement("p"),
-				//imgEdit = document.createElement("input"),
+				imgCheck = document.createElement("input"),
 				imgDelete = document.createElement("input"),
 				footerDiv = document.createElement("div"),
 				clr = document.createElement("div")
@@ -85,7 +85,7 @@ async function addProject(project, role) {
 			newDiv.appendChild(newP)
 			newDiv.appendChild(footerDiv)
 			newDiv.appendChild(clr)
-			//footerDiv.appendChild(imgEdit)
+			footerDiv.appendChild(imgCheck)
 			footerDiv.appendChild(imgDelete)
 
 			newDiv.className = "dash_project"
@@ -97,12 +97,12 @@ async function addProject(project, role) {
 			newP.textContent = `Lecturer: ${teacher} | Start: ${startDate} | End: ${endDate}`
 			
 			footerDiv.className = "action_pane"
-			/*
-			imgEdit.type="image"
-			imgEdit.src="../imgs/edit-16.png"
-			imgEdit.id="edit_project"
-			imgEdit.className="std_component"
-			*/
+			
+			imgCheck.type="image"
+			imgCheck.src="../imgs/check-mark-12-24.png"
+			imgCheck.id="edit_project"
+			imgCheck.className="std_component mark_cmplt_size"
+		
 
 			imgDelete.type="image"
 			imgDelete.src="../imgs/delete-16.png"
@@ -198,10 +198,12 @@ async function createProject(){
 
 
 	displayConfirmAlert("Project Created!")
-	setTimeout(3000);
+	setTimeout(function() {
+		window.location.href = "../html/home-teacherview.html";
+	},5000);
     // window.alert("Project Created!")
     // Bring the user to the home page after successful sign up
-    window.location.href = "../html/home-teacherview.html";
+    
 }
 
 document.getElementById("search_id_button").addEventListener("click", function() {
