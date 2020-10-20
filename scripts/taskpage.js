@@ -22,38 +22,105 @@ window.taskPageNameSpace = {
     }
 }
 
-Object.entries(JSON.parse(localStorage.getItem("assignedTo"))).forEach(member => {
-    var memberAccess = window.taskPageNameSpace.members,
-        username = member[1].Username
-    memberAccess[username] = {};
-    memberAccess.array.push(username);
-    // Later I just need to take the data from firebase and add it the total duration and timelogs
-    firebaseRef.child(`Projects/${localStorage.getItem("projectName")}/Tasks/${localStorage.getItem("taskName")}/Times/${username}`).once("value").then(function(snapshot) {
-        var totalDuration = snapshot.child('TotalTimeSpent').val(),
-            plannedDuration = snapshot.child('PlannedTime').val(),
-            timelogs = snapshot.val()
-        
-        memberAccess[username].totalDuration = totalDuration;
-        memberAccess[username].plannedTime = plannedDuration;
+firebase.auth().onAuthStateChanged(function(user) {
+	if (user) {
+		// Adds all the projects the logged in user is a part of to the his/her homepage
+		firebaseRef.child(`Users/${getUsername(user.email)}`)
+		.once('value').then(function(snapshot) {
+			const username = snapshot.child('Username').val(),
+					role = snapshot.child('Role').val()
 
-        if (timelogs) {
-            var timelogs = Object.entries(timelogs),
-                length = timelogs.length
+            updateTaskPage(username, role)
+            updateVisuals()
+		})
+	}
+	else {
+	  // No user is signed in.
+	}
+});
+
+// FUNCTIONS TO UPDATE THE TASK PAGE
+function updateTaskPage(username, role) {
+	const taskField = document.getElementById("taskName"),
+		  descriptionField = document.getElementById("description"),
+		  editTaskDescriptionButton = document.getElementById("edit_task_desc"),
+		  submitTimeButton = document.getElementById("save_time_log"),
+		  planContBtn = document.getElementById("plan_cont_btn"),
+		  newLogBtn   = document.getElementById("new_log_btn"),
+		  markCompltBtn = document.getElementById("mark_complt_btn")
+
+	// Update the fields with project information
+	taskField.textContent = localStorage.getItem("taskName")
+	descriptionField.textContent = localStorage.getItem("taskDescription")
+	Object.entries(JSON.parse(localStorage.getItem("assignedTo"))).forEach(member => {addMembers(member)})
+
+	// Remove task description button for teachers but show for students
+	// Remove time input button for teachers but show for students
+	if (editTaskDescriptionButton && submitTimeButton) {
+		if (role === 'Teacher') {
+			markCompltBtn.style.display="inline-block";
+			planContBtn.style.display = "none"
+			newLogBtn.style.display = "none"
+			editTaskDescriptionButton.style.display = "none"
+			submitTimeButton.style.display = "none"
+			
+		}
+		else if (role === 'Student') {
+			firebaseRef.child(`Projects/${localStorage.getItem("projectName")}/Tasks/${localStorage.getItem("taskName")}/AssignedTo/${username}`)
+			.once('value').then(function(snapshot) {
+				if (snapshot.val()) {
+					markCompltBtn.style.display="inline-block";
+					newLogBtn.style.display = "inline-block"
+					planContBtn.style.display="inline-block"
+					editTaskDescriptionButton.style.display = "inline-block"
+					submitTimeButton.style.display = "inline-block"
+				}
+				else {
+					markCompltBtn.style.display="none";
+					newLogBtn.style.display = "none"
+					planContBtn.style.display="none"
+					editTaskDescriptionButton.style.display = "none"
+					submitTimeButton.style.display = "none"
+				}
+			})
+		}
+	}
+}
+
+function updateVisuals() {
+    Object.entries(JSON.parse(localStorage.getItem("assignedTo"))).forEach(member => {
+        var memberAccess = window.taskPageNameSpace.members,
+            username = member[1].Username
+        memberAccess[username] = {};
+        memberAccess.array.push(username);
+        // Later I just need to take the data from firebase and add it the total duration and timelogs
+        firebaseRef.child(`Projects/${localStorage.getItem("projectName")}/Tasks/${localStorage.getItem("taskName")}/Times/${username}`).once("value").then(function(snapshot) {
+            var totalDuration = snapshot.child('TotalTimeSpent').val(),
+                plannedDuration = snapshot.child('PlannedTime').val(),
+                timelogs = snapshot.val()
             
-            memberAccess[username].timelogs = timelogs.slice(0, length - 1)
-        }
-        else {
-            memberAccess[username].timelogs = []
-        }
-        
-    }).then(function() {
-        updateCharts()
-        populateTable(username)
+            memberAccess[username].totalDuration = totalDuration;
+            memberAccess[username].plannedTime = plannedDuration;
+    
+            if (timelogs) {
+                var timelogs = Object.entries(timelogs),
+                    length = timelogs.length
+                
+                memberAccess[username].timelogs = timelogs.slice(1, length - 1)
+            }
+            else {
+                memberAccess[username].timelogs = []
+            }
+            
+        }).then(function() {
+            updateCharts()
+            populateTable(username)
+        })
     })
-})
-
-addChart("time_duration_bar", "Time Duration spent by each member", "bar", memberDurationChart)
-addChart("time_duration_pie","Time Percentages","pie", memberDurationChart)
+    
+    addChart("time_duration_bar", "Time Duration spent by each member", "bar", memberDurationChart)
+    addChart("time_duration_pie","Time Percentages","pie", memberDurationChart)
+}
 
 function addChart( id,title, type,func){
     var chart = func(id, title, type);
@@ -86,7 +153,7 @@ document.getElementById("save_time_log").addEventListener('click', function(){
     }
 });
 
-
+// FUNCTIONALITY FUNCTIONS
 function getDataforPopulation(){
     var startDate = document.getElementById("start_day").value,
         startMonth = document.getElementById("start_month").value,
