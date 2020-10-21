@@ -47,7 +47,7 @@ var timeInput = document.getElementById("time_input");
 var contribution = document.getElementById("contribution_overlay");
 
 /* Chart */
-var chartCard = document.getElementById("chart_card")  
+var chartCard = document.getElementById("task_chart_card")  
 var statusColumn = document.getElementById("logtime_status")
 
 /* Error Messages */
@@ -228,16 +228,21 @@ function getDataforPopulation(){
 
     var startDateFormat = new Date(startYear, startMonth-1, startDate, startHrParsed, startMin),
         endDateFormat = new Date(endYear, endMonth-1, endDate, endHrParsed, endMin ),
+        timeNow = new Date(),
         hourNotEntered = isNaN(startDateFormat.getTime()) || isNaN(endDateFormat.getTime()),
-        dateValid = endDateFormat.getTime() > startDateFormat.getTime()
+        startEndTimeValid = endDateFormat.getTime() > startDateFormat.getTime() 
     
+    if (timeNow < startDateFormat){
+        displayError("Timelogs in the future are not accepted ", commonTaskError);
+        return;
+    }
 
     if (hourNotEntered){
         displayError("Hour minute input must be provided", commonTaskError);
         return;
     }
 
-    if (!dateValid){
+    if (!startEndTimeValid){
         displayError("Start time should be before end time",commonTaskError);
         return;
     } 
