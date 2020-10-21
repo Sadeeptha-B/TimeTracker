@@ -56,61 +56,6 @@ function populateProjectsToHome(username) {
 	})
 }
 
-async function addProject(project, role) {
-	firebaseRef.child(`Projects/${project[1].ProjectName}`).once("value").then(function(snapshot) {
-		const projectName = snapshot.child('ProjectName').val(),
-			  startDate = snapshot.child('StartDate').val(),
-			  endDate = snapshot.child('EndDate').val(),
-			  teacher = snapshot.child('TeacherInCharge').val(),
-			  completed  = snapshot.child('Completed').val()
-
-		if (completed === null || (role === 'Student' && completed)) {
-			var	dashboard = document.getElementById("dash_container"),
-				newDiv = document.createElement("div"),
-				newH2 = document.createElement("h2"),
-				newP = document.createElement("p"),
-				imgCheck = document.createElement("input"),
-				imgDelete = document.createElement("input"),
-				footerDiv = document.createElement("div"),
-				clr = document.createElement("div")
-
-			dashboard.appendChild(newDiv)
-			newDiv.appendChild(newH2)
-			newDiv.appendChild(newP)
-			newDiv.appendChild(footerDiv)
-			newDiv.appendChild(clr)
-			footerDiv.appendChild(imgCheck)
-			footerDiv.appendChild(imgDelete)
-
-			newDiv.className = "dash_project"
-			newDiv.id = `${projectName}`
-			newH2.className = "dash_project_head"
-			newH2.textContent = project[0]
-
-			newP.className = "project_summary"
-			newP.textContent = `Lecturer: ${teacher} | Start: ${startDate} | End: ${endDate}`
-			
-			footerDiv.className = "action_pane"
-			
-			imgCheck.type="image"
-			imgCheck.src="../imgs/check-mark-12-24.png"
-			imgCheck.id="edit_project"
-			imgCheck.className="std_component mark_cmplt_size"
-		
-
-			imgDelete.type="image"
-			imgDelete.src="../imgs/delete-16.png"
-			imgDelete.id="delete_task"
-			imgDelete.className="std_component"
-
-			clr.className = "clr"
-			
-			addProjectsEventListener(newDiv)
-		
-		}
-	})
-}
-
 // FUNCTIONALITY FUNCTIONS
 // ======================================================================
 

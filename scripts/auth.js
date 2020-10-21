@@ -159,30 +159,3 @@ function writeUserData(email, role) {
 		throw 'As an admin, you can only create teacher accounts.'
 	}
 }
-
-function getUsername(email) {
-	for (i = 0; i < email.length; i++) {
-		if (email[i] === "@") {
-			return email.slice(0, i)
-		}
-	}
-}
-
-function isSchoolAccount(email) {
-	if (email.indexOf('monash') !== -1) {
-		return true
-	}
-	else {
-		return false
-	}
-}
-
-function getRole(email) {
-	if (email.indexOf('student') !== -1) {
-		return 'Student'
-	}
-	return 'Teacher'
-	
-}
-
-

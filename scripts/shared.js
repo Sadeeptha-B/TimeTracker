@@ -186,6 +186,31 @@ function indexToBoolean(index){
      return value;
  };
 
+ function getUsername(email) {
+	for (i = 0; i < email.length; i++) {
+		if (email[i] === "@") {
+			return email.slice(0, i)
+		}
+	}
+}
+
+function isSchoolAccount(email) {
+	if (email.indexOf('monash') !== -1) {
+		return true
+	}
+	else {
+		return false
+	}
+}
+
+function getRole(email) {
+	if (email.indexOf('student') !== -1) {
+		return 'Student'
+	}
+	return 'Teacher'
+	
+}
+
 // FUNCTIONS TO ADD EVENT LISTENERS TO ALL THE PROJECT/TASK ELEMENTS
 // ======================================================================
 function addProjectsEventListener(project){
