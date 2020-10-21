@@ -82,8 +82,8 @@ function searchMultiple(searchBar, objArray){
 
         //Will be removed once close is clickable
         setTimeout(function(){
-            elem.setAttribute("class", "alert confirmation_alert hide")
-        }, 5000);
+            elem.setAttribute("class", "alert error_alert hide")
+        }, 10000);
     }
 
     function closeAlert(){
