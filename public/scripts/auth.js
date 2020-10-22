@@ -23,7 +23,7 @@ function logout(){
 	firebase.auth().signOut()
 	.then(function() {
 		removeLocalStorageItem()
-		window.location.href = "../html/login.html";
+		window.location.href = "../index.html";
 	})
 	.catch(function(error) {
 		displayErrorAlert("Sign Out Error" + error);
@@ -114,7 +114,7 @@ function createAccount(userEmail, userPass, userRole) {
 				}
 				else {
 					// Bring the student back to the login page after successful sign up to log in
-					window.location.href = "../html/login.html";
+					window.location.href = "../index.html";
 				}
 			})
 		})

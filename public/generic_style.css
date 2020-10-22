@@ -239,7 +239,7 @@ button.blue_curve_button:hover{
         transform: translateX(-10%);
     }
     100%{
-        transform: translateX(100%));
+        transform: translateX(100%);
     }
 }
 
