@@ -7,7 +7,7 @@ function login() {
 	firebase.auth().signInWithEmailAndPassword(userEmail, userPass)
 	.then(function() {
 		// User is signed in.
-		getHomePage()
+		getLoginPage()
 	})
 	.catch(function(error) {
 		// Handle Errors here.
@@ -61,6 +61,24 @@ async function signup() {
 		displayErrorAlert("Password does not match Confirm Password")
 		// window.alert("Password does not match Confirm Password")
 	}
+}
+
+async function getLoginPage() {
+	var user = await firebase.auth().currentUser
+	firebaseRef.child(`Users/${getUsername(user.email)}`)
+	.once('value').then(function(snapshot) {
+		const role = snapshot.child("Role").val()
+		
+		if (role === 'Admin') {
+			window.location.href = "html/home-adminview.html"
+		}
+		else {
+			window.location.href = "html/home.html"
+		}
+		
+   })
+
+   removeLocalStorageItem()
 }
 
 async function getHomePage() {
