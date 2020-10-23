@@ -1,3 +1,42 @@
+/*
+Functions : ------
+updateTaskPage : Display according to user
+updateVisuals : Update charts and tables  (Load data upon page load and update)                   
+                    Charts: addChart :   Specify chart type, chart creation function for the type
+                            updateCharts : Calls updateChart for each chart
+
+                   Tables : populateTable : Call updateTable and handle change display
+
+Entering new timelogs: Called by event listener for click "save_time_log" ------
+    getDataforPopulation
+    format
+    update     : updateCharts
+                 updateTable : Put timelog on frontend
+
+Planning Times: Called by event listener for click "save_contribution" ---------
+    updatePlannedTime
+    changeContribution
+
+Chart detailed specifics  ------------------------------------------------------
+    dynamicallyCreateChart - Base chart creation function
+    basicChartConfig       - Standard Chart config
+
+
+    Specific charts   - Calls dynamicallyCreateChart and sets chart config
+      memberDurationChart   - members and duration 
+      updateChart           
+
+Event listeners -----------------------------------
+   save_time_log
+   save_contribution
+   edit_task_desc
+   save_desc
+   mark_complt_btn
+   set_active_btn
+*/
+
+
+
 /* Timelogs table */
 var timeLogs = document.getElementById("timelogs");   //Container div
 var timeLogTableRow = document.getElementById("template_table_row");   //Table row
@@ -5,13 +44,15 @@ var timeLogTableBody = document.getElementById("timelog_table_body");   // Table
 
 /* Modals*/
 var timeInput = document.getElementById("time_input");
+var contribution = document.getElementById("contribution_overlay");
 
 /* Chart */
-var chartCard = document.getElementById("chart_card")  
+var chartCard = document.getElementById("task_chart_card")  
 var statusColumn = document.getElementById("logtime_status")
 
 /* Error Messages */
 var commonTaskError = document.getElementById("timelog_error")
+var contributeError = document.getElementById("contribute_error")
 
 window.taskPageNameSpace = {
     charts: [],
@@ -20,36 +61,105 @@ window.taskPageNameSpace = {
     }
 }
 
-Object.entries(JSON.parse(localStorage.getItem("assignedTo"))).forEach(member => {
-    var memberAccess =  window.taskPageNameSpace.members,
-        username = member[1].Username
-    memberAccess[username] = {};
-    memberAccess.array.push(username);
-    // Later I just need to take the data from firebase and add it the total duration and timelogs
-    firebaseRef.child(`Projects/${localStorage.getItem("projectName")}/Tasks/${localStorage.getItem("taskName")}/Times/${username}`).once("value").then(function(snapshot) {
-        var totalDuration = snapshot.child('TotalTimeSpent').val(),
-            timelogs = snapshot.val()
-        
-        memberAccess[username].totalDuration = totalDuration
+firebase.auth().onAuthStateChanged(function(user) {
+	if (user) {
+		// Adds all the projects the logged in user is a part of to the his/her homepage
+		firebaseRef.child(`Users/${getUsername(user.email)}`)
+		.once('value').then(function(snapshot) {
+			const username = snapshot.child('Username').val(),
+					role = snapshot.child('Role').val()
 
-        if (timelogs) {
-            var timelogs = Object.entries(timelogs),
-                length = timelogs.length
+            updateTaskPage(username, role)
+            updateVisuals()
+		})
+	}
+	else {
+      // No user is signed in.
+	}
+});
+
+// FUNCTIONS TO UPDATE THE TASK PAGE
+function updateTaskPage(username, role) {
+	const taskField = document.getElementById("taskName"),
+		  descriptionField = document.getElementById("description"),
+		  editTaskDescriptionButton = document.getElementById("edit_task_desc"),
+		  submitTimeButton = document.getElementById("save_time_log"),
+		  planContBtn = document.getElementById("plan_cont_btn"),
+		  newLogBtn   = document.getElementById("new_log_btn"),
+		  markCompltBtn = document.getElementById("mark_complt_btn")
+
+	// Update the fields with project information
+	taskField.textContent = localStorage.getItem("taskName")
+	descriptionField.textContent = localStorage.getItem("taskDescription")
+	Object.entries(JSON.parse(localStorage.getItem("assignedTo"))).forEach(member => {addMembers(member)})
+
+	// Remove task description button for teachers but show for students
+	// Remove time input button for teachers but show for students
+	if (editTaskDescriptionButton && submitTimeButton) {
+		if (role === 'Teacher') {
+			markCompltBtn.style.display="inline-block";
+			planContBtn.style.display = "none"
+			newLogBtn.style.display = "none"
+			editTaskDescriptionButton.style.display = "none"
+			submitTimeButton.style.display = "none"
+			
+		}
+		else if (role === 'Student') {
+			firebaseRef.child(`Projects/${localStorage.getItem("projectName")}/Tasks/${localStorage.getItem("taskName")}/AssignedTo/${username}`)
+			.once('value').then(function(snapshot) {
+				if (snapshot.val()) {
+					markCompltBtn.style.display="inline-block";
+					newLogBtn.style.display = "inline-block"
+					planContBtn.style.display="inline-block"
+					editTaskDescriptionButton.style.display = "inline-block"
+					submitTimeButton.style.display = "inline-block"
+				}
+				else {
+					markCompltBtn.style.display="none";
+					newLogBtn.style.display = "none"
+					planContBtn.style.display="none"
+					editTaskDescriptionButton.style.display = "none"
+					submitTimeButton.style.display = "none"
+				}
+			})
+		}
+	}
+}
+
+function updateVisuals() {
+    Object.entries(JSON.parse(localStorage.getItem("assignedTo"))).forEach(member => {
+        var memberAccess = window.taskPageNameSpace.members,
+            username = member[1].Username
+        memberAccess[username] = {};
+        memberAccess.array.push(username);
+        // Later I just need to take the data from firebase and add it the total duration and timelogs
+        firebaseRef.child(`Projects/${localStorage.getItem("projectName")}/Tasks/${localStorage.getItem("taskName")}/Times/${username}`).once("value").then(function(snapshot) {
+            var totalDuration = snapshot.child('TotalTimeSpent').val(),
+                plannedDuration = snapshot.child('PlannedTime').val(),
+                timelogs = snapshot.val()
             
-            memberAccess[username].timelogs = timelogs.slice(0, length - 1)
-        }
-        else {
-            memberAccess[username].timelogs = []
-        }
-        
-    }).then(function() {
-        updateCharts()
-        populateTable(username)
+            memberAccess[username].totalDuration = totalDuration;
+            memberAccess[username].plannedTime = plannedDuration;
+    
+            if (timelogs) {
+                var timelogs = Object.entries(timelogs),
+                    length = timelogs.length
+                
+                memberAccess[username].timelogs = timelogs.slice(1, length - 1)
+            }
+            else {
+                memberAccess[username].timelogs = []
+            }
+            
+        }).then(function() {
+            updateCharts()
+            populateTable(username)
+        })
     })
-})
-
-addChart("time_duration_bar", "Time Duration spent by each member", "bar", memberDurationChart)
-addChart("time_duration_pie","Time Percentages","pie", memberDurationChart)
+    
+    addChart("time_duration_bar", "Time Duration spent by each member", "bar", memberDurationChart)
+    addChart("time_duration_pie","Time Percentages","pie", memberDurationChart)
+}
 
 function addChart( id,title, type,func){
     var chart = func(id, title, type);
@@ -82,7 +192,7 @@ document.getElementById("save_time_log").addEventListener('click', function(){
     }
 });
 
-
+// FUNCTIONALITY FUNCTIONS
 function getDataforPopulation(){
     var startDate = document.getElementById("start_day").value,
         startMonth = document.getElementById("start_month").value,
@@ -118,16 +228,21 @@ function getDataforPopulation(){
 
     var startDateFormat = new Date(startYear, startMonth-1, startDate, startHrParsed, startMin),
         endDateFormat = new Date(endYear, endMonth-1, endDate, endHrParsed, endMin ),
+        timeNow = new Date(),
         hourNotEntered = isNaN(startDateFormat.getTime()) || isNaN(endDateFormat.getTime()),
-        dateValid = endDateFormat.getTime() > startDateFormat.getTime()
+        startEndTimeValid = endDateFormat.getTime() > startDateFormat.getTime() 
     
+    if (timeNow < startDateFormat){
+        displayError("Timelogs in the future are not accepted ", commonTaskError);
+        return;
+    }
 
     if (hourNotEntered){
         displayError("Hour minute input must be provided", commonTaskError);
         return;
     }
 
-    if (!dateValid){
+    if (!startEndTimeValid){
         displayError("Start time should be before end time",commonTaskError);
         return;
     } 
@@ -182,7 +297,7 @@ async function update(formatObject){
     window.taskPageNameSpace.members[username].timelogs.push(formatObject);
     window.taskPageNameSpace.members[username].totalDuration += formatObject.durationData.timeInHrs;
     updateCharts(); 
-    updateTable(username, formatObject);
+    updateTable(username, formatObject);     // Consider incorporating to populateTable function
 
     
     setDisplayNone(statusColumn);
@@ -195,6 +310,7 @@ async function update(formatObject){
     firebaseRef.child(`Projects/${projectName}`).once('value').then(function(snapshot) {
         var username = getUsername(user.email),
             amount = snapshot.child(`Tasks/${taskName}/Times/${username}`).val(),
+            plannedTimePresent = snapshot.child(`Tasks/${taskName}/Times/${username}/PlannedTime`).val(),
             noOfTasks = 1,
 
             totalTimeSpentProject = snapshot.child(`TotalTimeSpent/${username}/Duration`).val(),
@@ -203,7 +319,12 @@ async function update(formatObject){
 
         if (amount) {
             amount = Object.entries(amount)
-            noOfTasks = amount.length
+            if (plannedTimePresent) {
+                noOfTasks = amount.length - 1
+            }
+            else {
+                noOfTasks = amount.length
+            }
         }
 
         if (totalTimeSpentProject == null) {
@@ -235,11 +356,61 @@ async function update(formatObject){
             })
         })
         .then(function() {
-            window.alert("Time logged!");
+            displayConfirmAlert("Time logged    👍")
+            // window.alert("Time logged!");
         })
     })
 }
 
+document.getElementById("save_contribution").addEventListener('click', function(){
+    clearErrors(commonTaskError);
+    var hrsObj = updatePlannedTime();
+    if (hrsObj != undefined){
+        changeContribution(hrsObj);
+    }
+});
+
+function updatePlannedTime(){
+    var workHours = document.getElementById("work_hours").value;
+    var hrsObj = parseInt(workHours);
+
+    var dateFormat = new Date(2020, 0, 1, hrsObj, 0)
+    workHourNotGiven = isNaN(dateFormat.getTime());
+
+    if (workHourNotGiven){
+        displayError("Hour input must be provided", contributeError);
+        return;
+    }
+
+    return hrsObj;
+}
+
+async function changeContribution(hrsObject){
+    var user = await firebase.auth().currentUser;
+    const username = getUsername(user.email)
+
+    window.taskPageNameSpace.members[username].plannedTime = hrsObject;
+    updateCharts(); 
+    
+    setDisplayNone(statusColumn);
+    setDisplayFlex(timeLogs);
+    closeModal(contribution);
+
+    var projectName = localStorage.getItem("projectName"),
+            taskName = localStorage.getItem("taskName")
+
+    firebaseRef.child(`Projects/${projectName}`).once('value').then(function(snapshot) {
+        var username = getUsername(user.email)
+
+        firebaseRef.child(`Projects/${projectName}/Tasks/${taskName}/Times/${username}`).update({
+            PlannedTime: hrsObject
+        })
+        .then(function() {
+            displayConfirmAlert("Workload expectation logged!");
+            // window.alert("Workload expectation logged!");
+        })
+    })
+}
 
 function updateTable(user, formatObject){
     var startTimeObject = formatObject.startTimeObject,
@@ -319,7 +490,7 @@ function basicChartConfig(type, xAxes, label, yAxes){
                     data: {
                         labels:xAxes,
                         datasets:[{
-                            label: type === "bar" ? "Hours" : "Numbers",
+                            label: type === "bar" ? "Actual Time in Hours" : "Numbers",
                             data: yAxes,
                             backgroundColor: palette('tol', xAxes.length).map(function(hex) {
                                 return '#' + hex;

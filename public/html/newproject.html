@@ -14,7 +14,7 @@
             </div>
             <div class="header_links_wrapper">
                 <a><button class="button_generic" id="homepage_button" onclick="getHomePage()">Home Page</button></a>
-                <a href="login.html"><button id="signout_button" class="button_generic" onclick="logout()">Log Out</button></a>  
+                <a href="../index.html"><button id="signout_button" class="button_generic" onclick="logout()">Log Out</button></a>  
             </div>
         </div>
     </div>
@@ -114,6 +114,17 @@
                 Error <!-- <span>Error</span> -->
             </div>
             
+        </div>
+        <div class = "alert error_alert hide">
+            <span class ="fas fa-exclamation-circle"></span>
+            <span class="msg" id="error_msg"> Warning: This is a warning alert </span>
+            <div class="close generic_popup_close" onclick=closeAlert()>+</div>
+        </div>
+
+        <div class = "alert confirmation_alert hide">
+            <span class="fas fa-check"></span>
+            <span class="msg" id="confirm_msg"> Confirmation message </span>
+            <div class="close  generic_popup_close" onclick=closeAlert()>+</div>
         </div>
     </div>
     

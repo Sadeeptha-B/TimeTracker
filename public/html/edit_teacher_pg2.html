@@ -15,7 +15,7 @@
         </div>
         <div class="header_links_wrapper">
             <a><button class="button_generic" id="homepage_button" onclick="getHomePage()">Home Page</button></a>
-            <a href="login.html"><button id="signout_button" class="button_generic" onclick="logout()">Log Out</button></a>
+            <a href="../index.html"><button id="signout_button" class="button_generic" onclick="logout()">Log Out</button></a>
         </div>
     </div>
 
@@ -23,39 +23,8 @@
         <div class="form_login_signup">
 
             <div class="form_header">
-                <h2 class="form_header">Edit Teacher</h2>
+                <h2 class="form_header">Edit</h2>
             </div>
-
-            <div class="form_centered_container">
-                <table id="check_user_form" class="form_login_body">
-                    <!---
-                    <tr>
-                        <th>Username</th>
-                        <td><input type="text" class="username_input" id="Username" name="Username" required></td>
-                    </tr>
-                    -->
-                    <tr>
-                        <th>Email</th>
-                        <td><input type="email" class="email_input" id="Email" name="Email" required></td>
-                    </tr>
-                </table>
-
-                <div class="form_submit_action_container">
-                    <!-- <button id="search_id_button" class="form_search_user_button">Next</button> -->
-                    <a href="edit_teacher_pg2.html"><button id="search_id_button" class="button_generic">Next</button></a>
-                </div>
-                <!-- Once we confirm that the user with the email exists we can open up the next section, 
-                    or we can do it in another page -->
-            </div>
-        </div>
-
-        <div>
-            <!-- Div for showing data of matching user -->
-        </div>
-
-        <!-- Option 1: this form shows up once the email is in the DB -->
-        <!-- Maybe you would want to show which user is matched first-->
-        <div class="form_login_signup">
 
             <div class="form_centered_container">
                 <table id="edit_teacher_form" class="form_login_body">
@@ -63,6 +32,16 @@
                         <th>New Username</th>
                         <td><input type="text" class="username_input" id="Username" name="Username" required></td>
                     </tr>
+                    <tr>
+                        <th>New Email</th>
+                        <td><input type="email" class="email_input" id="Email" name="Email" required></td>
+                    </tr>
+                        <!--
+                        <tr>
+                            <th>Student/Teacher ID</th>
+                            <td><input type="text" class="id_input" name="ID" required></td>
+                        </tr>
+                        -->
                     <tr>
                         <th>New Password</th>
                         <td><input type="password" class="password_input" id="Password" name="Password" required></td>
@@ -74,11 +53,22 @@
                 </table>
 
                 <div class="form_submit_action_container">
-                    <button id="edit_submit_button" class="button_generic">Save</button>
+                    <button id="search_id_button" class="button_generic">Save</button>
                     <a href="home-adminview.html"><button class="button_generic">Back</button></a>
                 </div>
                 
             </div>
+        </div>
+        <div class = "alert error_alert hide">
+            <span class ="fas fa-exclamation-circle"></span>
+            <span class="msg" id="error_msg"> Warning: This is a warning alert </span>
+            <div class="close generic_popup_close" onclick=closeAlert()>+</div>
+        </div>
+
+        <div class = "alert confirmation_alert hide">
+            <span class="fas fa-check"></span>
+            <span class="msg" id="confirm_msg"> Confirmation message </span>
+            <div class="close  generic_popup_close" onclick=closeAlert()>+</div>
         </div>
     </div>
 

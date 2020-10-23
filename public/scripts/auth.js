@@ -7,7 +7,7 @@ function login() {
 	firebase.auth().signInWithEmailAndPassword(userEmail, userPass)
 	.then(function() {
 		// User is signed in.
-		getHomePage()
+		getLoginPage()
 	})
 	.catch(function(error) {
 		// Handle Errors here.
@@ -15,7 +15,7 @@ function login() {
 		var errorMessage = error.message;
 		// ...
 		console.log(errorCode)
-		window.alert("Error :" + errorMessage);
+		displayErrorAlert("Error :" + errorMessage);
 	});
 }
 
@@ -23,10 +23,10 @@ function logout(){
 	firebase.auth().signOut()
 	.then(function() {
 		removeLocalStorageItem()
-		window.location.href = "../html/login.html";
+		window.location.href = "../index.html";
 	})
 	.catch(function(error) {
-		window.alert('Sign Out Error', error)
+		displayErrorAlert("Sign Out Error" + error);
 	});
 }
 
@@ -48,17 +48,37 @@ async function signup() {
 			}
 		}
 		catch(err) {
-			window.alert(err)
+			displayErrorAlert(err)
 			location.reload()
 		}
 			
 	}
 	else if (userPass.length < 6) {
-		window.alert("Password needs to be at least 6 characters long")
+		displayErrorAlert("Password needs to be at least 6 characters long")
+		// window.alert("Password needs to be at least 6 characters long")
 	}
 	else if (userPass !== userConfirmPass) {
-		window.alert("Password does not match Confirm Password")
+		displayErrorAlert("Password does not match Confirm Password")
+		// window.alert("Password does not match Confirm Password")
 	}
+}
+
+async function getLoginPage() {
+	var user = await firebase.auth().currentUser
+	firebaseRef.child(`Users/${getUsername(user.email)}`)
+	.once('value').then(function(snapshot) {
+		const role = snapshot.child("Role").val()
+		
+		if (role === 'Admin') {
+			window.location.href = "html/home-adminview.html"
+		}
+		else {
+			window.location.href = "html/home.html"
+		}
+		
+   })
+
+   removeLocalStorageItem()
 }
 
 async function getHomePage() {
@@ -99,7 +119,8 @@ function createAccount(userEmail, userPass, userRole) {
 		.then(function() {
 			firebase.auth().signOut()
 			.then(function() {
-				window.alert("Sign Up Successful")
+				displayConfirmAlert("Sign Up Successful")
+				// window.alert("Sign Up Successful")
 
 				// This means Admin is creating a teacher account
 				if (userRole === 'Teacher') {
@@ -111,7 +132,7 @@ function createAccount(userEmail, userPass, userRole) {
 				}
 				else {
 					// Bring the student back to the login page after successful sign up to log in
-					window.location.href = "../html/login.html";
+					window.location.href = "../index.html";
 				}
 			})
 		})
@@ -120,7 +141,8 @@ function createAccount(userEmail, userPass, userRole) {
 			var errorMessage = error.message
 
 			console.log(errorCode)
-			window.alert(errorMessage)
+			displayErrorAlert(errorMessage);
+			// window.alert(errorMessage)
 		})
 	}
 	catch(err) {
@@ -155,30 +177,3 @@ function writeUserData(email, role) {
 		throw 'As an admin, you can only create teacher accounts.'
 	}
 }
-
-function getUsername(email) {
-	for (i = 0; i < email.length; i++) {
-		if (email[i] === "@") {
-			return email.slice(0, i)
-		}
-	}
-}
-
-function isSchoolAccount(email) {
-	if (email.indexOf('monash') !== -1) {
-		return true
-	}
-	else {
-		return false
-	}
-}
-
-function getRole(email) {
-	if (email.indexOf('student') !== -1) {
-		return 'Student'
-	}
-	return 'Teacher'
-	
-}
-
-

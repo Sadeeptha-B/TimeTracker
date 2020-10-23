@@ -28,7 +28,7 @@
             </div>
             <div class="header_links_wrapper">
                 <a><button class="button_generic" id="homepage_button" onclick="getHomePage()">Home Page</button></a>
-                <a href="login.html"><button id="signout_button" class="button_generic" onclick="logout()">Log Out</button></a>
+                <a href="../index.html"><button id="signout_button" class="button_generic" onclick="logout()">Log Out</button></a>
             </div>
         </div>
     </div>
@@ -104,7 +104,7 @@
 
             <!--Charts-->
             <div class="body-flex-wrapper-two-col">
-                <div class="content_card" id="cont_card">
+                <div class="content_card" id="task_cont_card">
                     <div class="card_header" id="action_pane">
                         <h3> Action Pane </h3>
                         <hr class="thin">
@@ -183,10 +183,22 @@
                                     </tbody>
                             </table>
                         </div>
+                    </div> <br> 
+                </div>
+                <div class="header_type_card" id="task_comment_card">
+                    <div class="card_header">
+                        <h3> Comments </h3>
+                        <hr class="thin">
+                    </div>
+
+                    <div class="content_card_body">
+                        <h4 class="field_elements" for="comment_field"> Enter Comment </h4>
+                        <textarea id = "comment_field" rows="5" cols="60" class="input_field"></textarea>
+                        <button class="blue_curve_button float_right_elements "> Save </button>
+                        <div class="clr"></div>
                     </div>
                 </div>
-                
-                <div class="content_card" id="chart_card">
+                <div class="content_card" id="task_chart_card">
                     <h3> Progress Charts </h3>
                     <!-- <div>
                         <h4> Time Contribution</h4>
@@ -230,15 +242,18 @@
                 </div>
             </div>
 
-            <!-- EXTRA: Workload popup, used to set expected workload percentage-->
+            <!-- EXTRA: Workload popup, used to set expected workload hours-->
             <div class="bg-modal" id="contribution_overlay">
                 <div class="modal-content">
                     <div class="close generic_popup_close" onclick="closeModal(contribution_overlay)">+</div>
                     <div class="input_form">
-                        <h3>Set workload percentage</h3>
-                        <label class="field_elements" for="percentage">Expected workload (%):</label>
-                        <input type="number" width="20px" class="percentage" name="Workload Percentage" id = "percentage"
-                        min="1" max="100" required>
+                        <h3>Plan out task</h3>
+                        <label class="field_elements" for="percentage">Expected work hours:</label>
+                        <input type="number" width="20px" class="work_hours" name="Work Hours" id = "work_hours"
+                        min="1" required>
+                    </div>
+                    <div class="error common_error_div" id="contribute_error"> 
+                        Error
                     </div>
                     <div class= "desc_footer">
                         <button href="#" class="blue_curve_button" id="save_contribution"> Save </button>
@@ -316,11 +331,22 @@
                     <div class="clr"></div>
                 </div>
             </div> 
+
+            <div class = "alert error_alert hide">
+                <span class ="fas fa-exclamation-circle"></span>
+                <span class="msg" id="error_msg"> Warning: This is a warning alert </span>
+                <div class="close generic_popup_close" onclick=closeAlert()>+</div>
+            </div>
+
+            <div class = "alert confirmation_alert hide">
+                <span class="fas fa-check"></span>
+                <span class="msg" id="confirm_msg"> Confirmation message </span>
+                <div class="close  generic_popup_close" onclick=closeAlert()>+</div>
+            </div>
          
          <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
          <script src="../scripts/shared.js"></script>
          <script src="../scripts/auth.js"></script>
-         <script src="../scripts/index.js"></script>
          <script src= "../scripts/taskpage.js"></script>
     </body>
 </html>
