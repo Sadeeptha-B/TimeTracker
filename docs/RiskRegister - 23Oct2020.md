@@ -1,6 +1,6 @@
 ## Risk Register - for Team Members
 
-### Updated: 15 October 2020
+### Updated: 23 October 2020
 
 This risk register file is for team members to fill in their risks and concerns in their own individual sections. Teammates will then evaluate these risks together.
 
@@ -126,9 +126,9 @@ Feeling ill
   <tr>
    <td>Unable to implement all requested features
    </td>
-   <td>Teammates not contributing, focus was not on the more urgent requirements
+   <td>Focus was not on the more urgent requirements
    </td>
-   <td>Product may not be approved for release, more work carried over to future sprints 
+   <td>Product may not be approved for release, more work carried over to future sprints
    </td>
    <td>3
    </td>
@@ -140,23 +140,23 @@ Feeling ill
    </td>
   </tr>
   <tr>
-   <td>Requirements from the product owner are not fulfilled causing the final product to be rejected
+   <td>Requirements from the client are not fulfilled causing the final product to be rejected
    </td>
-   <td>Delayed project delivery or even misunderstanding in the requirements from the product owner
+   <td>Delayed project delivery or even misunderstanding in the requirements from the client
    </td>
-   <td>Failure to deliver the product wanted by the product owner which will result in dissatisfaction of the client 
-   </td>
-   <td>4
+   <td>Failure to deliver the product wanted by the client which will result in dissatisfaction of the client 
    </td>
    <td>4
    </td>
-   <td>Make sure that the requirements from the product owner are all understood correctly by all team members during Sprint planning 
+   <td>4
+   </td>
+   <td>Make sure that the requirements from the client are all understood correctly by all team members during Sprint planning 
    </td>
    <td>Prioritize the main essential requirements of the product and ask for an extension for the date of product delivery from the client.
    </td>
   </tr>
     <tr>
-   <td>There is no enough time in the QA process to validate equally on all browsers on all operating systems
+   <td>There is not enough time in the QA process to validate equally on all browsers on all operating systems
    </td>
    <td>The time given is not sufficient for us to validate all browsers on all operating systems
    </td>
@@ -169,6 +169,22 @@ Feeling ill
    <td>Squeeze out some additional time to validate on more browsers on more operating systems
    </td>
    <td>Validate on more browsers along the sprints so that the risk can be lowered.
+   </td>
+  </tr>
+  <tr>
+   <td>Unable to implement the feature due to requirements for it being too difficult.
+   </td>
+   <td>Requirement(s) from the client is unrealistic and too difficult for team members to achieve given the timeframe members have been given or are left with
+   </td>
+   <td>Failure to deliver the product wanted by the client which will result in dissatisfaction of the client
+   </td>
+   <td>4
+   </td>
+   <td>5
+   </td>
+   <td>Negotiate with the client on an easier-to-implement alternative 
+   </td>
+   <td>Communicate to the client of the possible delays and pros and cons of implementing a particular feature.
    </td>
   </tr>
 </table>
