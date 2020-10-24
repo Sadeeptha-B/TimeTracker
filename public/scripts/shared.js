@@ -16,7 +16,7 @@ var firebaseConfig = {
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 
-
+const waitFor = (ms) => new Promise(r => setTimeout(r, ms))
 
 /* Search functionality */
 

@@ -67,7 +67,7 @@ async function createProject(){
         startDay =  document.getElementById("start_day").value,
         startMonth = document.getElementById("start_month").value,
         startYear = document.getElementById("start_year").value,
-        
+
         // Putting into DD/MM/YYYY format - OBSOLETE (using JS Date object now)
 		// startDate = startDay + "/" + startMonth + "/" + startYear,
 
@@ -78,7 +78,7 @@ async function createProject(){
 
         // Putting into DD/MM/YYYY format - OBSOLETE (using JS Date object now)
 		// endDate = endDay + "/" + endMonth + "/" + endYear;
-		
+
 		var start = new Date(startYear, startMonth-1, startDay);
 		var end = new Date(endYear, endMonth-1, endDay);
 
@@ -94,7 +94,7 @@ async function createProject(){
 			dateValid = false;
 		}
 		else if (startMonth == endMonth){
-			if (startDay >= endDay){ 
+			if (startDay >= endDay){
 				dateValid = false;
 			}
 		}
@@ -105,7 +105,7 @@ async function createProject(){
 		displayError("Project cannot end before it starts, or end on the same day as the start date",commonProjError);
 		return;
 	}
-	
+
     if (description.length == 0){
         description = "N/A";
 	}
@@ -124,7 +124,7 @@ async function createProject(){
         EndDate: endDateString,
         TeacherInCharge: getUsername(user.email)
 	})
-	
+
 	// Update projects the current user is in charge of
 	firebaseRef.child(`Users/${getUsername(user.email)}/Projects/${projectName}`).update({
 		ProjectName: projectName
@@ -133,7 +133,7 @@ async function createProject(){
 	// ScriptManager.RegisterStartupScript(
 	// displayConfirmAlert("Project Created!"), window.location =' "../html/home-teacherview.html",
 	// true);
-	
+
 
 
 	displayConfirmAlert("Project Created!")
@@ -142,7 +142,7 @@ async function createProject(){
 	},5000);
     // window.alert("Project Created!")
     // Bring the user to the home page after successful sign up
-    
+
 }
 
 
@@ -162,10 +162,10 @@ document.getElementById("search_id_button").addEventListener("click", function()
 	}
 }),
 
-document.getElementById("delete_teacher_button").addEventListener("click", function() {
+document.getElementById("delete_teacher_button").addEventListener("click", async function() {
 	var username = document.getElementById("delete_username_input").value
-	
-	firebaseRef.child(`Users/${username}`).remove().then(function() {
-		getHomePage()
-	})
+
+	deleteTeacher()
+	await(waitFor(250))
+	firebaseRef.child(`Users/${username}`).remove()
 })

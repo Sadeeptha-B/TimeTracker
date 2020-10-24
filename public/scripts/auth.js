@@ -167,7 +167,7 @@ function writeUserData(email, password, role) {
 				Password: password
 			})
 		}
-		
+
 
 	}
 	else if (!isSchoolAccount(email)) {
@@ -185,41 +185,77 @@ function deleteTeacher(){
 	teacher = String(document.getElementById("delete_username_input").value);
 	localStorage.setItem("teacher",teacher);
 
-	firebaseRef.child(`Users/${localStorage.getItem("teacher")}`)
-		.once('value').then(function(snapshot) {
-			localStorage.setItem("role",snapshot.child('Role').val());
-			localStorage.setItem("userEmail",snapshot.child('Email').val());
-			localStorage.setItem("password",snapshot.child('Password').val());
-				})
-					firebase.auth().signOut()
-					.then(function() {
-										userEmail = localStorage.getItem("userEmail");
-										password = localStorage.getItem("password");
-										firebase.auth().signInWithEmailAndPassword(userEmail, password)
-										.then(async function() {
-											// User is signed in.
-											var user = await firebase.auth().currentUser;
-											user.delete().then(function() {
-											// User deleted.
-											firebase.auth().signInWithEmailAndPassword('timetracker999@gmail.com', 'admin123!')
-											.then(function(){
-												getHomePage();
-												localStorage.removeItem("userEmail");
-												localStorage.removeItem("password");
-												localStorage.removeItem("teacher");
-											})
-											.catch(function(error) {
-											// An error happened.
-											displayErrorAlert("Error in deleting teacher account.")
-											});
-											})
-
-
-										})
-
-
-
+	firebaseRef.child(`Users/${localStorage.getItem("teacher")}`).once('value')
+		.then(function(snapshot) {
+			localStorage.setItem("role",String(snapshot.child('Role').val()));
+			localStorage.setItem("userEmail",String(snapshot.child('Email').val()));
+			localStorage.setItem("password",String(snapshot.child('Password').val()));
+		}).then(function() {
+			firebase.auth().signOut().then(function() {
+				userEmail = localStorage.getItem("userEmail");
+				password = localStorage.getItem("password");
+				firebase.auth().signInWithEmailAndPassword(userEmail, password).then(async function() {
+					var user = await firebase.auth().currentUser;
+					user.delete()
+					displayConfirmAlert("Teacher Account Deleted")
+				}).then(function() {
+					// User deleted.
+						firebase.auth().signInWithEmailAndPassword('timetracker999@gmail.com', 'admin123!').then(function() {
+						getHomePage();
+						localStorage.removeItem("userEmail");
+						localStorage.removeItem("password");
+						localStorage.removeItem("teacher");
+						}).catch(function(error) {
+							// An error happened.
+							displayErrorAlert("Error in deleting teacher account.")
+						});
 					})
 
-
+			})
+		})
 }
+
+function editTeacher(){
+	email = String(document.getElementById("Email").value);
+	newUsername = String(document.getElementById("Username").value);
+	newPass = String(document.getElementById("Password").value);
+	newConfirmPass = String(document.getElementById("ConfirmPassword").value);
+
+
+	firebaseRef.child(`Users/${getUsername(email)}`).once('value')
+	.then(function(snapshot) {
+			localStorage.setItem("PASSWORD",String(snapshot.child('Password').val()));
+			localStorage.setItem("EMAIL",String(snapshot.child('Email').val()));
+		}).then(function(){
+			if (localStorage.getItem("EMAIL") == email){
+				if(newPass == newConfirmPass){
+					localStorage.setItem("newEmail",String(newUsername + "@monash.edu"));
+					localStorage.setItem("newPass",newPass);
+					firebaseRef.child(`Users/${getUsername(email)}`).update({
+						Email: newUsername + "@monash.edu",
+						Username: newUsername,
+						Password: newPass
+					}).then(function() {
+							firebase.auth().signOut()
+							.then(async function() {
+								firebase.auth().signInWithEmailAndPassword(localStorage.getItem("EMAIL"),localStorage.getItem("PASSWORD"));
+								var user = await firebase.auth().currentUser;
+								user.updateEmail(localStorage.getItem("newEmail"));
+								user.updatePassword(localStorage.getItem("newPass"))
+								.then(function(){
+									firebase.auth().signOut();
+									firebase.auth().signInWithEmailAndPassword('timetracker999@gmail.com','admin123!')
+									.then(function(){
+										displayConfirmAlert("Updated teacher account.")
+										window.location.href = "../html/home-adminview.html";
+									}).catch(function(error){
+										displayErrorAlert("Error in updating information of teacher.")
+
+									})
+								})
+							})
+						})
+					}
+				}
+			})
+		}
