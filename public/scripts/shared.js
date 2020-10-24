@@ -17,6 +17,7 @@ var firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 
+
 /* Search functionality */
 
 /* Provide Searchbar and Array of data to search from */
@@ -36,7 +37,7 @@ function searchSingle(searchBar, searchSpace){
     return foundArray;
 }
 
-/* Provide searchbar and pass in an array of objects of which keys need to be 
+/* Provide searchbar and pass in an array of objects of which keys need to be
 searched.
 */
 function searchMultiple(searchBar, objArray){
@@ -57,7 +58,7 @@ function searchMultiple(searchBar, objArray){
         if (found){
             foundArray.push(objArray[i]);
         }
-    }   
+    }
 
     return foundArray;
 }
@@ -118,7 +119,7 @@ function openModal(modalElem, isTextModal, ...editableElems){
         for (i= 0; i < editableElems.length; i++){
             editableElems[i].value = "";
         }
-    } 
+    }
     modalElem.style.display = "flex";
 }
 
@@ -136,7 +137,7 @@ function openConfigurableModal(modalElem, isTextModal, isCreateMode, ...editable
     for (i =0; i<  editModeElems.length;i++){
         editModeElems[i].classList.toggle('visible', !isCreateMode);
         editModeElems[i].classList.toggle('hidden', isCreateMode);
-    }  
+    }
     openModal(modalElem, isTextModal, ...editableElems);
 }
 
@@ -177,7 +178,7 @@ Date.prototype.onlyDate = function () {
 
 /* Helper function */
 function indexToBoolean(index){
-    var value; 
+    var value;
      if (index === -1) {
          value = false;
      } else {
@@ -208,7 +209,7 @@ function getRole(email) {
 		return 'Student'
 	}
 	return 'Teacher'
-	
+
 }
 
 // FUNCTIONS TO ADD EVENT LISTENERS TO ALL THE PROJECT/TASK ELEMENTS
@@ -220,7 +221,7 @@ function addProjectsEventListener(project){
 			const projectName = snapshot.child('ProjectName').val(),
 				  description = snapshot.child('Description').val(),
 				  members = snapshot.child('Members').val()  // Object containing all the students
-				  
+
 			localStorage.setItem("projectName", projectName)
 			localStorage.setItem("description", description)
 			localStorage.setItem("members", JSON.stringify(members))
@@ -239,7 +240,7 @@ function addTasksEventListener(project, task){
 				  projectName = document.getElementById("project_name").textContent,
 				  projectDescription = document.getElementById("description").textContent,
 				  members = document.getElementById("member_card_content").getElementsByClassName("member")
-			
+
 			// To store the names of the members in the project in the form of an object
 			var membersObject = {}
 
@@ -247,7 +248,7 @@ function addTasksEventListener(project, task){
 			localStorage.setItem("description", projectDescription)
 			localStorage.setItem("taskName", taskName)
 			localStorage.setItem("taskDescription", taskDescription)
-			
+
 			// Get the name of each member and store in the object
 			Array.from(members).forEach(member => {
 				const name = member.textContent
@@ -279,7 +280,7 @@ function addMembers(member) {
 	newDiv.id = member[1].Username
 	newDiv.className = "member"
 	newDiv.textContent = member[1].Username
-	
+
 }
 
 // Function used by archives and index to populate projects
@@ -302,11 +303,11 @@ function addProject(project, projectData, role) {
 	dashboard.appendChild(newDiv)
 	newDiv.appendChild(newH2)
 	newDiv.appendChild(newP)
-	
+
 	newDiv.className = "dash_project"
 	newDiv.id = `${projectName}`
 	newH2.className = "dash_project_head"
-	
+
 	if (completed) {
 		newH2.innerHTML = project[0] + " - Completed "
 	}
@@ -316,7 +317,7 @@ function addProject(project, projectData, role) {
 
 	newP.className = "project_summary"
 	newP.textContent = `Lecturer: ${teacher} | Start: ${startDate} | End: ${endDate}`
-	
+
 	// Only teachers has acccess to delete project button
 	if (role === 'Teacher') {
 		newDiv.appendChild(footerDiv)
@@ -339,6 +340,6 @@ function addProject(project, projectData, role) {
 
 		clr.className = "clr"
 	}
-	
+
 	addProjectsEventListener(newDiv)
 }
