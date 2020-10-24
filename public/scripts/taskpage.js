@@ -57,7 +57,8 @@ var contributeError = document.getElementById("contribute_error")
 window.taskPageNameSpace = {
     charts: [],
     members: {
-        array : []
+        array : [],
+        totalTime : 0
     }
 }
 
@@ -126,7 +127,9 @@ function updateTaskPage(username, role) {
 	}
 }
 
-function updateVisuals() {
+async function updateVisuals() {
+    const waitFor = (ms) => new Promise(r => setTimeout(r, ms))
+
     Object.entries(JSON.parse(localStorage.getItem("assignedTo"))).forEach(member => {
         var memberAccess = window.taskPageNameSpace.members,
             username = member[1].Username
@@ -135,11 +138,12 @@ function updateVisuals() {
         // Later I just need to take the data from firebase and add it the total duration and timelogs
         firebaseRef.child(`Projects/${localStorage.getItem("projectName")}/Tasks/${localStorage.getItem("taskName")}/Times/${username}`).once("value").then(function(snapshot) {
             var totalDuration = snapshot.child('TotalTimeSpent').val(),
-                plannedDuration = snapshot.child('PlannedTime').val(),
+                plannedTime = snapshot.child('PlannedTime').val(),
                 timelogs = snapshot.val()
             
             memberAccess[username].totalDuration = totalDuration;
-            memberAccess[username].plannedTime = plannedDuration;
+            memberAccess[username].plannedTime = plannedTime;
+            memberAccess.totalTime += totalDuration
     
             if (timelogs) {
                 var timelogs = Object.entries(timelogs),
@@ -156,7 +160,18 @@ function updateVisuals() {
             populateTable(username)
         })
     })
-    
+
+    await(waitFor(250))
+
+    Object.entries(JSON.parse(localStorage.getItem("assignedTo"))).forEach(member => {
+        var memberAccess = window.taskPageNameSpace.members,
+            username = memberAccess[member[1].Username],
+            total = memberAccess.totalTime,
+            memberTime = username.totalDuration
+            
+        username.actualAllocation = Math.floor(((memberTime/total) * 100)+0.5);
+    })
+
     addChart("time_duration_bar", "Time Duration spent by each member", "bar", memberDurationChart)
     addChart("time_duration_pie","Time Percentages","pie", memberDurationChart)
 }
@@ -701,3 +716,55 @@ document.getElementById("set_active_btn").addEventListener('click', function(){
     document.getElementById("mark_complt_btn").style.display = "flex";   
     document.getElementById("set_active_btn").style.display = "none";
 });
+
+document.getElementById("download_data_btn").addEventListener('click', function() {
+    firebaseRef.child(`Projects/${localStorage.getItem('projectName')}`).once('value').then(function(snapshot) {
+        var data = snapshot.val(),
+            taskData = snapshot.child(`Tasks/${localStorage.getItem('taskName')}`).val(),
+            filename = `${data.ProjectName}_${taskData.TaskName}`,
+            members = "",
+            assignedTo = "",
+            text = ""
+        
+            
+        Object.entries(data.Members).forEach(member => {
+            members += member[1].Username + ", "
+        })
+        
+        Object.entries(taskData.AssignedTo).forEach(member => {
+            assignedTo += member[1].Username + ", "
+        })
+
+        text += `Project: ${data.ProjectName}
+Project Description: ${data.Description}
+Members: ${members}
+Teacher In Charge: ${data.TeacherInCharge}
+Start Date: ${data.StartDate}
+End Date: ${data.EndDate}
+
+Task: ${taskData.TaskName}
+Task Description: ${taskData.Description}
+AssignedTo: ${assignedTo}
+Start Date: ${taskData.StartDate}
+End Date: ${taskData.EndDate}
+\n`
+
+        Object.entries(taskData.AssignedTo).forEach(member => {  // plannedTime is in hours, it will be later changed to percentage
+            text += member[1].Username + `
+Planned Allocation: ${window.taskPageNameSpace.members[member[1].Username].plannedTime}%
+Actual Allocation: ${window.taskPageNameSpace.members[member[1].Username].actualAllocation}%
+Total Time Spent on Task: ${window.taskPageNameSpace.members[member[1].Username].totalDuration} hours\n`
+        })       
+
+        var element = document.createElement('a');
+        element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+        element.setAttribute('download', filename);
+
+        element.style.display = 'none';
+        document.body.appendChild(element);
+
+        element.click();
+
+        document.body.removeChild(element);
+    })
+})
