@@ -226,35 +226,63 @@ function editTeacher(){
 	.then(function(snapshot) {
 			localStorage.setItem("PASSWORD",String(snapshot.child('Password').val()));
 			localStorage.setItem("EMAIL",String(snapshot.child('Email').val()));
-		}).then(function(){
-			if (localStorage.getItem("EMAIL") == email){
-				if(newPass == newConfirmPass){
-					localStorage.setItem("newEmail",String(newUsername + "@monash.edu"));
-					localStorage.setItem("newPass",newPass);
-					firebaseRef.child(`Users/${getUsername(email)}`).update({
+	}).then(function(){
+		if (localStorage.getItem("EMAIL") == email){
+			if(newPass == newConfirmPass){
+				localStorage.setItem("newEmail",String(newUsername + "@monash.edu"));
+				localStorage.setItem("newPass",newPass);
+				getProjectsOfTeacher(getUsername(email)).then(async function() {
+					updateTeacherInCharge(localStorage.getItem("projectData"), newUsername)
+					firebaseRef.child(`Users/${newUsername}`).set({
 						Email: newUsername + "@monash.edu",
 						Username: newUsername,
-						Password: newPass
-					}).then(function() {
+						Password: newPass,
+						Projects: JSON.parse(localStorage.getItem("projectData")),
+						Role: 'Teacher'
+					})
+					.then(function() {
+						firebaseRef.child(`Users/${getUsername(email)}`).remove()
+						.then(function() {
 							firebase.auth().signOut()
 							.then(async function() {
-								firebase.auth().signInWithEmailAndPassword(localStorage.getItem("EMAIL"),localStorage.getItem("PASSWORD"));
-								var user = await firebase.auth().currentUser;
-								user.updateEmail(localStorage.getItem("newEmail"));
-								user.updatePassword(localStorage.getItem("newPass"))
-								.then(function(){
-									firebase.auth().signOut();
-									firebase.auth().signInWithEmailAndPassword('timetracker999@gmail.com','admin123!')
-									.then(function(){
-										displayConfirmAlert("Updated teacher account.")
-										window.location.href = "../html/home-adminview.html";
-									}).catch(function(error){
-										displayErrorAlert("Error in updating information of teacher.")
-									})
+								firebase.auth().signInWithEmailAndPassword(localStorage.getItem("EMAIL"),localStorage.getItem("PASSWORD")).then(async function() {
+									var user = await firebase.auth().currentUser;
+									displayConfirmAlert("Updated teacher account.")
+									user.updateEmail(localStorage.getItem("newEmail")).then(function() {
+										user.updatePassword(localStorage.getItem("newPass")).then(function(){
+											firebase.auth().signOut().then(function() {
+												firebase.auth().signInWithEmailAndPassword('timetracker999@gmail.com','admin123!')
+												.then(function(){
+													getHomePage()
+												}).catch(function(error){
+													displayErrorAlert("Error in updating information of teacher.")
+												})
+											})
+										});
+									});
 								})
 							})
 						})
-					}
-				}
-			})
+					})
+				})
+			}
 		}
+	})
+}
+
+function getProjectsOfTeacher(username) {
+	return firebaseRef.child(`Users/${username}/Projects`).once('value').then(function(snapshot) {
+		projectData = snapshot.val()
+		localStorage.setItem("projectData", JSON.stringify(projectData))
+	})
+}
+
+function updateTeacherInCharge(projects, newUsername) {
+	if (projects) {
+		Object.entries(JSON.parse(projects)).forEach(project => {
+			firebaseRef.child(`Projects/${project[1].ProjectName}`).update({
+				TeacherInCharge: newUsername
+			})
+		})
+	}
+}
