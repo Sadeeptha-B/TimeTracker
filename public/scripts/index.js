@@ -136,6 +136,7 @@ async function createProject(){
 
 
 
+
 	displayConfirmAlert("Project Created!")
 	setTimeout(function() {
 		window.location.href = "../html/home-teacherview.html";

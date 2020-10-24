@@ -250,7 +250,6 @@ function editTeacher(){
 										window.location.href = "../html/home-adminview.html";
 									}).catch(function(error){
 										displayErrorAlert("Error in updating information of teacher.")
-
 									})
 								})
 							})

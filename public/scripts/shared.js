@@ -64,6 +64,7 @@ function searchMultiple(searchBar, objArray){
 }
 
 
+
 /* Alerts */
     function displayConfirmAlert(msg){
         var elem = document.querySelector("div[class^='alert confirmation_alert']")
