@@ -38,7 +38,7 @@ async function signup() {
 	// Sign up the user
 	if (userPass === userConfirmPass && userPass.length >= 6) {
 		var user = await firebase.auth().currentUser
-		
+
 		try {
 			if (user) {
 				createAccount(userEmail, userPass, 'Teacher')
@@ -51,7 +51,7 @@ async function signup() {
 			displayErrorAlert(err)
 			location.reload()
 		}
-			
+
 	}
 	else if (userPass.length < 6) {
 		displayErrorAlert("Password needs to be at least 6 characters long")
@@ -68,14 +68,14 @@ async function getLoginPage() {
 	firebaseRef.child(`Users/${getUsername(user.email)}`)
 	.once('value').then(function(snapshot) {
 		const role = snapshot.child("Role").val()
-		
+
 		if (role === 'Admin') {
 			window.location.href = "html/home-adminview.html"
 		}
 		else {
 			window.location.href = "html/home.html"
 		}
-		
+
    })
 
    removeLocalStorageItem()
@@ -86,14 +86,14 @@ async function getHomePage() {
 	firebaseRef.child(`Users/${getUsername(user.email)}`)
 	.once('value').then(function(snapshot) {
 		const role = snapshot.child("Role").val()
-		
+
 		if (role === 'Admin') {
 			window.location.href = "../html/home-adminview.html"
 		}
 		else {
 			window.location.href = "../html/home.html"
 		}
-		
+
    })
 
    removeLocalStorageItem()
@@ -111,7 +111,7 @@ function removeLocalStorageItem() {
 function createAccount(userEmail, userPass, userRole) {
 	try {
 		// Enters the information into the database
-		writeUserData(userEmail, userRole)
+		writeUserData(userEmail, userPass, userRole)
 
 		// When account is created, users is automatically logged in,
 		// so the user is straight away logged out in order to prevent unintentional login
@@ -150,22 +150,25 @@ function createAccount(userEmail, userPass, userRole) {
 	}
 }
 
-function writeUserData(email, role) {
+function writeUserData(email, password, role) {
 	var username = getUsername(email)
-	
+
 	if (isSchoolAccount(email) && (getRole(email) === role)) {
 		firebaseRef.child(`Users/${username}`).set({
 			Username: username,
 			Email: email,
-			Role: role
+			Role: role,
+			Password: password
 		})
 
 		if (role === 'Student') {
 			firebaseRef.child(`Students/${username}`).set({
-				Username: username
+				Username: username,
+				Password: password
 			})
 		}
 		
+
 	}
 	else if (!isSchoolAccount(email)) {
 		throw 'Please use your school email account. Please try again.'
@@ -176,4 +179,47 @@ function writeUserData(email, role) {
 	else if (getRole(email) !== role && role === 'Teacher') {
 		throw 'As an admin, you can only create teacher accounts.'
 	}
+}
+
+function deleteTeacher(){
+	teacher = String(document.getElementById("delete_username_input").value);
+	localStorage.setItem("teacher",teacher);
+
+	firebaseRef.child(`Users/${localStorage.getItem("teacher")}`)
+		.once('value').then(function(snapshot) {
+			localStorage.setItem("role",snapshot.child('Role').val());
+			localStorage.setItem("userEmail",snapshot.child('Email').val());
+			localStorage.setItem("password",snapshot.child('Password').val());
+				})
+					firebase.auth().signOut()
+					.then(function() {
+										userEmail = localStorage.getItem("userEmail");
+										password = localStorage.getItem("password");
+										firebase.auth().signInWithEmailAndPassword(userEmail, password)
+										.then(async function() {
+											// User is signed in.
+											var user = await firebase.auth().currentUser;
+											user.delete().then(function() {
+											// User deleted.
+											firebase.auth().signInWithEmailAndPassword('timetracker999@gmail.com', 'admin123!')
+											.then(function(){
+												getHomePage();
+												localStorage.removeItem("userEmail");
+												localStorage.removeItem("password");
+												localStorage.removeItem("teacher");
+											})
+											.catch(function(error) {
+											// An error happened.
+											displayErrorAlert("Error in deleting teacher account.")
+											});
+											})
+
+
+										})
+
+
+
+					})
+
+
 }
