@@ -263,12 +263,11 @@ function deleteTask(index){
 function editTask(index){
     event.stopPropagation();
     openConfigurableModal(updateTaskModal, true, false, newTaskName, newTaskDesc);
-    myNameSpace.editId = index;
-    var task = document.getElementById("task_" + index);
-
-    document.removeChild(task)
-
-    closeModal(updateTaskModal)
+    
+    //myNameSpace.editId = index;
+    //var task = document.getElementById("task_" + index);
+    //document.removeChild(task)
+    //closeModal(updateTaskModal)
 }
 
 function markTaskAsComplete(index){
