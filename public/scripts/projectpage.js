@@ -143,8 +143,8 @@ function populateTask(projectName, taskName){
         var clone = cloneElement(taskTemplate, tasksCardBody);
         clone.removeAttribute("style");
         clone.id = "task_" + taskID
-        clone.setAttribute("data-taskName", taskName)
-        clone.setAttribute("data-projectName", project)
+        clone.setAttribute("data-taskname", taskName)
+        clone.setAttribute("data-projectname", project)
         addTasksEventListener(projectName, clone)
     })
 }
@@ -254,7 +254,7 @@ function deleteTask(index){
     var task = document.getElementById("task_" + index);
 
     /* Delete from backend */
-    firebaseRef.child(`Projects/${task.getAttribute("data-projectName")}/Tasks/${task.getAttribute("data-taskName")}`).remove()
+    firebaseRef.child(`Projects/${task.getAttribute("data-projectname")}/Tasks/${task.getAttribute("data-taskname")}`).remove()
 
     tasksCardBody.removeChild(task);
 }
@@ -301,8 +301,8 @@ document.getElementById("edit_mode_btn").addEventListener('click', function(){
     var taskData = getNewTaskData(localStorage.getItem("projectName"));  // Get data, validate, and store in backend
     if (taskData != undefined){
         var task = document.getElementById("task_" + myNameSpace.editId),
-            projectName = task.getAttribute("data-projectName"),
-            taskName = task.getAttribute("data-taskName")
+            projectName = task.getAttribute("data-projectname"),
+            taskName = task.getAttribute("data-taskname")
 
         firebaseRef.child(`Projects/${projectName}/Tasks/${taskName}`).once("value").then(function(snapshot) {
             const assignedTo = snapshot.child("AssignedTo").val(),
