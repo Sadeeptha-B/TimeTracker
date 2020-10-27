@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+        <meta name="mobile-web-app-capable" content="yes" />
+        <title>Task Page</title>  
+        <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-auth.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-database.js"></script>  
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js" integrity="sha512-s+xg36jbIujB2S2VKfpGmlC3T5V2TF3lY48DX7u2r9XzGzgPsa6wTpOQA7J9iffvdeBN0q9tKzRxVxw1JviZPg==" crossorigin="anonymous"></script>
+        <script src="../scripts/palette.js"></script>
+       
+
+        <link rel="stylesheet" href="../generic_style.css"></link>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
+        
+    </head>
+    
+    <body>        
+    <div class="header">
+        <div class="header_content_wrapper">
+            <div class="header_word_wrapper">
+                <h1 id="taskName"></h1>
+            </div>
+            <div class="header_links_wrapper">
+                <a><button class="button_generic" id="homepage_button" onclick="getHomePage()">Home Page</button></a>
+                <a href="../index.html"><button id="signout_button" class="button_generic" onclick="logout()">Log Out</button></a>
+            </div>
+        </div>
+    </div>
+
+    <div class="body">
+
+        <div class="body-flex-wrapper-two-col" id="description_team_wrapper">
+            <div class="classic_card header_type_card" id="task_description_card">
+                <div class="card_header">
+                    <h3> Description <h3>
+                        <hr class="thin">
+                </div>
+                <div id ="description_card_content" class="header_card_content">
+                     <p id= "description"></p>
+                </div>
+                <div class="card_footer">
+                 <a href="#" id="edit_task_desc" class="hover_grey_link" onclick="openModal(desc_edit_overlay,true, desc_field)" style="display:none">Edit description </a>
+                </div>
+            </div>
+
+            <div class="classic_card header_type_card" id="task_team_card">
+                <div class="card_header">
+                    <h3>Assigned to</h3>
+                    <hr class="thin">
+                </div>
+                <!-- Make accessible to students-->
+                    <a href="#" id ="add_member" class="hover_grey_link float_right_elements" onclick="openModal(add_student, false),displayStudentList()"  style="display:none">
+                        Add member
+                    </a>
+                    <!--Template for adding members-->
+                <div id ="member_card_content" class="header_card_content">
+               </div>
+               <div>
+                   <!-- Should be accessible to students in final product (but we'll hide it for now) -->
+                <a href="#" onclick="openModal(contribution_overlay, false)" style="left: 14px;">
+                    <button id="assign_task_button" class="button_generic" style="display:none">Set workload percentage</button>
+                </a>
+               </div>
+            </div>
+
+       <!--     <div class="classic_card header_type_card" id="recent_logtimes">
+                <h4> Most Recent Timelogs </h4>
+                <div class="grid_wrapper" id="logs_card_body">
+                    <div class="small_card_wrapper" id="timelog_template">
+                        <div class="classic_card small_card" >
+                            <div class="small_card_header">
+                                <h5 id="timelog_date"> 25th September 2020</h5>
+                            </div>
+                            <div class="small_card_content">
+                                <h5 id="timelog_assignee"> Member </h5> 
+                                <span> Duration: </span>
+                                <span  id="timelog_duration">  1 hour</span><br>
+                                <span>From <span id="timelog_start_time"> 5pm</span> to  <span id="timelog_end_time">6pm </span></span>
+                            </div>
+                            <div class="small_card_footer">
+                                <input type="image" id="delete_time_log" src="../imgs/delete-16.png" class="std_component float_right_elements">
+                                <input type="image" src="../imgs/edit-16.png" id="edit_time_log"  class="std_component float_right_elements">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+
+        </div>
+           
+            <!--  Change this to show the people to whom the task is assigned to?
+            <div class="header_type_card" id="assigned_members">
+                <h3>Team</h3>
+                 <hr class="thin">
+
+            </div> -->
+
+
+            <!--Charts-->
+            <div class="body-flex-wrapper-two-col">
+                <div class="content_card" id="task_cont_card">
+                    <div class="card_header" id="action_pane">
+                        <h3> Action Pane </h3>
+                        <hr class="thin">
+                        <div id="button_dock">
+                            <button id="download_data_btn" class="button_simple float_right_elements"> Download Task Data </button>   
+                            <button id="set_active_btn" class="button_simple float_right_elements" style="display:none;" > Set Task back to active </button> 
+                            <button id="mark_complt_btn" class="button_simple float_right_elements" style="display:none;" > Mark as completed </button> 
+                            <button id="task_dist_btn" class="button_simple float_right_elements"> View Task Distribution</button> 
+                            <button id="plan_cont_btn" class="button_simple float_right_elements" style="display:none;" onclick="openModal(contribution_overlay, false)"> Plan out task</button> 
+                            <button id="new_log_btn" class="button_simple float_right_elements" style="display:none;" onclick="openModal(time_input, false)"> Enter New Timelog</button>   
+                        </div>
+                        <div class="clr"></div>
+                    </div><br>
+                    
+                    <div class="status_column_wrapper" id="marked_cmplt" style="display:none;">
+                        <div class="status_column centered_card" >
+                            <div class="status_column_content">
+                                Task marked as complete
+                            </div>
+                            <div class="clr"></div>
+                            
+                            <div class="status_column_deco">
+                                <div class="image_container">
+                                    <img src="../imgs/check-mark-12-24.png">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    
+
+                    <div class="card_header">
+                        <h3> Contributions </h3>
+                        <hr class="thin">
+                    </div>
+                    <div class="content_card_body">
+                    <!-- Zhe Sheng: section for (preferably) task overview (in table) -->
+
+                    <div class="status_column_wrapper">
+                        <div class="status_column centered_card" id="logtime_status">
+                            <div class="status_column_content">
+                                    No Timelogs have been recorded yet
+                            </div>
+                            <div class="clr"></div>
+                            
+                            <div class="status_column_deco">
+                                <div class="image_container">
+                                    <img src="../imgs/alarm-clock-32.png">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                        <div class="flex_div" id="timelogs" style="display:none">
+                            <h4> Timelogs </h4>
+                                
+                            <!-- <span>  Log your time to track progress </span> -->
+                            <table class="content_table" id="timelog_table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col"> Member </th>
+                                        <th scope="col">Start Date</th>
+                                        <th scope="col">End Date</th>
+                                        <th scope="col">Begin</th>
+                                        <th scope="col">End</th>
+                                        <th scope="col">Duration</th>
+                                    </tr>
+                                </thead>
+                                    <tbody id="timelog_table_body">
+                                        <tr id="template_table_row" style="display:none">  
+                                            <td id="table_member"></td>
+                                            <td id="table_start_date"> 25/09/2020</td>
+                                            <td id="table_end_date">25/09/2020 </td>
+                                            <td id="table_start"> 5pm</td>
+                                            <td id="table_end"> 6pm </td>
+                                            <td id="table_duration"> 7pm</td>
+                                        </tr>
+                                    </tbody>
+                            </table>
+                        </div>
+                    </div> <br> 
+                </div>
+                <div class="header_type_card" id="task_comment_card">
+                    <div class="card_header">
+                        <h3> Comments </h3>
+                    </div>
+
+                    <div class="content_card_body">
+
+                        <div class="comment_section" id="comment_section">
+                            <div class="comment_card" id="comment_card_template" style="display:none">
+                                <div class="comment_head">
+                                    <h4 id="commenter_name" class="comment_heading">hban0006</h4> 
+                                    <small class="comment_date" id="comment_date"> 28/10/2020</small> <div class="clr"></div>
+                                </div>
+                                <div class="comment_body" id="comment_content">
+                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Atque rem, quod dolor rerum, sequi illum a est sapiente aperiam velit quae ab! Perferendis, dolorem itaque!
+                                </div>
+                            </div>
+                        </div> <br><br>
+
+
+                        <div class="comment_form">
+                            <h4 class="field_elements" for="comment_field"> Add a comment</h4><br>
+                            <small >Comment as:  </small>
+                            <textarea id = "comment_field" rows="3" cols="60" class="input_field"></textarea>
+                            <div class="error common_error_div padding_margin_none" id="comment_error"> 
+                                Error
+                            </div>
+                            <button class="blue_curve_button float_right_elements" id="add_cmnt_btn"> Save </button>
+                            <div class="clr"></div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="content_card" id="task_chart_card">
+                    <h3> Progress Charts </h3>
+                    <!-- <div>
+                        <h4> Time Contribution</h4>
+                        <div class="chart_container">
+                            <canvas id="myContChart"></canvas>
+                        </div>
+                    </div>     -->
+                </div>
+            </div>
+           
+                        
+
+            <!--
+                <div class="card_footer">
+                    <!-- Zhe Sheng: section for task time input -->
+                    <!-- HIDDEN from teacher -->
+                       <!-- <button id="time_input_button" class="button_generic" style="display:none" onclick="openModal(time_input, false)"> Time Input </button>
+                    <div class="clr"></div>
+                    <table>
+                         and then maybe a table which shows the time contributed? 
+                    </table>
+                </div>
+            </div> -->
+            
+            
+
+            <!--Modals -->
+            <div class="bg-modal" id="desc_edit_overlay">
+                <div class="modal-content">
+                    <div class="close generic_popup_close" onclick="closeModal(desc_edit_overlay)">+</div>
+                    <div class = "input_form">
+                        <h3>Edit description</h3>
+                        <label class="field_elements" for="desc_field">Description : </label><br>
+                        <textarea id = "desc_field" rows="14" cols="120" class="input_field"></textarea>
+                        
+                    </div>
+                    <div class= "desc_footer">
+                        <button href="#" class="blue_curve_button" id="save_desc"> Save </button>
+                    </div>
+                       
+                </div>
+            </div>
+
+            <!-- EXTRA: Workload popup, used to set expected workload hours-->
+            <div class="bg-modal" id="contribution_overlay">
+                <div class="modal-content">
+                    <div class="close generic_popup_close" onclick="closeModal(contribution_overlay)">+</div>
+                    <div class="input_form">
+                        <h3>Plan out task</h3>
+                        <label class="field_elements" for="percentage">Expected work hours:</label>
+                        <input type="number" width="20px" class="work_hours" name="Work Hours" id = "work_hours"
+                        min="1" required>
+                    </div>
+                    <div class="error common_error_div" id="contribute_error"> 
+                        Error
+                    </div>
+                    <div class= "desc_footer">
+                        <button href="#" class="blue_curve_button" id="save_contribution"> Save </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-modal" id="time_input">
+                <div class="modal-content">
+                    <div class="close generic_popup_close" onclick="closeModal(time_input)" >+</div>
+                    <div class = "time_input_form">
+                        <h3>Time input</h3>
+                        <label class="field_elements">Start time :</label><br>
+                        <!-- ZS: This is the format for now, maybe there will be a better format coming along? -->
+                        <!-- Time input now includes am/pm option, which is in the ID 'start_period' and 'end_period'-->
+                        <input type="number" width="20px" class="start_day" name="Start Day" id = "start_day"
+                            min="1" max="31" value="1" required>
+                        <select name="start_month" class="start_month" id = "start_month">
+                            <option value="1">January</option>
+                            <option value="2">February</option>
+                            <option value="3">March</option>
+                            <option value="4">April</option>
+                            <option value="5">May</option>
+                            <option value="6">June</option>
+                            <option value="7">July</option>
+                            <option value="8">August</option>
+                            <option value="9">September</option>
+                            <option value="10">October</option>
+                            <option value="11">November</option>
+                            <option value="12">December</option>
+                        </select>
+                        <input type="number" width="40px" class="start_year" name="Start Year" id = "start_year"
+                            min="2020" max="2099" value="2020" required><br>
+    
+                        <input type="number" id="start_hr" min="1" max="12" required>
+                        <input type="number" id="start_min" min="0" max="59" required>
+                        <select name="Start Period" class="start_period" id="start_period">
+                            <option value="0">a.m.</option>
+                            <option value="12">p.m.</option>
+                        </select><br>
+    
+                        <label class="field_elements">End time :</label><br>
+                        <input type="number" width="20px" class="end_day" name="End Day" id = "end_day"
+                            min="1" max="31" value="1" required>
+                        <select name="End Month" class="end_month" id = "end_month">
+                            <option value="1">January</option>
+                            <option value="2">February</option>
+                            <option value="3">March</option>
+                            <option value="4">April</option>
+                            <option value="5">May</option>
+                            <option value="6">June</option>
+                            <option value="7">July</option>
+                            <option value="8">August</option>
+                            <option value="9">September</option>
+                            <option value="10">October</option>
+                            <option value="11">November</option>
+                            <option value="12">December</option>
+                        </select>
+                        <input type="number" width="40px" class="end_year" name="End Year" id = "end_year"
+                            min="2020" max="2099" value="2020" required><br>
+                        <input type="number" id="end_hr" min="1" max="12" required>
+                        <input type="number" id="end_min" min="0" max="59" required>
+                        <select name="End Period" class="end_period" id="end_period">
+                            <option value="0">a.m.</option>
+                            <option value="12">p.m.</option>
+                        </select>
+                    </div>
+                    <br>
+                    <div class= "time_input_footer">
+                        <div class="error common_error_div" id="timelog_error"> 
+                            Error
+                        </div>
+                        <button href="#" class="blue_curve_button float_right_elements" id="save_time_log"> Submit </button>
+                    </div>
+                    <div class="clr"></div>
+                </div>
+            </div> 
+
+            <div class = "alert error_alert hide">
+                <span class ="fas fa-exclamation-circle"></span>
+                <span class="msg" id="error_msg"> Warning: This is a warning alert </span>
+                <div class="close generic_popup_close" onclick=closeAlert()>+</div>
+            </div>
+
+            <div class = "alert confirmation_alert hide">
+                <span class="fas fa-check"></span>
+                <span class="msg" id="confirm_msg"> Confirmation message </span>
+                <div class="close  generic_popup_close" onclick=closeAlert()>+</div>
+            </div>
+         
+         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+         <script src="../scripts/shared.js"></script>
+         <script src="../scripts/auth.js"></script>
+         <script src= "../scripts/taskpage.js"></script>
+    </body>
+</html>
+
