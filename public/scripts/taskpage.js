@@ -108,11 +108,10 @@ function updateTaskPage(username, role) {
 	if (editTaskDescriptionButton && submitTimeButton) {
 		if (role === 'Teacher') {
 			markCompltBtn.style.display="inline-block";
-			planContBtn.style.display = "none"
+			planPctageBtn.style.display = "none"
 			newLogBtn.style.display = "none"
 			editTaskDescriptionButton.style.display = "none"
 			submitTimeButton.style.display = "none"
-			
 		}
 		else if (role === 'Student') {
 			firebaseRef.child(`Projects/${localStorage.getItem("projectName")}/Tasks/${localStorage.getItem("taskName")}/AssignedTo/${username}`)
@@ -120,14 +119,14 @@ function updateTaskPage(username, role) {
 				if (snapshot.val()) {
 					markCompltBtn.style.display="inline-block";
 					newLogBtn.style.display = "inline-block"
-					planContBtn.style.display="inline-block"
+					planPctageBtn.style.display="inline-block"
 					editTaskDescriptionButton.style.display = "inline-block"
 					submitTimeButton.style.display = "inline-block"
 				}
 				else {
 					markCompltBtn.style.display="none";
 					newLogBtn.style.display = "none"
-					planContBtn.style.display="none"
+					planPctageBtn.style.display="none"
 					editTaskDescriptionButton.style.display = "none"
 					submitTimeButton.style.display = "none"
 				}
@@ -406,13 +405,44 @@ document.getElementById("save_contribution").addEventListener('click', function(
     }
 });
 
+// <input type="number" width="20px" class="percentage" name="Work Percentage" id = "percentage" min="1" max="100" required>
+document.getElementById("plan_pctage_btn").addEventListener('click', function() {
+    var input_container = document.getElementById("percentage_input_container"),
+        assignedTo = Object.entries(JSON.parse(localStorage.getItem("assignedTo")))
+    
+    if (input_container.innerHTML == "") {
+        assignedTo.forEach(member => {
+            var new_div = document.createElement("div"),
+                input_box = document.createElement("input")
+            
+            input_container.appendChild(new_div)
+            new_div.appendChild(input_box)
+
+            input_box.type = "number"
+            input_box.style.width = "300px"
+            input_box.style.marginBottom = "20px"
+            input_box.className = "percentage"
+            input_box.name = "Work Percentage"
+            input_box.id = member[1].Username
+            input_box.min = "1"
+            input_box.max = "100"
+            input_box.required = true
+            input_box.placeholder = "Planned percentage for " + member[1].Username + "..."
+        })
+    }
+})
 
 document.getElementById("save_percentage").addEventListener('click', function(){
     clearErrors(contributeError);
-    var percentObj = updatePercentage();
-    if (percentObj != undefined){
-        changeContributionPercent(percentObj);
-    }
+    var percentObj = getPercentage();
+    firebaseRef.child(`Projects/${localStorage.getItem("projectName")}/Tasks/${localStorage.getItem("taskName")}/Times`).update({
+        PlannedTime: percentObj
+    })
+    closeModal(percentage_overlay)
+    displayConfirmAlert("Planned Contribution has been added")
+    // if (percentObj != undefined){
+    //     changeContributionPercent(percentObj);
+    // }
 });
 
 function updatePlannedTime(){
@@ -431,31 +461,43 @@ function updatePlannedTime(){
 }
 
 // should we make this section async?
-function updatePercentage(){
-    var percentage = document.getElementById("percentage").value;
+function getPercentage(){
+    // var percentage = document.getElementById("percentage").value;
     var percentClass = document.getElementsByClassName("percentage");
     var percentArray = [];
+    var percentObj = {}
     var contributionSum = 0;
-    for (let i = 0; i < percentClass.length; i++) {
-        percentArray.push(percentClass[i]);
-    }
+    // for (let i = 0; i < percentClass.length; i++) {
+    //     percentArray.push(percentClass[i]);
+    // }
 
-    for (let i = 0; i < percentArray.length; i++) {
-        contributionSum += percentArray[i];
-    } 
+    // for (let i = 0; i < percentArray.length; i++) {
+    //     contributionSum += percentArray[i];
+    // } 
 
-    var percentObj = parseInt(percentage);
+    Array.from(percentClass).forEach(percentage => {
+        var percentage_error = percentage.value == null || percentage.value <= 0 || percentage.value > 100;
 
-    var percentage_error = percentObj == null || percentObj <= 0 || percentObj > 100;
+        if (percentage_error){
+            displayError("Percentage input invalid. Percentage must be between 1 to 100", contributeError);
+            return;
+        }
+        else {
+            percentArray.push(percentage.value)
+            percentObj[percentage.id] = {PlannedContribution: percentage.value}
+        }
+    })
+
+    percentArray.forEach(percentage => {
+        contributionSum += parseInt(percentage);
+    })
+    
+
+    // var percentObj = parseInt(percentage);
 
     var contribution_not_full = contributionSum != 100;
 
-    if (percentage_error){
-        displayError("Percentage input invalid. Percentage must be between 1 to 100", contributeError);
-        return;
-    }
-
-    if (contribution_not_full){
+    if (contribution_not_full){        
         displayError("Percentage input invalid. Total percentage must add up to 100", contributeError);
         return;
     }
