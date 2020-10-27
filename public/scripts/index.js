@@ -192,3 +192,8 @@ try {
 	})
 }
 catch {;}
+
+function markProjectAsComplete(projectName) {
+    var project = document.getElementById(projectName);
+
+}
