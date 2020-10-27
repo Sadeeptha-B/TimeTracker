@@ -20,7 +20,7 @@
     </div>
 
     <div class="body">
-        <div class="form_login_signup">
+        <div id="enter_email_container" class="form_login_signup">
 
             <div class="form_header">
                 <h2 class="form_header">Edit Teacher</h2>
@@ -35,14 +35,14 @@
                     </tr>
                     -->
                     <tr>
-                        <th>Email</th>
-                        <td><input type="email" class="email_input" id="Email" name="Email" required></td>
+                        <th>Username</th>
+                        <td><input type="email" class="email_input" id="Username" name="Email" required></td>
                     </tr>
                 </table>
 
                 <div class="form_submit_action_container">
                     <!-- <button id="search_id_button" class="form_search_user_button">Next</button> -->
-                    <button id="search_id_button" class="button_generic">Next</button>
+                    <button id="search_edit_id_button" class="button_generic">Next</button>
                 </div>
                 <!-- Once we confirm that the user with the email exists we can open up the next section,
                     or we can do it in another page -->
@@ -55,13 +55,13 @@
 
         <!-- Option 1: this form shows up once the email is in the DB -->
         <!-- Maybe you would want to show which user is matched first-->
-        <div class="form_login_signup">
+        <div id="edit_container" class="form_login_signup" style="display:none">
 
             <div class="form_centered_container">
                 <table id="edit_teacher_form" class="form_login_body">
                     <tr>
                         <th>New Username</th>
-                        <td><input type="text" class="username_input" id="Username" name="Username" required></td>
+                        <td><input type="text" class="username_input" id="NewUsername" name="Username" required></td>
                     </tr>
                     <tr>
                         <th>New Password</th>
