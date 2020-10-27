@@ -169,10 +169,11 @@ function deleteTeacher(){
 	localStorage.setItem("teacher",teacher);
 
 	firebaseRef.child(`Users/${localStorage.getItem("teacher")}`).once('value')
-		.then(function(snapshot) {
+		.then(async function(snapshot) {
 			localStorage.setItem("role",String(snapshot.child('Role').val()));
 			localStorage.setItem("userEmail",String(snapshot.child('Email').val()));
 			localStorage.setItem("password",String(snapshot.child('Password').val()));
+			deleteTeacherProjects(localStorage.getItem("teacher"), snapshot.child('Projects').val())
 		}).then(function() {
 			firebase.auth().signOut().then(function() {
 				userEmail = localStorage.getItem("userEmail");
@@ -197,24 +198,44 @@ function deleteTeacher(){
 			})
 		})
 }
+//timetracker999@gmail.com
+async function deleteTeacherProjects(username, projects) {
+	Object.entries(projects).forEach(project => {
+		firebaseRef.child(`Projects/${project[1].ProjectName}/Members`).once('value').then(function(snapshot) {
+			var members = snapshot.val()
+			if (members) {
+				firebaseRef.child(`Projects/${project[1].ProjectName}`).update({
+					Deleted: 1
+				})
+			}
+			// Only remove the project from the database completed if there arent any students in the project
+			else {
+				firebaseRef.child(`Projects/${project[1].ProjectName}`).remove()
+			}
+		})
+		
+	})
+	await(waitFor(250))
+	firebaseRef.child(`Users/${username}`).remove()
+}
 
 function editTeacher(){
-	email = String(document.getElementById("Email").value);
-	newUsername = String(document.getElementById("Username").value);
-	newPass = String(document.getElementById("Password").value);
-	newConfirmPass = String(document.getElementById("ConfirmPassword").value);
+	username = document.getElementById("Username").value;
+	newUsername = document.getElementById("NewUsername").value;
+	newPass = document.getElementById("Password").value;
+	newConfirmPass = document.getElementById("ConfirmPassword").value;
 
 
-	firebaseRef.child(`Users/${getUsername(email)}`).once('value')
+	firebaseRef.child(`Users/${username}`).once('value')
 	.then(function(snapshot) {
 			localStorage.setItem("PASSWORD",String(snapshot.child('Password').val()));
-			localStorage.setItem("EMAIL",String(snapshot.child('Email').val()));
+			localStorage.setItem("USERNAME",String(snapshot.child('Username').val()));
 	}).then(function(){
-		if (localStorage.getItem("EMAIL") == email){
+		if (localStorage.getItem("USERNAME") == username){
 			if(newPass == newConfirmPass){
 				localStorage.setItem("newEmail",String(newUsername + "@monash.edu"));
 				localStorage.setItem("newPass",newPass);
-				getProjectsOfTeacher(getUsername(email)).then(async function() {
+				getProjectsOfTeacher(username).then(async function() {
 					updateTeacherInCharge(localStorage.getItem("projectData"), newUsername)
 					firebaseRef.child(`Users/${newUsername}`).set({
 						Email: newUsername + "@monash.edu",
@@ -224,11 +245,11 @@ function editTeacher(){
 						Role: 'Teacher'
 					})
 					.then(function() {
-						firebaseRef.child(`Users/${getUsername(email)}`).remove()
+						firebaseRef.child(`Users/${username}`).remove()
 						.then(function() {
 							firebase.auth().signOut()
 							.then(async function() {
-								firebase.auth().signInWithEmailAndPassword(localStorage.getItem("EMAIL"),localStorage.getItem("PASSWORD")).then(async function() {
+								firebase.auth().signInWithEmailAndPassword(localStorage.getItem("USERNAME")+"@monash.edu",localStorage.getItem("PASSWORD")).then(async function() {
 									var user = await firebase.auth().currentUser;
 									displayConfirmAlert("Updated teacher account.")
 									user.updateEmail(localStorage.getItem("newEmail")).then(function() {
@@ -261,7 +282,7 @@ function getProjectsOfTeacher(username) {
 }
 
 function updateTeacherInCharge(projects, newUsername) {
-	if (projects) {
+	if (projects != "null") {
 		Object.entries(JSON.parse(projects)).forEach(project => {
 			firebaseRef.child(`Projects/${project[1].ProjectName}`).update({
 				TeacherInCharge: newUsername
