@@ -139,7 +139,7 @@ async function createProject(){
 
 	displayConfirmAlert("Project Created!")
 	setTimeout(function() {
-		getHomePage();
+		getHomePage()
 	},1000);
     // window.alert("Project Created!")
     // Bring the user to the home page after successful sign up
