@@ -65,7 +65,8 @@ window.taskPageNameSpace = {
     members: {
         array : [],
         totalTime : 0
-    }
+    },
+    commentCount : 0
 }
 
 firebase.auth().onAuthStateChanged(function(user) {
@@ -141,11 +142,14 @@ async function updateVisuals() {
             username = member[1].Username
         memberAccess[username] = {};
         memberAccess.array.push(username);
+        
         // Later I just need to take the data from firebase and add it the total duration and timelogs
-        firebaseRef.child(`Projects/${localStorage.getItem("projectName")}/Tasks/${localStorage.getItem("taskName")}/Times/${username}`).once("value").then(function(snapshot) {
-            var totalDuration = snapshot.child('TotalTimeSpent').val(),
-                plannedTime = snapshot.child('PlannedTime').val(),
-                timelogs = snapshot.val()
+        firebaseRef.child(`Projects/${localStorage.getItem("projectName")}/Tasks/${localStorage.getItem("taskName")}`).once("value").then(function(snapshot) {
+            var totalDuration = snapshot.child(`Times/${username}/TotalTimeSpent`).val(),
+                plannedTime = snapshot.child(`Times/${username}/PlannedTime`).val(),
+                commentCount = snapshot.child(`commentCount`).val(),
+                comments = snapshot.child('Comments').val(),
+                timelogs = snapshot.child(`Times/${username}`).val()
             
             memberAccess[username].totalDuration = totalDuration;
             memberAccess[username].plannedTime = plannedTime;
@@ -160,10 +164,20 @@ async function updateVisuals() {
             else {
                 memberAccess[username].timelogs = []
             }
+
+            window.taskPageNameSpace.commentCount = commentCount;
+
+            Object.entries(comments).forEach(comment=>{
+                var commenter = comment[1].commenter,
+                    content = comment[1].content,
+                    time = comment[1].time;
+                populateComment(commenter, time, content);
+            });
             
         }).then(function() {
             updateCharts()
             populateTable(username)
+
         })
     })
 
@@ -313,14 +327,13 @@ async function update(formatObject){
         endTimeObject = formatObject.endTimeObject
         
     var user = await firebase.auth().currentUser;
-    const username = getUsername(user.email)
+    const username = getUsername(user.email);
 
     window.taskPageNameSpace.members[username].timelogs.push(formatObject);
     window.taskPageNameSpace.members[username].totalDuration += formatObject.durationData.timeInHrs;
     updateCharts(); 
     updateTable(username, formatObject);     // Consider incorporating to populateTable function
 
-    
     setDisplayNone(statusColumn);
     setDisplayFlex(timeLogs);
     closeModal(timeInput);
@@ -580,15 +593,7 @@ function updateChart(chart){
 }
 
 /* Comment thread */
-function populateComment(comment){
-    var user = firebase.auth().currentUser
-    var username = getUsername(user.email);
-    var timeNow = new Date();
-    var timeFormatString = timeNow.toLocaleDateString("en-US", {day:'numeric'}) +"/" +
-                            timeNow.toLocaleDateString("en-US", {month: 'numeric'}) +"/"+
-                            timeNow.toLocaleDateString("en-US", {year: 'numeric'})
-
-
+function populateComment(username, timeFormatString, comment){
     document.getElementById("commenter_name").innerText = username;
     document.getElementById("comment_date").innerText = timeFormatString;
     document.getElementById("comment_content").innerText = comment;
@@ -599,15 +604,43 @@ function populateComment(comment){
 
 
 document.getElementById("add_cmnt_btn").addEventListener('click', function(){
-    var comment = document.getElementById("comment_field").value.trim();
+    var commentField =  document.getElementById("comment_field");
+    var comment = commentField.value.trim();
+
     if (comment.length == 0){
         displayError("Comment is empty", commentError);
     }  else{
-        populateComment(comment);
+        //User
+        var user = firebase.auth().currentUser;
+        var username = getUsername(user.email);
 
-        //firebaseRef.child(`Projects/${projectName}/Tasks/${taskName}/${commentTitle}`.set)
+        //Time
+        var timeNow = new Date();
+        var timeFormatString = timeNow.toLocaleDateString("en-US", {day:'numeric'}) +"/" +
+                                timeNow.toLocaleDateString("en-US", {month: 'numeric'}) +"/"+
+                                timeNow.toLocaleDateString("en-US", {year: 'numeric'})
 
 
+        // Comment ID
+        window.taskPageNameSpace.commentCount += 1;
+        var commentId = window.taskPageNameSpace.commentCount;
+
+        displayConfirmAlert("Comment submitted");
+        populateComment(username, timeFormatString, comment);
+        commentField.value = "";
+
+        
+        firebaseRef.child(`Projects/${localStorage.getItem("projectName")}/Tasks/${localStorage.getItem("taskName")}`).update({
+            commentCount: parseInt([commentId])
+        })
+        firebaseRef.child(`Projects/${localStorage.getItem("projectName")}/Tasks/${localStorage.getItem("taskName")}/Comments`).update({
+            [commentId]:{
+                id:commentId,
+                commenter: username,
+                time: timeFormatString,
+                content : comment
+            }      
+        })
     }
 });
 
