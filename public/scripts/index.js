@@ -14,6 +14,7 @@ firebase.auth().onAuthStateChanged(function(user) {
 	}
   });
 
+
 // FUNCTIONS TO UPDATE HOME PAGE
 // =================================================
 function updateHomePage(username, role) {
@@ -85,21 +86,6 @@ async function createProject(){
 	var commonProjError = document.getElementById("create_project_error");
     var dateValid = end.getTime() > start.getTime();
 
-	/*
-	if (startYear > endYear){
-		dateValid = false;
-	}
-	else if (startYear == endYear){
-		if (startMonth > endMonth){
-			dateValid = false;
-		}
-		else if (startMonth == endMonth){
-			if (startDay >= endDay){
-				dateValid = false;
-			}
-		}
-	}
-	*/
 
     if (!dateValid){
 		displayError("Project cannot end before it starts, or end on the same day as the start date",commonProjError);
@@ -130,20 +116,12 @@ async function createProject(){
 		ProjectName: projectName
 	})
 
-	// ScriptManager.RegisterStartupScript(
-	// displayConfirmAlert("Project Created!"), window.location =' "../html/home-teacherview.html",
-	// true);
-
-
-
-
+    // window.alert("Project Created!")
+    // Bring the user to the home page after successful sign up
 	displayConfirmAlert("Project Created!")
 	setTimeout(function() {
 		window.location.href = "../html/home-teacherview.html";
 	},5000);
-    // window.alert("Project Created!")
-    // Bring the user to the home page after successful sign up
-
 }
 
 

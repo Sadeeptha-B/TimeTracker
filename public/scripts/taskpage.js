@@ -449,23 +449,6 @@ function updateTable(user, formatObject){
     var startTimeHourString = timeToStr(startTimeObject.Hour);
     var endTimeHourString = timeToStr(endTimeObject.Hour);
 
-    // var startFormatted = new Date (startTimeObject.Year, 
-    //     parseInt(startTimeObject.Month)-1, 
-    //     parseInt(startTimeObject.Date), 
-    //     startTimeObject.Hour, 
-    //     startTimeObject.Minute);
-
-    // var endFormatted = new Date (endTimeObject.Year, 
-    //     parseInt(endTimeObject.Month)-1, 
-    //     parseInt(endTimeObject.Date), 
-    //     endTimeObject.Hour, 
-    //     endTimeObject.Minute);
-
-    // var durationSecs = (endFormatted.getTime() - startFormatted.getTime())/1000;
-    // var durationMins = durationSecs / 60;
-    // var durationHrs = Math.floor(durationMins / 60);
-    // var durationDisplayMins = durationMins % 60;
-
     document.getElementById("table_member").innerText = user;
     document.getElementById("table_start_date").innerText = startDateString;
     document.getElementById("table_end_date").innerText = endDateString;
@@ -587,93 +570,6 @@ function updateChart(chart){
         // chart.data.datasets[0].backgroundColor = ['#f2d13a', '#c9deeb', '#cacaca'];
         chart.update();
     }, 0);
-}
-
-
-/* Chart */
-// var ctxMyCont = document.getElementById("myContChart").getContext('2d');
-// var timeArray = ["2018-12-07 15:45:17", "2018-12-09 15:30:17", "2018-12-15 15:15:16", "2018-12-12 15:00:17", "2018-12-13 14:45:16", "2018-12-14 14:30:17", "2018-12-10 14:15:17", "2018-12-09 14:00:17", "2018-12-08 13:45:17", "2018-12-07 13:30:16", "2018-12-06 13:15:17", "2018-12-10 16:00:17"];
-// var hoursContributed = [3, 1, 0.5, 2, 5, 3, 1, 1.5, 1, 2, 4, 3];
-
-
-// var myChart = new Chart(ctxMyCont, {
-//     type: 'line',
-//     data: {
-//         labels: timeArray,
-//         datasets: [{
-//             label: 'Duration',
-//             data: hoursContributed,
-//             backgroundColor: "rgb(113, 163, 240)",
-//         }],
-//     },
-//     options: {
-//         scales: {
-//             yAxes: [{
-//                 ticks: {
-//                     beginAtZero:true
-//                 }
-//             }],
-//             xAxes: [{
-//                 type: 'time',
-//                 time: {
-//                     unit: 'day',
-//                     displayFormats: {
-//                         // second: 'h:MM:SS',
-//                         // minute: 'h:MM',
-//                         // hour: 'hA',
-//                         day: 'MMM D',
-//                         month: 'YYYY MMM',
-//                         year: 'YYYY'
-//                     },                            
-//                 },
-//                 display: true,
-//                 scaleLabel: {
-//                     display: true,
-//                     labelString: 'value'
-//                 }                        
-//             }]                    
-//         }
-//     }
-// });
-
-var contributors={
-    label:"Team member",
-    borderColor: "orange",
-    data: [
-        {x:"2018-12-07 15:45:17", y: "Robyn"},
-        {x:"2018-12-09 15:30:17", y: "Campbell"},
-        {x: "2018-12-15 15:15:16",y: "Najam"},
-        {x:"2018-12-12 15:00:17", y: "Nathan"},
-        {x: "2018-12-13 14:45:16", y:"Robyn"},
-        {x:"2018-12-14 14:30:17", y:"Najam"},
-        {x:"2018-12-10 14:15:17", y:"Nathan"},
-        {x:"2018-12-09 14:00:17", y: "Campbell"},
-        {x:"2018-12-08 13:45:17", y: "Campbell"},
-        {x: "2018-12-07 13:30:16", y: "Campbell"},
-        {x:"2018-12-06 13:15:17", y:"Robyn"},
-        {x:"2018-12-10 16:00:17", y:"Nathan"}
-    ]
-
-}
-
-
-var dateAndCont = {
-    label:"Dates and Hour contribution",
-    borderColor: "blue",
-    data: [
-        {x:"2018-12-07 15:45:17", y: 3},
-        {x:"2018-12-09 15:30:17", y:1},
-        {x: "2018-12-15 15:15:16", y:0.5},
-        {x:"2018-12-12 15:00:17", y:2},
-        {x: "2018-12-13 14:45:16", y:5},
-        {x:"2018-12-14 14:30:17", y:3},
-        {x:"2018-12-10 14:15:17", y:1},
-        {x:"2018-12-09 14:00:17", y: 1.5},
-        {x:"2018-12-08 13:45:17", y:1},
-        {x: "2018-12-07 13:30:16", y:2},
-        {x:"2018-12-06 13:15:17", y:4},
-        {x:"2018-12-10 16:00:17", y:3}
-    ]
 }
 
 

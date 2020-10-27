@@ -7,13 +7,13 @@ function login() {
 	firebase.auth().signInWithEmailAndPassword(userEmail, userPass)
 	.then(function() {
 		// User is signed in.
+		getHomePage();
 		getLoginPage()
 	})
 	.catch(function(error) {
 		// Handle Errors here.
 		var errorCode = error.code;
 		var errorMessage = error.message;
-		// ...
 		console.log(errorCode)
 		displayErrorAlert("Error :" + errorMessage);
 	});
@@ -63,6 +63,7 @@ async function signup() {
 	}
 }
 
+/* This addressing works on the hosted version */
 async function getLoginPage() {
 	var user = await firebase.auth().currentUser
 	firebaseRef.child(`Users/${getUsername(user.email)}`)
@@ -81,6 +82,7 @@ async function getLoginPage() {
    removeLocalStorageItem()
 }
 
+/* This addressing works on Local */
 async function getHomePage() {
 	var user = await firebase.auth().currentUser
 	firebaseRef.child(`Users/${getUsername(user.email)}`)
