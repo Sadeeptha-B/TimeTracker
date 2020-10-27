@@ -218,9 +218,19 @@ function deleteTeacher(){
 //timetracker999@gmail.com
 async function deleteTeacherProjects(username, projects) {
 	Object.entries(projects).forEach(project => {
-		firebaseRef.child(`Projects/${project[1].ProjectName}`).update({
-			Deleted: 1
+		firebaseRef.child(`Projects/${project[1].ProjectName}/Members`).once('value').then(function(snapshot) {
+			var members = snapshot.val()
+			if (members) {
+				firebaseRef.child(`Projects/${project[1].ProjectName}`).update({
+					Deleted: 1
+				})
+			}
+			// Only remove the project from the database completed if there arent any students in the project
+			else {
+				firebaseRef.child(`Projects/${project[1].ProjectName}`).remove()
+			}
 		})
+		
 	})
 	await(waitFor(250))
 	firebaseRef.child(`Users/${username}`).remove()
