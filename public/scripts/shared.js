@@ -290,7 +290,8 @@ function addProject(project, projectData, role) {
 			startDate = projectData.StartDate,
 			endDate = projectData.EndDate,
 			teacher = projectData.TeacherInCharge,
-			completed  = projectData.Completed
+			completed  = projectData.Completed,
+			deleted = projectData.Deleted
 
 	var	dashboard = document.getElementById("dash_container"),
 		newDiv = document.createElement("div"),
@@ -311,6 +312,9 @@ function addProject(project, projectData, role) {
 
 	if (completed) {
 		newH2.innerHTML = project[0] + " - Completed "
+	}
+	else if (deleted) {
+		newH2.innerHTML = project[0] + " - Deleted "
 	}
 	else {
 		newH2.innerHTML = project[0]

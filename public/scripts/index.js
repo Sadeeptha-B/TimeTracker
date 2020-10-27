@@ -48,7 +48,7 @@ function populateProjectsToHome(username) {
 			firebaseRef.child(`Projects/${project[1].ProjectName}`).once("value").then(function(snapshot) {
 				var projectData = snapshot.val()
 
-				if (!projectData.Completed || (projectData.Completed && role === 'Student')) {
+				if (!projectData.Completed && !projectData.Deleted) {
 					addProject(project, projectData, role)
 				}
 			})

@@ -218,7 +218,9 @@ function deleteTeacher(){
 //timetracker999@gmail.com
 async function deleteTeacherProjects(username, projects) {
 	Object.entries(projects).forEach(project => {
-		firebaseRef.child(`Projects/${project[1].ProjectName}`).remove()
+		firebaseRef.child(`Projects/${project[1].ProjectName}`).update({
+			Deleted: 1
+		})
 	})
 	await(waitFor(250))
 	firebaseRef.child(`Users/${username}`).remove()
