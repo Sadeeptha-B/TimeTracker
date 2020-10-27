@@ -140,7 +140,7 @@ async function createProject(){
 	displayConfirmAlert("Project Created!")
 	setTimeout(function() {
 		window.location.href = "../html/home-teacherview.html";
-	},5000);
+	},1000);
     // window.alert("Project Created!")
     // Bring the user to the home page after successful sign up
 
@@ -148,25 +148,47 @@ async function createProject(){
 
 
 // ONCLICK BUTTONS
-document.getElementById("search_id_button").addEventListener("click", function() {
-	var username = document.getElementById("delete_username_input").value,
-		confirmation_section = document.getElementById("confirm_delete_container"),
-		enter_username_container = document.getElementById("enter_username_container")
+try {
+	document.getElementById("search_id_button").addEventListener("click", function() {
+		var username = document.getElementById("delete_username_input").value,
+			confirmation_section = document.getElementById("confirm_delete_container"),
+			enter_username_container = document.getElementById("enter_username_container")
+	
+		if (username.length === 0) {
+			displayErrorAlert("Please enter teacher's username to be deleted")
+			// window.alert("Please enter teacher's username to be deleted")
+		}
+		else {
+			enter_username_container.style.display= 'none'
+			confirmation_section.style.display = 'block'
+		}
+	})
+}
+catch {;}
 
-	if (username.length === 0) {
-		displayErrorAlert("Please enter teacher's username to be deleted")
-		// window.alert("Please enter teacher's username to be deleted")
-	}
-	else {
-		enter_username_container.style.display= 'none'
-		confirmation_section.style.display = 'block'
-	}
-}),
+try {
+	document.getElementById("search_edit_id_button").addEventListener("click", function() {
+		var username = document.getElementById("Username").value,
+			edit_section = document.getElementById("edit_container"),
+			enter_email_container = document.getElementById("enter_email_container")
 
-document.getElementById("delete_teacher_button").addEventListener("click", async function() {
-	var username = document.getElementById("delete_username_input").value
+		if (username.length === 0) {
+			displayErrorAlert("Please enter teacher's username to be edited")
+			// window.alert("Please enter teacher's username to be deleted")
+		}
+		else {
+			enter_email_container.style.display= 'none'
+			edit_section.style.display = 'block'
+		}
+	})
+}
+catch {;}
 
-	deleteTeacher()
-	await(waitFor(250))
-	firebaseRef.child(`Users/${username}`).remove()
-})
+try {
+	document.getElementById("delete_teacher_button").addEventListener("click", async function() {
+		var username = document.getElementById("delete_username_input").value
+
+		deleteTeacher()
+	})
+}
+catch {;}
