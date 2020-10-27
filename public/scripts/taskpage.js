@@ -45,6 +45,7 @@ var timeLogTableBody = document.getElementById("timelog_table_body");   // Table
 /* Modals*/
 var timeInput = document.getElementById("time_input");
 var contribution = document.getElementById("contribution_overlay");
+var contributePercent = document.getElementById("percentage_overlay");
 
 /* Chart */
 var chartCard = document.getElementById("task_chart_card")  
@@ -85,7 +86,8 @@ function updateTaskPage(username, role) {
 		  descriptionField = document.getElementById("description"),
 		  editTaskDescriptionButton = document.getElementById("edit_task_desc"),
 		  submitTimeButton = document.getElementById("save_time_log"),
-		  planContBtn = document.getElementById("plan_cont_btn"),
+          planContBtn = document.getElementById("plan_cont_btn"),
+          planPctageBtn = document.getElementById("plan_pctage_btn"),
 		  newLogBtn   = document.getElementById("new_log_btn"),
 		  markCompltBtn = document.getElementById("mark_complt_btn")
 
@@ -378,10 +380,19 @@ async function update(formatObject){
 }
 
 document.getElementById("save_contribution").addEventListener('click', function(){
-    clearErrors(commonTaskError);
+    clearErrors(contributeError);
     var hrsObj = updatePlannedTime();
     if (hrsObj != undefined){
         changeContribution(hrsObj);
+    }
+});
+
+
+document.getElementById("save_percentage").addEventListener('click', function(){
+    clearErrors(contributeError);
+    var percentObj = updatePercentage();
+    if (percentObj != undefined){
+        changeContributionPercent(percentObj);
     }
 });
 
@@ -399,6 +410,60 @@ function updatePlannedTime(){
 
     return hrsObj;
 }
+
+// should we make this section async?
+function updatePercentage(){
+    var percentage = document.getElementById("percentage").value;
+    var percentClass = document.getElementsByClassName("percentage");
+    var percentArray = [];
+    var contributionSum = 0;
+    for (let i = 0; i < percentClass.length; i++) {
+        percentArray.push(percentClass[i]);
+    }
+
+    for (let i = 0; i < percentArray.length; i++) {
+        contributionSum += percentArray[i];
+    } 
+
+    var percentObj = parseInt(percentage);
+
+    var percentage_error = percentObj == null || percentObj <= 0 || percentObj > 100;
+
+    var contribution_not_full = contributionSum != 100;
+
+    if (percentage_error){
+        displayError("Percentage input invalid. Percentage must be between 1 to 100", contributeError);
+        return;
+    }
+
+    if (contribution_not_full){
+        displayError("Percentage input invalid. Total percentage must add up to 100", contributeError);
+        return;
+    }
+
+    /*
+    If putting total contribution validation here is better,
+    uncomment this code and change function above to async;
+    var user = await firebase.auth().currentUser;
+    const username = getUsername(user.email)
+
+    var totalContribution = 0;
+    var members = window.taskPageNameSpace.members;
+    members.forEach((member) => {
+        totalContribution += window.taskPageNameSpace.members[member].plannedTime;
+    })
+
+    var time_over_limit_error = (totalContribution + percentObj > 100);
+    if (time_over_limit_error){
+        displayError("Percentage input invalid. Total percentage is over 100", contributeError);        
+        return;
+    }
+    */
+
+    return percentObj;
+    // return percentArray;
+}
+
 
 async function changeContribution(hrsObject){
     var user = await firebase.auth().currentUser;
@@ -419,6 +484,55 @@ async function changeContribution(hrsObject){
 
         firebaseRef.child(`Projects/${projectName}/Tasks/${taskName}/Times/${username}`).update({
             PlannedTime: hrsObject
+        })
+        .then(function() {
+            displayConfirmAlert("Workload expectation logged!");
+            // window.alert("Workload expectation logged!");
+        })
+    })
+}
+
+
+async function changeContributionPercent(percentObj){
+    var user = await firebase.auth().currentUser;
+    const username = getUsername(user.email)
+
+    // optional section: should we check total percentage here, or up there?
+    // comment out this section if checking percentage in other function
+    var totalContribution = 0;
+    var members = window.taskPageNameSpace.members;
+    members.forEach((member) => {
+        totalContribution += window.taskPageNameSpace.members[member].plannedTime;
+    })
+    var time_over_limit_error = (totalContribution + percentObj > 100);
+    if (time_over_limit_error){
+        displayError("Percentage input invalid. Total percentage is over 100", contributeError);
+        return;
+    }
+    // end of optional section
+
+    window.taskPageNameSpace.members[username].plannedTime = percentObj;
+
+    // if using array
+    /*
+    members.forEach((member) => {
+        window.taskPageNameSpace.members[member].plannedTime = percentObj[member];
+    })
+    */
+    updateCharts(); 
+    
+    setDisplayNone(statusColumn);
+    setDisplayFlex(timeLogs);
+    closeModal(contributePercent);
+
+    var projectName = localStorage.getItem("projectName"),
+            taskName = localStorage.getItem("taskName")
+
+    firebaseRef.child(`Projects/${projectName}`).once('value').then(function(snapshot) {
+        var username = getUsername(user.email)
+
+        firebaseRef.child(`Projects/${projectName}/Tasks/${taskName}/Times/${username}`).update({
+            PlannedTime: percentObj
         })
         .then(function() {
             displayConfirmAlert("Workload expectation logged!");
@@ -572,7 +686,6 @@ function memberDurationChart(id, title, type){
 
     return chart;
 }
-
 
 function updateChart(chart){
     var members = window.taskPageNameSpace.members.array;

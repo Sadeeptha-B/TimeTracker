@@ -114,6 +114,7 @@
                             <button id="mark_complt_btn" class="button_simple float_right_elements" style="display:none;" > Mark as completed </button> 
                             <button id="task_dist_btn" class="button_simple float_right_elements"> View Task Distribution</button> 
                             <button id="plan_cont_btn" class="button_simple float_right_elements" style="display:none;" onclick="openModal(contribution_overlay, false)"> Plan out task</button> 
+                            <button id="plan_pctage_btn" class="button_simple float_right_elements" style="display:none;" onclick="openModal(percentage_overlay, false)"> Plan out task</button> 
                             <button id="new_log_btn" class="button_simple float_right_elements" style="display:none;" onclick="openModal(time_input, false)"> Enter New Timelog</button>   
                         </div>
                         <div class="clr"></div>
@@ -249,7 +250,7 @@
                     <div class="close generic_popup_close" onclick="closeModal(contribution_overlay)">+</div>
                     <div class="input_form">
                         <h3>Plan out task</h3>
-                        <label class="field_elements" for="percentage">Expected work hours:</label>
+                        <label class="field_elements" for="work_hours">Expected work hours:</label>
                         <input type="number" width="20px" class="work_hours" name="Work Hours" id = "work_hours"
                         min="1" required>
                     </div>
@@ -258,6 +259,25 @@
                     </div>
                     <div class= "desc_footer">
                         <button href="#" class="blue_curve_button" id="save_contribution"> Save </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- EXTRA: Workload popup, used to set expected workload percentage-->
+            <div class="bg-modal" id="percentage_overlay">
+                <div class="modal-content">
+                    <div class="close generic_popup_close" onclick="closeModal(percentage_overlay)">+</div>
+                    <div class="input_form">
+                        <h3>Plan out task</h3>
+                        <label class="field_elements">Expected work percentage:</label>
+                        <input type="number" width="20px" class="percentage" name="Work Percentage" id = "percentage"
+                        min="1" max="100" required>
+                    </div>
+                    <div class="error common_error_div" id="contribute_error"> 
+                        Error
+                    </div>
+                    <div class= "desc_footer">
+                        <button href="#" class="blue_curve_button" id="save_percentage"> Save </button>
                     </div>
                 </div>
             </div>
