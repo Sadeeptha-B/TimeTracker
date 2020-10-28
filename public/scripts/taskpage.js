@@ -48,7 +48,8 @@ var contribution = document.getElementById("contribution_overlay");
 var contributePercent = document.getElementById("percentage_overlay");
 
 /* Chart */
-var chartCard = document.getElementById("task_chart_card")  
+var barChartCard = document.getElementById("bar_chart_card")  
+var pieChartCard = document.getElementById("pie_chart_card")  
 var statusColumn = document.getElementById("logtime_status")
 
 /* Comment Section */
@@ -59,6 +60,7 @@ var commentCardTemplate = document.getElementById("comment_card_template");
 /* Error Messages */
 var commonTaskError = document.getElementById("timelog_error")
 var contributeError = document.getElementById("contribute_error")
+var percentageError = document.getElementById("pctage_error")
 var commentError = document.getElementById("comment_error");
 
 window.taskPageNameSpace = {
@@ -148,7 +150,7 @@ async function updateVisuals() {
         // Later I just need to take the data from firebase and add it the total duration and timelogs
         firebaseRef.child(`Projects/${localStorage.getItem("projectName")}/Tasks/${localStorage.getItem("taskName")}`).once("value").then(function(snapshot) {
             var totalDuration = snapshot.child(`Times/${username}/TotalTimeSpent`).val(),
-                plannedTime = snapshot.child(`Times/${username}/PlannedTime`).val(),
+                plannedTime = snapshot.child(`Times/PlannedTime/${username}`).val(),
                 commentCount = snapshot.child(`commentCount`).val(),
                 comments = snapshot.child('Comments').val(),
                 timelogs = snapshot.child(`Times/${username}`).val()
@@ -161,10 +163,14 @@ async function updateVisuals() {
                 var timelogs = Object.entries(timelogs),
                     length = timelogs.length
                 
-                memberAccess[username].timelogs = timelogs.slice(1, length - 1)
+                memberAccess[username].timelogs = timelogs.slice(0, length - 1)
             }
             else {
                 memberAccess[username].timelogs = []
+            }
+
+            if (plannedTime) {
+                memberAccess[username].plannedTime = parseInt(plannedTime.PlannedContribution)
             }
 
             window.taskPageNameSpace.commentCount = commentCount;
@@ -196,12 +202,24 @@ async function updateVisuals() {
         username.actualAllocation = Math.floor(((memberTime/total) * 100)+0.5);
     })
 
-    addChart("time_duration_bar", "Time Duration spent by each member", "bar", memberDurationChart)
-    addChart("time_duration_pie","Time Percentages","pie", memberDurationChart)
+    var members = window.taskPageNameSpace.members.array;
+    var durationArray = []
+    members.forEach((member) => {
+        durationArray.push(window.taskPageNameSpace.members[member].totalDuration)
+    })
+
+    var plannedArray = []
+    members.forEach((member) => {
+        plannedArray.push(window.taskPageNameSpace.members[member].plannedTime)
+    })
+
+    addChart("time_duration_bar", "Time Duration spent by each member", "bar", durationArray, memberDurationChart)
+    addChart("planned_duration_pie","Planned Percentage Contributions","pie", plannedArray, memberDurationChart)
+    addChart("time_duration_pie","Actual Percentage Contributions","pie", durationArray, memberDurationChart)
 }
 
-function addChart( id,title, type,func){
-    var chart = func(id, title, type);
+function addChart(id, title, type, dataArray,func){
+    var chart = func(id, title, type, dataArray);
     window.taskPageNameSpace.charts.push(chart)
 }
 
@@ -343,12 +361,11 @@ async function update(formatObject){
     closeModal(timeInput);
 
     var projectName = localStorage.getItem("projectName"),
-            taskName = localStorage.getItem("taskName")
+        taskName = localStorage.getItem("taskName")
 
     firebaseRef.child(`Projects/${projectName}`).once('value').then(function(snapshot) {
         var username = getUsername(user.email),
             amount = snapshot.child(`Tasks/${taskName}/Times/${username}`).val(),
-            plannedTimePresent = snapshot.child(`Tasks/${taskName}/Times/${username}/PlannedTime`).val(),
             noOfTasks = 1,
 
             totalTimeSpentProject = snapshot.child(`TotalTimeSpent/${username}/Duration`).val(),
@@ -357,12 +374,7 @@ async function update(formatObject){
 
         if (amount) {
             amount = Object.entries(amount)
-            if (plannedTimePresent) {
-                noOfTasks = amount.length - 1
-            }
-            else {
-                noOfTasks = amount.length
-            }
+            noOfTasks = amount.length
         }
 
         if (totalTimeSpentProject == null) {
@@ -436,12 +448,13 @@ document.getElementById("plan_pctage_btn").addEventListener('click', function() 
 })
 
 document.getElementById("save_percentage").addEventListener('click', function(){
-    clearErrors(contributeError);
+    clearErrors(percentageError);
     var percentObj = getPercentage();
     firebaseRef.child(`Projects/${localStorage.getItem("projectName")}/Tasks/${localStorage.getItem("taskName")}/Times`).update({
         PlannedTime: percentObj
     })
     closeModal(percentage_overlay)
+    updateCharts()
     displayConfirmAlert("Planned Contribution has been added")
     // if (percentObj != undefined){
     //     changeContributionPercent(percentObj);
@@ -482,7 +495,7 @@ function getPercentage(){
         var percentage_error = percentage.value == null || percentage.value <= 0 || percentage.value > 100;
 
         if (percentage_error){
-            displayError("Percentage input invalid. Percentage must be between 1 to 100", contributeError);
+            displayError("Percentage input invalid. Percentage must be between 1 to 100", percentageError);
             return;
         }
         else {
@@ -501,10 +514,14 @@ function getPercentage(){
     var contribution_not_full = contributionSum != 100;
 
     if (contribution_not_full){        
-        displayError("Percentage input invalid. Total percentage must add up to 100", contributeError);
+        displayError("Percentage input invalid. Total percentage must add up to 100", percentageError);
         return;
     }
 
+    Array.from(percentClass).forEach(percentage => {
+        window.taskPageNameSpace.members[percentage.id].plannedTime = parseInt(percentage.value)
+    })
+    
     /*
     If putting total contribution validation here is better,
     uncomment this code and change function above to async;
@@ -570,7 +587,7 @@ async function changeContributionPercent(percentObj){
     })
     var time_over_limit_error = (totalContribution + percentObj > 100);
     if (time_over_limit_error){
-        displayError("Percentage input invalid. Total percentage is over 100", contributeError);
+        displayError("Percentage input invalid. Total percentage is over 100", percentageError);
         return;
     }
     // end of optional section
@@ -640,14 +657,14 @@ function updateTable(user, formatObject){
 
 
 
-function dynamicallyCreateChart(id, title){
+function dynamicallyCreateChart(id, title, container){
     var chartUnit = document.createElement("div");
     var header = document.createElement("h4");
     var chartContainer = document.createElement("div");
     var chartCanvas = document.createElement("canvas");
     var br =  document.createElement("br");
     
-    chartCard.appendChild(chartUnit);
+    container.appendChild(chartUnit);
     chartUnit.appendChild(header);
     chartUnit.appendChild(chartContainer);
     chartContainer.appendChild(chartCanvas);
@@ -722,29 +739,48 @@ function tooltipFunction(){
     }
 }
 
-function memberDurationChart(id, title, type){
-    var ctx = dynamicallyCreateChart(id, title);
+function memberDurationChart(id, title, type, array){
+    var ctx = null
+    if (type == "pie") {
+        ctx = dynamicallyCreateChart(id, title, pieChartCard);
+    }
+    else if (type == "bar") {
+        ctx = dynamicallyCreateChart(id, title, barChartCard);
+    }
+
     var members = window.taskPageNameSpace.members.array;
-    var durationArray = []
-    members.forEach((member) => {
-        durationArray.push(window.taskPageNameSpace.members[member].totalDuration)
-    })
-
-    var chart = new Chart(ctx, basicChartConfig(type, members, 'Members', durationArray));
-
+    // var durationArray = []
+    // members.forEach((member) => {
+    //     durationArray.push(window.taskPageNameSpace.members[member].totalDuration)
+    // })
+    var chart = new Chart(ctx, basicChartConfig(type, members, 'Members', array));
     return chart;
 }
 
 function updateChart(chart){
     var members = window.taskPageNameSpace.members.array;
-    var durationArray = []
-    members.forEach((member) => {
-        durationArray.push(window.taskPageNameSpace.members[member].totalDuration)
-    })
+    var durationArray = [],
+        plannedArray = []
+
+    if (chart.canvas.id === "planned_duration_pie") {
+        members.forEach((member) => {
+            plannedArray.push(window.taskPageNameSpace.members[member].plannedTime)
+        })
+    }
+    else {
+        members.forEach((member) => {
+            durationArray.push(window.taskPageNameSpace.members[member].totalDuration)
+        })
+    }
 
     setTimeout(function(){
         chart.data.datasets[0].data.pop();
-        chart.data.datasets[0].data = durationArray;
+        if (chart.canvas.id === "planned_duration_pie") {
+            chart.data.datasets[0].data = plannedArray;
+        }
+        else {
+            chart.data.datasets[0].data = durationArray;
+        }
         // chart.data.datasets[0].backgroundColor = ['#f2d13a', '#c9deeb', '#cacaca'];
         chart.update();
     }, 0);
