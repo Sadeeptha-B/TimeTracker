@@ -1,7 +1,12 @@
 <html>
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes"/>
     <title>TimeTracker - Dashboard</title>
-    <link rel="stylesheet" href="../generic_style.css"></link>
+    
+    <link rel="stylesheet" href="generic_style.css"></link>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -10,25 +15,26 @@
             <div class="header_word_wrapper">
                 <h1>TimeTracker</h1>
             </div>
-            <div class="header_links_wrapper">
-              <button id="signout_button" class="button_generic" onclick="logout()">Log Out</button>
-            </div>
+        </div>
+        <div class="header_links_wrapper">
+            <a href="index.html"><button id="signout_button" class="button_generic" onclick="logout()">Log Out</button></a>
         </div>
     </div>
     <div class="body">
         <div class="welcome_pane">
             <h2 id="welcome_text" class="welcome_text">Welcome, ...</h2>
         </div>
-        <div class="dashboard">
+        <div class="content_card">
             <div class="dashboard_header">
                 <h2 class="dashboard_header">Dashboard</h2>
-                <a href="newproject.html">
-                    <button id="new_project_button" class="button_standard" style="display: none">New Project</button>
-                </a>
-                <a href="archives.html">
-                    <button id="archives_button" class="button_standard">Archived Projects</button>
-                </a>
-               
+                <hr class="thin">
+                    <a href="newproject.html">
+                        <button id="new_project_button" class="button_simple float_right_elements" style="display: none">New Project</button>
+                    </a>
+                    <a href="archives.html">
+                        <button id="archives_button" class="button_simple float_right_elements">Archived Projects</button>
+                    </a>
+                    <div class="clr"></div>
             </div>
             <div id="dash_container" class="dash_container">
 
@@ -120,9 +126,9 @@
     <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-database.js"></script>
-    <script src="../scripts/shared.js"></script>
-    <script src="../scripts/auth.js"></script>
-    <script src="../scripts/index.js"></script>
+    <script src="scripts/shared.js"></script>
+    <script src="scripts/auth.js"></script>
+    <script src="scripts/index.js"></script>
 
 </body>
 </html>
