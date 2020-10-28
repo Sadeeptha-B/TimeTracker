@@ -7,7 +7,7 @@ function login() {
 	firebase.auth().signInWithEmailAndPassword(userEmail, userPass)
 	.then(function() {
 		// User is signed in.
-		redirectPage()
+		getHomePage()
 	})
 	.catch(function(error) {
 		// Handle Errors here.
@@ -63,7 +63,7 @@ async function signup() {
 }
 
 /* This addressing works on the hosted version */
-async function redirectPage() {
+async function getHomePage() {
 	var user = await firebase.auth().currentUser
 	firebaseRef.child(`Users/${getUsername(user.email)}`)
 	.once('value').then(function(snapshot) {
