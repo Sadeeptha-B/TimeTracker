@@ -137,6 +137,7 @@ function updateTaskPage(username, role) {
 
 async function updateVisuals() {
     const waitFor = (ms) => new Promise(r => setTimeout(r, ms))
+    haveAddedComments = 0
 
     Object.entries(JSON.parse(localStorage.getItem("assignedTo"))).forEach(member => {
         var memberAccess = window.taskPageNameSpace.members,
@@ -168,13 +169,15 @@ async function updateVisuals() {
 
             window.taskPageNameSpace.commentCount = commentCount;
 
-            Object.entries(comments).forEach(comment=>{
-                var commenter = comment[1].commenter,
-                    content = comment[1].content,
-                    time = comment[1].time;
-                populateComment(commenter, time, content);
-            });
-            
+            if (!haveAddedComments) {
+                Object.entries(comments).forEach(comment=>{
+                    var commenter = comment[1].commenter,
+                        content = comment[1].content,
+                        time = comment[1].time;
+                    populateComment(commenter, time, content);
+                });
+                haveAddedComments = 1
+            }
         }).then(function() {
             updateCharts()
             populateTable(username)
