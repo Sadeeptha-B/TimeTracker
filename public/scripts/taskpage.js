@@ -106,35 +106,37 @@ function updateTaskPage(username, role) {
 	Object.entries(JSON.parse(localStorage.getItem("assignedTo"))).forEach(member => {addMembers(member)})
 
 	// Remove task description button for teachers but show for students
-	// Remove time input button for teachers but show for students
-	if (editTaskDescriptionButton && submitTimeButton) {
-		if (role === 'Teacher') {
-			markCompltBtn.style.display="inline-block";
-			planPctageBtn.style.display = "none"
-			newLogBtn.style.display = "none"
-			editTaskDescriptionButton.style.display = "none"
-			submitTimeButton.style.display = "none"
-		}
-		else if (role === 'Student') {
-			firebaseRef.child(`Projects/${localStorage.getItem("projectName")}/Tasks/${localStorage.getItem("taskName")}/AssignedTo/${username}`)
-			.once('value').then(function(snapshot) {
-				if (snapshot.val()) {
-					markCompltBtn.style.display="inline-block";
-					newLogBtn.style.display = "inline-block"
-					planPctageBtn.style.display="inline-block"
-					editTaskDescriptionButton.style.display = "inline-block"
-					submitTimeButton.style.display = "inline-block"
-				}
-				else {
-					markCompltBtn.style.display="none";
-					newLogBtn.style.display = "none"
-					planPctageBtn.style.display="none"
-					editTaskDescriptionButton.style.display = "none"
-					submitTimeButton.style.display = "none"
-				}
-			})
-		}
-	}
+    // Remove time input button for teachers but show for students
+    firebaseRef.child(`Projects/${localStorage.getItem("projectName")}`).once('value').then(function(snapshot) {
+        var deleted = snapshot.child('Deleted').val()
+            userIsAssignedToTask = snapshot.child(`Tasks/${localStorage.getItem("taskName")}/AssignedTo/${username}`).val()
+
+        if (editTaskDescriptionButton && submitTimeButton) {
+            if (role === 'Teacher') {
+                markCompltBtn.style.display="inline-block";
+                planPctageBtn.style.display = "none"
+                newLogBtn.style.display = "none"
+                editTaskDescriptionButton.style.display = "none"
+                submitTimeButton.style.display = "none"
+            }
+            else if (role === 'Student') {
+                if (userIsAssignedToTask && !deleted) {
+                    markCompltBtn.style.display="inline-block";
+                    newLogBtn.style.display = "inline-block"
+                    planPctageBtn.style.display="inline-block"
+                    editTaskDescriptionButton.style.display = "inline-block"
+                    submitTimeButton.style.display = "inline-block"
+                }
+                else {
+                    markCompltBtn.style.display="none";
+                    newLogBtn.style.display = "none"
+                    planPctageBtn.style.display="none"
+                    editTaskDescriptionButton.style.display = "none"
+                    submitTimeButton.style.display = "none"
+                }
+            }
+        }
+    })
 }
 
 async function updateVisuals() {
