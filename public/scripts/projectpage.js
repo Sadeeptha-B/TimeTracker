@@ -223,7 +223,6 @@ function addStudentToProject() {
 		
 		Object.entries(members).forEach(member => {
 			const name = member[1].Username
-
 			membersObject[name] = {"Username": name}
 		})
 		

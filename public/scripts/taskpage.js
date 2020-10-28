@@ -51,17 +51,24 @@ var contributePercent = document.getElementById("percentage_overlay");
 var chartCard = document.getElementById("task_chart_card")  
 var statusColumn = document.getElementById("logtime_status")
 
+/* Comment Section */
+var commentSection = document.getElementById("comment_section");
+var commentCardTemplate = document.getElementById("comment_card_template");
+
+
 /* Error Messages */
 var commonTaskError = document.getElementById("timelog_error")
 var contributeError = document.getElementById("contribute_error")
 var percentageError = document.getElementById("pctage_error")
+var commentError = document.getElementById("comment_error");
 
 window.taskPageNameSpace = {
     charts: [],
     members: {
         array : [],
         totalTime : 0
-    }
+    },
+    commentCount : 0
 }
 
 firebase.auth().onAuthStateChanged(function(user) {
@@ -131,17 +138,21 @@ function updateTaskPage(username, role) {
 
 async function updateVisuals() {
     const waitFor = (ms) => new Promise(r => setTimeout(r, ms))
+    haveAddedComments = 0
 
     Object.entries(JSON.parse(localStorage.getItem("assignedTo"))).forEach(member => {
         var memberAccess = window.taskPageNameSpace.members,
             username = member[1].Username
         memberAccess[username] = {};
         memberAccess.array.push(username);
+        
         // Later I just need to take the data from firebase and add it the total duration and timelogs
-        firebaseRef.child(`Projects/${localStorage.getItem("projectName")}/Tasks/${localStorage.getItem("taskName")}/Times/${username}`).once("value").then(function(snapshot) {
-            var totalDuration = snapshot.child('TotalTimeSpent').val(),
-                plannedTime = snapshot.child('PlannedTime').val(),
-                timelogs = snapshot.val()
+        firebaseRef.child(`Projects/${localStorage.getItem("projectName")}/Tasks/${localStorage.getItem("taskName")}`).once("value").then(function(snapshot) {
+            var totalDuration = snapshot.child(`Times/${username}/TotalTimeSpent`).val(),
+                plannedTime = snapshot.child(`Times/${username}/PlannedTime`).val(),
+                commentCount = snapshot.child(`commentCount`).val(),
+                comments = snapshot.child('Comments').val(),
+                timelogs = snapshot.child(`Times/${username}`).val()
             
             memberAccess[username].totalDuration = totalDuration;
             memberAccess[username].plannedTime = plannedTime;
@@ -156,10 +167,22 @@ async function updateVisuals() {
             else {
                 memberAccess[username].timelogs = []
             }
-            
+
+            window.taskPageNameSpace.commentCount = commentCount;
+
+            if (!haveAddedComments) {
+                Object.entries(comments).forEach(comment=>{
+                    var commenter = comment[1].commenter,
+                        content = comment[1].content,
+                        time = comment[1].time;
+                    populateComment(commenter, time, content);
+                });
+                haveAddedComments = 1
+            }
         }).then(function() {
             updateCharts()
             populateTable(username)
+
         })
     })
 
@@ -309,14 +332,13 @@ async function update(formatObject){
         endTimeObject = formatObject.endTimeObject
         
     var user = await firebase.auth().currentUser;
-    const username = getUsername(user.email)
+    const username = getUsername(user.email);
 
     window.taskPageNameSpace.members[username].timelogs.push(formatObject);
     window.taskPageNameSpace.members[username].totalDuration += formatObject.durationData.timeInHrs;
     updateCharts(); 
     updateTable(username, formatObject);     // Consider incorporating to populateTable function
 
-    
     setDisplayNone(statusColumn);
     setDisplayFlex(timeLogs);
     closeModal(timeInput);
@@ -606,23 +628,6 @@ function updateTable(user, formatObject){
     var startTimeHourString = timeToStr(startTimeObject.Hour);
     var endTimeHourString = timeToStr(endTimeObject.Hour);
 
-    // var startFormatted = new Date (startTimeObject.Year, 
-    //     parseInt(startTimeObject.Month)-1, 
-    //     parseInt(startTimeObject.Date), 
-    //     startTimeObject.Hour, 
-    //     startTimeObject.Minute);
-
-    // var endFormatted = new Date (endTimeObject.Year, 
-    //     parseInt(endTimeObject.Month)-1, 
-    //     parseInt(endTimeObject.Date), 
-    //     endTimeObject.Hour, 
-    //     endTimeObject.Minute);
-
-    // var durationSecs = (endFormatted.getTime() - startFormatted.getTime())/1000;
-    // var durationMins = durationSecs / 60;
-    // var durationHrs = Math.floor(durationMins / 60);
-    // var durationDisplayMins = durationMins % 60;
-
     document.getElementById("table_member").innerText = user;
     document.getElementById("table_start_date").innerText = startDateString;
     document.getElementById("table_end_date").innerText = endDateString;
@@ -633,6 +638,7 @@ function updateTable(user, formatObject){
     var clone = cloneElement(timeLogTableRow, timeLogTableBody);
     clone.removeAttribute("style");
 }
+
 
 
 function dynamicallyCreateChart(id, title){
@@ -745,93 +751,57 @@ function updateChart(chart){
     }, 0);
 }
 
+/* Comment thread */
+function populateComment(username, timeFormatString, comment){
+    document.getElementById("commenter_name").innerText = username;
+    document.getElementById("comment_date").innerText = timeFormatString;
+    document.getElementById("comment_content").innerText = comment;
 
-/* Chart */
-// var ctxMyCont = document.getElementById("myContChart").getContext('2d');
-// var timeArray = ["2018-12-07 15:45:17", "2018-12-09 15:30:17", "2018-12-15 15:15:16", "2018-12-12 15:00:17", "2018-12-13 14:45:16", "2018-12-14 14:30:17", "2018-12-10 14:15:17", "2018-12-09 14:00:17", "2018-12-08 13:45:17", "2018-12-07 13:30:16", "2018-12-06 13:15:17", "2018-12-10 16:00:17"];
-// var hoursContributed = [3, 1, 0.5, 2, 5, 3, 1, 1.5, 1, 2, 4, 3];
-
-
-// var myChart = new Chart(ctxMyCont, {
-//     type: 'line',
-//     data: {
-//         labels: timeArray,
-//         datasets: [{
-//             label: 'Duration',
-//             data: hoursContributed,
-//             backgroundColor: "rgb(113, 163, 240)",
-//         }],
-//     },
-//     options: {
-//         scales: {
-//             yAxes: [{
-//                 ticks: {
-//                     beginAtZero:true
-//                 }
-//             }],
-//             xAxes: [{
-//                 type: 'time',
-//                 time: {
-//                     unit: 'day',
-//                     displayFormats: {
-//                         // second: 'h:MM:SS',
-//                         // minute: 'h:MM',
-//                         // hour: 'hA',
-//                         day: 'MMM D',
-//                         month: 'YYYY MMM',
-//                         year: 'YYYY'
-//                     },                            
-//                 },
-//                 display: true,
-//                 scaleLabel: {
-//                     display: true,
-//                     labelString: 'value'
-//                 }                        
-//             }]                    
-//         }
-//     }
-// });
-
-var contributors={
-    label:"Team member",
-    borderColor: "orange",
-    data: [
-        {x:"2018-12-07 15:45:17", y: "Robyn"},
-        {x:"2018-12-09 15:30:17", y: "Campbell"},
-        {x: "2018-12-15 15:15:16",y: "Najam"},
-        {x:"2018-12-12 15:00:17", y: "Nathan"},
-        {x: "2018-12-13 14:45:16", y:"Robyn"},
-        {x:"2018-12-14 14:30:17", y:"Najam"},
-        {x:"2018-12-10 14:15:17", y:"Nathan"},
-        {x:"2018-12-09 14:00:17", y: "Campbell"},
-        {x:"2018-12-08 13:45:17", y: "Campbell"},
-        {x: "2018-12-07 13:30:16", y: "Campbell"},
-        {x:"2018-12-06 13:15:17", y:"Robyn"},
-        {x:"2018-12-10 16:00:17", y:"Nathan"}
-    ]
-
+    var clone = cloneElement(commentCardTemplate, commentSection);
+    clone.removeAttribute("style");
 }
 
 
-var dateAndCont = {
-    label:"Dates and Hour contribution",
-    borderColor: "blue",
-    data: [
-        {x:"2018-12-07 15:45:17", y: 3},
-        {x:"2018-12-09 15:30:17", y:1},
-        {x: "2018-12-15 15:15:16", y:0.5},
-        {x:"2018-12-12 15:00:17", y:2},
-        {x: "2018-12-13 14:45:16", y:5},
-        {x:"2018-12-14 14:30:17", y:3},
-        {x:"2018-12-10 14:15:17", y:1},
-        {x:"2018-12-09 14:00:17", y: 1.5},
-        {x:"2018-12-08 13:45:17", y:1},
-        {x: "2018-12-07 13:30:16", y:2},
-        {x:"2018-12-06 13:15:17", y:4},
-        {x:"2018-12-10 16:00:17", y:3}
-    ]
-}
+document.getElementById("add_cmnt_btn").addEventListener('click', function(){
+    var commentField =  document.getElementById("comment_field");
+    var comment = commentField.value.trim();
 
+    if (comment.length == 0){
+        displayError("Comment is empty", commentError);
+    }  else{
+        //User
+        var user = firebase.auth().currentUser;
+        var username = getUsername(user.email);
+
+        //Time
+        var timeNow = new Date();
+        var timeFormatString = timeNow.toLocaleDateString("en-US", {day:'numeric'}) +"/" +
+                                timeNow.toLocaleDateString("en-US", {month: 'numeric'}) +"/"+
+                                timeNow.toLocaleDateString("en-US", {year: 'numeric'})
+
+
+        // Comment ID
+        window.taskPageNameSpace.commentCount += 1;
+        var commentId = window.taskPageNameSpace.commentCount;
+
+        displayConfirmAlert("Comment submitted");
+        populateComment(username, timeFormatString, comment);
+        commentField.value = "";
+
+        
+        firebaseRef.child(`Projects/${localStorage.getItem("projectName")}/Tasks/${localStorage.getItem("taskName")}`).update({
+            commentCount: parseInt([commentId])
+        })
+        firebaseRef.child(`Projects/${localStorage.getItem("projectName")}/Tasks/${localStorage.getItem("taskName")}/Comments`).update({
+            [commentId]:{
+                id:commentId,
+                commenter: username,
+                time: timeFormatString,
+                content : comment
+            }      
+        })
+    }
+});
 
 // Edit task description
 document.getElementById("edit_task_desc").addEventListener('click', function(){
@@ -856,6 +826,8 @@ document.getElementById("save_desc").addEventListener("click", async function(){
     })
     closeModal(document.getElementById("desc_edit_overlay"));
 });
+
+
 
 document.getElementById("mark_complt_btn").addEventListener('click', function(){
     document.getElementById("marked_cmplt").style.display = "flex";   // This must be grid

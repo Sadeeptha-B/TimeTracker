@@ -7,13 +7,12 @@ function login() {
 	firebase.auth().signInWithEmailAndPassword(userEmail, userPass)
 	.then(function() {
 		// User is signed in.
-		getLoginPage()
+		getHomePage()
 	})
 	.catch(function(error) {
 		// Handle Errors here.
 		var errorCode = error.code;
 		var errorMessage = error.message;
-		// ...
 		console.log(errorCode)
 		displayErrorAlert("Error :" + errorMessage);
 	});
@@ -63,7 +62,8 @@ async function signup() {
 	}
 }
 
-async function getLoginPage() {
+/* This addressing works on the hosted version */
+async function getHomePage() {
 	var user = await firebase.auth().currentUser
 	firebaseRef.child(`Users/${getUsername(user.email)}`)
 	.once('value').then(function(snapshot) {
@@ -81,23 +81,6 @@ async function getLoginPage() {
    removeLocalStorageItem()
 }
 
-async function getHomePage() {
-	var user = await firebase.auth().currentUser
-	firebaseRef.child(`Users/${getUsername(user.email)}`)
-	.once('value').then(function(snapshot) {
-		const role = snapshot.child("Role").val()
-
-		if (role === 'Admin') {
-			window.location.href = "../html/home-adminview.html"
-		}
-		else {
-			window.location.href = "../html/home.html"
-		}
-
-   })
-
-   removeLocalStorageItem()
-}
 
 function removeLocalStorageItem() {
 	localStorage.removeItem("projectName")
