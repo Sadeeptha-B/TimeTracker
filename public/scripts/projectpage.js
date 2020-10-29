@@ -72,7 +72,7 @@ function updateProjectPage(role) {
         var completed = snapshot.child('Completed').val()
         //UNSURE
 
-        if (!deleted || !completed) {
+        if (!deleted && !completed) {
             if (addMemberButton && editDescriptionButton) {
                 if (role === 'Teacher') {
                     addMemberButton.style.display = "block";
