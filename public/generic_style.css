@@ -61,7 +61,7 @@ div.form{
 
 h1{
     font-weight: 200;
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Poppins', sans-serif;
 }
 
 .float_right_elements{
@@ -120,7 +120,7 @@ specify position.
     background-color: #9999cc;
     border: none;
     padding: 8px;
-    font: 16px; /*"Arial";*/
+    font: 16px; 
     color: #ffffff;
     border-radius: 2px;
     min-width: 40px;
@@ -673,8 +673,10 @@ h2.form_header{
 
 
 div.form_centered{
-    background-color: #ccccff;
     float: center;
+    border: 1px solid #D3D3D3;
+    border-radius: 5px;
+    padding: 5px;
     margin-left: 10%;
     margin-right: 10%;
     margin-top: 16px;
@@ -689,7 +691,7 @@ div.form_header{
     margin-left: 5%;
     margin-right: 5%;
     padding: 8px;
-    font: 20px "Arial";
+    font: 20px;
 }
 
 h2.form_header{
@@ -714,14 +716,14 @@ table.form_body{
     text-align: left;
     margin: auto;
     padding: 4px;
-    font: 16px "Arial";
+    font: 16px;
 }
 
 table.form_login_body{
     text-align: left;
     margin: auto;
     padding: 4px;
-    font: 16px "Arial";
+    font: 16px;
 }
 
 th{

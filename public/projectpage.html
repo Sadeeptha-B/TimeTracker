@@ -13,7 +13,6 @@
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-colorschemes"></script>
 
     <link rel="stylesheet" href="generic_style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
 </head>
     <body>
@@ -98,6 +97,21 @@
 
                     <button class="button_with_symbol" id="new_task_button" onclick="openConfigurableModal(create_edit_task, true, true, task_name_input, task_desc_input)" style="display:none">+</button>
                     <div class="clr"></div>      <!-- Clearing Float-->
+
+                    <div class="status_column_wrapper" id="no_tasks" style="display:none;">
+                        <div class="status_column centered_card" >
+                            <div class="status_column_content">
+                                No Tasks for this Project
+                            </div>
+                            <div class="clr"></div>
+                            
+                            <div class="status_column_deco">
+                                <div class="image_container">
+                                    <img src="imgs/check-mark-12-24.png">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="task" id="task_template" style="display:none">
                             <div class="dash_project">
