@@ -6,6 +6,7 @@
     <link rel=icon href=imgs/favicon.png>
     <title>TimeTracker - Create Project</title>
     <link rel="stylesheet" href="generic_style.css"></link>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
 </head>
 
 <body>
@@ -31,36 +32,14 @@
                 <table class="form_body">
                     <tr>
                         <th>Project Name</th>
-                        <td><input type="text" class="project_name" name="Project Name" id ="project_name" required></td>
+                        <td><input type="text" class="input_field project_name" name="Project Name" id ="project_name" required></td>
                     </tr>
                     <tr>
                         <th>Description</th>
                         <td><textarea id = "project_description" rows="12" cols="120" class="input_field"></textarea></td>
                         
                     </tr>
-                    <!-- not part of current sprint (adding students)
-                    <tr>
-                        <th>Students</th>
-                        <td><input type="text" class="students_list" name="Students" required></td>
-                    </tr>
-                    <tr>
-                        <th></th>
-                        <td><input type="text" class="students_list" name="Students"></td>
-                    </tr>
-                    <tr>
-                        <th></th>
-                        <td><button>Add Student</button></td>
-                    </tr>
-                    <tr>
-                        <th>Start Date</th>
-                        <td><input type="date" class="start_date" name="Start Date" required></td>
-                    </tr>
-                    <tr>
-                        <th>End Date</th>
-                        <td><input type="date" class="end_date" name="End Date" required></td>
 
-                    </tr>
-                    -->
                     <tr>
                         <th>Start Date</th>
                         <td><input type="number" width="20px" class="start_day" name="Start Day" id="start_day"
@@ -114,7 +93,7 @@
                 <a href="home-teacherview.html"><button class="button_generic">Cancel</button></a>
             </div>
             <div class="error common_error_div" id="create_project_error"> 
-                Error <!-- <span>Error</span> -->
+                Error 
             </div>
             
         </div>
