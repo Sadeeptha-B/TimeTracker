@@ -1,5 +1,9 @@
 
 /* General styles    */
+*{
+    box-sizing: border-box;
+}
+
 html{
     background-color: #fff;
 }
@@ -163,6 +167,19 @@ button.blue_curve_button:hover{
     background-color:#ddd;
 }
 
+.button_with_symbol{
+    position: relative;
+    display: inline-block;
+    font-size:25px;
+    padding-right: 0.5rem;
+    padding-left: 0.5rem;
+    border: 1px solid #ccc2c233;
+    border-radius: 0.5em;
+    background-color: #fff;
+    cursor: pointer;
+}
+
+
 /* Alerts
  - Error alert
  - Confirm alert
@@ -180,11 +197,12 @@ button.blue_curve_button:hover{
     overflow: hidden;
     pointer-events: none;
     vertical-align: bottom;
+    z-index: 20;
 }
 
 .error_alert{
-    border-left: 4px solid rgba(255, 0, 0, 0.3);
-    background: rgba(255, 0, 0, 0.3);
+    border-left: 4px solid #ffbb33;
+    background:  #ffbb33;
 }
 
 .confirmation_alert{
@@ -499,6 +517,10 @@ a.hover_gray_link :hover{
 
 
 /*Dashboard page */
+#dashboard{
+    border: 1px solid black;
+}
+
 div.dashboard{
     background-color: #ccccff;
     padding:2px;
@@ -543,6 +565,103 @@ p.project_summary{
 
 
 /*Log in*/
+.wave{
+    position:fixed;
+    left:0;
+    bottom:0;
+    z-index:-1;
+}
+
+.flex-container{
+    position:fixed;
+    display:grid;
+    grid-template-columns: 1fr 2fr;
+    width:100vw;
+    height:100vh;
+    padding: 0 2rem;
+}
+
+.deco_img{
+    display:flex;
+    align-items: flex-end;
+    transform: translateY(-15%);
+}
+
+.left_deco_img{
+    max-width:500px;
+    min-width:270px; 
+} 
+
+.login_container{
+    display:flex;
+    justify-content: center;
+}
+
+.login_container .form_login{
+    width: 50%;
+    padding: 2px;
+}
+
+
+.header_login{
+    font-size: 2rem;
+    color:#333;
+    display:flex;
+    align-items: center;
+    padding:0;
+    margin:0;
+}
+
+.input_header{
+    display: inline-block;
+    text-align: right;
+    margin:15px;
+    width: 100px;
+} 
+
+@media screen and (max-width: 1050px){
+    .flex-container{
+        grid-gap: 5rem;
+    }
+}
+
+@media screen and (max-width: 1000px){
+    .login_container .form{
+        width: 290px;
+    }
+    .login_container .form_login > h2{
+        font-size: 1.5rem;
+        margin: 8px 0;
+    }
+
+    /* .deco_img{
+        width: 400px;
+    } */
+}
+
+@media screen and (max-width: 950px){
+    .left_deco_img{
+        display:none;
+    }
+
+    .wave{
+        display:none;
+    }
+
+    .flex-container{
+        grid-template-columns: 1fr;
+    }
+
+    .login_container{
+        box-shadow: 0 0 20px rgba(0,0,0,0.15);
+        border-radius: 1rem;
+        align-items: center;
+        transform: translateY(-30%);
+    }
+}
+
+
+
 h2.form_header{
     margin-top: 8px;
     margin-bottom: 8px;
@@ -746,6 +865,7 @@ td{
         font-family: inherit;
     }
 
+
     .date_container{
         display:block;
     }
@@ -761,10 +881,14 @@ td{
         padding: 15px;
     }
     
-    #name_field, #task_name_input{
+    #name_field, #task_name_input, #userEmail, #userPass{
         border: 0px none;
         border-bottom: 1px solid black;
         outline-width: 0;
+    }
+
+    #name_field:focus, #task_name_input:focus, #userEmail:focus, #userPass:focus{
+         border-bottom: 2px solid black;
     }
 
 
