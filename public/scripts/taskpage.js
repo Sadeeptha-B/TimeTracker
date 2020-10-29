@@ -60,6 +60,7 @@ var commentCardTemplate = document.getElementById("comment_card_template");
 /* Error Messages */
 var commonTaskError = document.getElementById("timelog_error")
 var contributeError = document.getElementById("contribute_error")
+var percentageError = document.getElementById("pctage_error")
 var commentError = document.getElementById("comment_error");
 
 window.taskPageNameSpace = {
@@ -105,35 +106,37 @@ function updateTaskPage(username, role) {
 	Object.entries(JSON.parse(localStorage.getItem("assignedTo"))).forEach(member => {addMembers(member)})
 
 	// Remove task description button for teachers but show for students
-	// Remove time input button for teachers but show for students
-	if (editTaskDescriptionButton && submitTimeButton) {
-		if (role === 'Teacher') {
-			markCompltBtn.style.display="inline-block";
-			planPctageBtn.style.display = "none"
-			newLogBtn.style.display = "none"
-			editTaskDescriptionButton.style.display = "none"
-			submitTimeButton.style.display = "none"
-		}
-		else if (role === 'Student') {
-			firebaseRef.child(`Projects/${localStorage.getItem("projectName")}/Tasks/${localStorage.getItem("taskName")}/AssignedTo/${username}`)
-			.once('value').then(function(snapshot) {
-				if (snapshot.val()) {
-					markCompltBtn.style.display="inline-block";
-					newLogBtn.style.display = "inline-block"
-					planPctageBtn.style.display="inline-block"
-					editTaskDescriptionButton.style.display = "inline-block"
-					submitTimeButton.style.display = "inline-block"
-				}
-				else {
-					markCompltBtn.style.display="none";
-					newLogBtn.style.display = "none"
-					planPctageBtn.style.display="none"
-					editTaskDescriptionButton.style.display = "none"
-					submitTimeButton.style.display = "none"
-				}
-			})
-		}
-	}
+    // Remove time input button for teachers but show for students
+    firebaseRef.child(`Projects/${localStorage.getItem("projectName")}`).once('value').then(function(snapshot) {
+        var deleted = snapshot.child('Deleted').val()
+            userIsAssignedToTask = snapshot.child(`Tasks/${localStorage.getItem("taskName")}/AssignedTo/${username}`).val()
+
+        if (editTaskDescriptionButton && submitTimeButton) {
+            if (role === 'Teacher') {
+                markCompltBtn.style.display="inline-block";
+                planPctageBtn.style.display = "none"
+                newLogBtn.style.display = "none"
+                editTaskDescriptionButton.style.display = "none"
+                submitTimeButton.style.display = "none"
+            }
+            else if (role === 'Student') {
+                if (userIsAssignedToTask && !deleted) {
+                    markCompltBtn.style.display="inline-block";
+                    newLogBtn.style.display = "inline-block"
+                    planPctageBtn.style.display="inline-block"
+                    editTaskDescriptionButton.style.display = "inline-block"
+                    submitTimeButton.style.display = "inline-block"
+                }
+                else {
+                    markCompltBtn.style.display="none";
+                    newLogBtn.style.display = "none"
+                    planPctageBtn.style.display="none"
+                    editTaskDescriptionButton.style.display = "none"
+                    submitTimeButton.style.display = "none"
+                }
+            }
+        }
+    })
 }
 
 async function updateVisuals() {
@@ -447,7 +450,7 @@ document.getElementById("plan_pctage_btn").addEventListener('click', function() 
 })
 
 document.getElementById("save_percentage").addEventListener('click', function(){
-    clearErrors(contributeError);
+    clearErrors(percentageError);
     var percentObj = getPercentage();
     firebaseRef.child(`Projects/${localStorage.getItem("projectName")}/Tasks/${localStorage.getItem("taskName")}/Times`).update({
         PlannedTime: percentObj
@@ -494,7 +497,7 @@ function getPercentage(){
         var percentage_error = percentage.value == null || percentage.value <= 0 || percentage.value > 100;
 
         if (percentage_error){
-            displayError("Percentage input invalid. Percentage must be between 1 to 100", contributeError);
+            displayError("Percentage input invalid. Percentage must be between 1 to 100", percentageError);
             return;
         }
         else {
@@ -513,7 +516,7 @@ function getPercentage(){
     var contribution_not_full = contributionSum != 100;
 
     if (contribution_not_full){        
-        displayError("Percentage input invalid. Total percentage must add up to 100", contributeError);
+        displayError("Percentage input invalid. Total percentage must add up to 100", percentageError);
         return;
     }
 
@@ -586,7 +589,7 @@ async function changeContributionPercent(percentObj){
     })
     var time_over_limit_error = (totalContribution + percentObj > 100);
     if (time_over_limit_error){
-        displayError("Percentage input invalid. Total percentage is over 100", contributeError);
+        displayError("Percentage input invalid. Total percentage is over 100", percentageError);
         return;
     }
     // end of optional section

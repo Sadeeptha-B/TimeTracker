@@ -61,32 +61,50 @@ function updateProjectPage(role) {
 	projectField.textContent = localStorage.getItem("projectName")
 	descriptionField.textContent = localStorage.getItem("description")
 
+    const makeElementsVisible = () => {
+
+    }
+
 	// Remove add member button for students but show for teachers
-	// Remove the add and assign task button for teachers but show for students
-	if (addMemberButton && editDescriptionButton) {
-		if (role === 'Teacher') {
-			addMemberButton.style.display = "block";
-			editDescriptionButton.style.display = "block";
+    // Remove the add and assign task button for teachers but show for students
+    firebaseRef.child(`Projects/${localStorage.getItem("projectName")}`).once('value').then(function(snapshot) {
+        var deleted = snapshot.child('Deleted').val()
 
-			addTaskButton.style.display = "none";
-			assignTaskButton.style.display = "none";
-		}
-		else if (role === 'Student') {
-			addMemberButton.style.display = "none";
-			editDescriptionButton.style.display = "none";
+        if (!deleted) {
+            if (addMemberButton && editDescriptionButton) {
+                if (role === 'Teacher') {
+                    addMemberButton.style.display = "block";
+                    editDescriptionButton.style.display = "block";
+        
+                    addTaskButton.style.display = "none";
+                    assignTaskButton.style.display = "none";
+                }
+                else if (role === 'Student') {
+                    addMemberButton.style.display = "none";
+                    editDescriptionButton.style.display = "none";
+        
+                    addTaskButton.style.display = "block";
+                    assignTaskButton.style.display = "block";
+                }
+            }
+        }
+        else {
+            addMemberButton.style.display = "none";
+            editDescriptionButton.style.display = "none";
 
-			addTaskButton.style.display = "block";
-			assignTaskButton.style.display = "block";
-		}
-	}
-
-	Object.entries(JSON.parse(localStorage.getItem("members"))).forEach(member => {addMembers(member)})
-	
-	// Add all the tasks of the project to the project page
-	populateTasks(localStorage.getItem("projectName"));
-
-	// Update the charts of contribution
-	updateChartsInProjectPage()
+            addTaskButton.style.display = "none";
+            assignTaskButton.style.display = "none";
+        }
+    }).then(function() {
+        Object.entries(JSON.parse(localStorage.getItem("members"))).forEach(member => {addMembers(member)})
+    
+    
+        // Add all the tasks of the project to the project page
+        populateTasks(localStorage.getItem("projectName"));
+    
+        // Update the charts of contribution
+        updateChartsInProjectPage()
+    })
 }
 
 function populateTasks(projectName){
@@ -104,13 +122,14 @@ function populateTask(projectName, taskName){
     myNameSpace.taskCount += 1;
     var taskID = myNameSpace.taskCount;
 
-    firebaseRef.child(`Projects/${projectName}/Tasks/${taskName}`)
+    firebaseRef.child(`Projects/${projectName}`)
     .once('value').then(function(snapshot) {
-        const name = snapshot.child('TaskName').val(),
-              startDate = snapshot.child('StartDate').val(),
-              endDate = snapshot.child('EndDate').val(),
-              assignedTo = snapshot.child('AssignedTo').val(),
-              project = snapshot.child('Project').val()
+        const name = snapshot.child(`Tasks/${taskName}/TaskName`).val(),
+              startDate = snapshot.child(`Tasks/${taskName}/StartDate`).val(),
+              endDate = snapshot.child(`Tasks/${taskName}/EndDate`).val(),
+              assignedTo = snapshot.child(`Tasks/${taskName}/AssignedTo`).val(),
+              project = snapshot.child(`Tasks/${taskName}/Project`).val(),
+              deleted = snapshot.child(`Deleted`).val()
 
         var taskHeading = document.getElementById("task_heading"),
             taskStartDate = document.getElementById("task_start_date"),
@@ -136,9 +155,14 @@ function populateTask(projectName, taskName){
         var editButton = document.getElementById("edit_task");
         var markAsCmpltBtn = document.getElementById("mark_cmplt_task");
 
-        deleteButton.setAttribute("onclick","deleteTask("+taskID+")");
-        editButton.setAttribute("onclick", "editTask("+taskID+")")
-        markAsCmpltBtn.setAttribute("onclick", "markTaskAsComplete("+taskID+")")
+        if (deleted) {
+            document.getElementById("action_pane").style.display = 'none'
+        }
+        else {
+            deleteButton.setAttribute("onclick","deleteTask("+taskID+")");
+            editButton.setAttribute("onclick", "editTask("+taskID+")")
+            markAsCmpltBtn.setAttribute("onclick", "markTaskAsComplete("+taskID+")")
+        }
 
         var clone = cloneElement(taskTemplate, tasksCardBody);
         clone.removeAttribute("style");
