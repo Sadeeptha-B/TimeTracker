@@ -69,8 +69,10 @@ function updateProjectPage(role) {
     // Remove the add and assign task button for teachers but show for students
     firebaseRef.child(`Projects/${localStorage.getItem("projectName")}`).once('value').then(function(snapshot) {
         var deleted = snapshot.child('Deleted').val()
+        var completed = snapshot.child('Completed').val()
+        //UNSURE
 
-        if (!deleted) {
+        if (!deleted || !completed) {
             if (addMemberButton && editDescriptionButton) {
                 if (role === 'Teacher') {
                     addMemberButton.style.display = "block";
