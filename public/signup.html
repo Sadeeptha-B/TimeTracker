@@ -19,30 +19,52 @@
     </div>
 
     <div class="body">
+        <img src="imgs/wave-2.svg" alt="" class="wave">
+    
+       
+        <div class="flex-container flex-container-left-emphasis">
+                <div class="login_container signup">     
+                    <div class="form_login">
+                        <div class="header_login">
+                            <h4>Sign Up</h4>
+                        </div>
+                        <div class="input_div">
+                                <h5>Email</h5>
+                                <input type="email" class="input_field" id="Email" name="Email" required>     
+                        </div>
+                        <div class="input_div">
+                                <h5>Password</h5>
+                                <input type="password" class="input_field" id="Password" name="Password" required>
+                        </div>
+                        <div class="input_div">
+                                <h5> Confirm Password</h5>
+                                <input type="password" class="input_field" id="ConfirmPassword" name="ConfirmPassword" required>
+                         </div>
+                         <a href="index.html"> Already have an account? Log in</a><br><br>
+                        <div class="form_submit_action_container">
+                         
+                            <button id="signup_button" class="button_generic" onclick="signup()">Sign Up</button>
+                        </div>
+                    </div>    
+                </div>
+                <div class="deco_img">
+                    <img src="imgs/undraw_metrics_gtu7.svg" alt="" class="elem_deco_img">
+                </div>
+        </div>
+        <!--
         <div class="form_login_signup">
-
             <div class="form_header">
                 <h2 class="form_header">Signup</h2>
             </div>
 
             <div class="form_centered_container">
                 <table id="signup_form" class="form_login_body">
-                    <!---
-                    <tr>
-                        <th>Username</th>
-                        <td><input type="text" class="username_input" id="Username" name="Username" required></td>
-                    </tr>
-                    -->
+                    
                     <tr>
                         <th>Email</th>
                         <td><input type="email" class="email_input" id="Email" name="Email" required></td>
                     </tr>
-                        <!--
-                        <tr>
-                            <th>Student/Teacher ID</th>
-                            <td><input type="text" class="id_input" name="ID" required></td>
-                        </tr>
-                        -->
+                        
                     <tr>
                         <th>Password</th>
                         <td><input type="password" class="password_input" id="Password" name="Password" required></td>
@@ -51,18 +73,7 @@
                         <th>Confirm Password</th>
                         <td><input type="password" class="confirm_pword_input" id="ConfirmPassword" name="ConfirmPassword" required></td>
                     </tr>
-                    <!-- DEPRECATED
-                    <tr>
-                        <th>Type</th>
-                        <td>
-                            <select name="user_type" id="user_type" class="user_type">
-                                <option value="Teacher">Teacher</option>
-                                <option value="Student">Student</option>
-                                <option hidden value="sysadmin">Admin</option>
-                              </select>
-                        </td>
-                    </tr>
-                    -->
+                  
                 </table>
 
                 <div class="form_submit_action_container">
@@ -70,8 +81,9 @@
                 </div>
                 
             </div>
-        </div>
 
+        </div>
+    -->
         <div class = "alert error_alert hide">
             <span class ="fas fa-exclamation-circle"></span>
             <span class="msg" id="error_msg"> Warning: This is a warning alert </span>
