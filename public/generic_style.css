@@ -673,8 +673,10 @@ h2.form_header{
 
 
 div.form_centered{
-    background-color: #ccccff;
     float: center;
+    border: 1px solid #D3D3D3;
+    border-radius: 5px;
+    padding: 5px;
     margin-left: 10%;
     margin-right: 10%;
     margin-top: 16px;
