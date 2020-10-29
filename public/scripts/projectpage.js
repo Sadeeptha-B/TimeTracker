@@ -131,13 +131,16 @@ function populateTask(projectName, taskName){
               endDate = snapshot.child(`Tasks/${taskName}/EndDate`).val(),
               assignedTo = snapshot.child(`Tasks/${taskName}/AssignedTo`).val(),
               project = snapshot.child(`Tasks/${taskName}/Project`).val(),
-              deleted = snapshot.child(`Deleted`).val()
+              deleted = snapshot.child(`Deleted`).val(),
+              completed = snapshot.child('Completed').val()
 
         var taskHeading = document.getElementById("task_heading"),
             taskStartDate = document.getElementById("task_start_date"),
             taskEndDate = document.getElementById("task_end_date")
+        
+        if (completed)      {taskHeading.innerHTML = name + " - Completed";}
+        else                {taskHeading.innerHTML = name;}
 
-        taskHeading.innerHTML = name;
         taskStartDate.innerHTML = startDate;
         taskEndDate.innerHTML = endDate;
         
@@ -299,9 +302,13 @@ function editTask(index){
 function markTaskAsComplete(index){
     event.stopPropagation();
     var task = document.getElementById("task_" + index);
+    var taskName = task.getAttribute("data-taskname");
+    //tasksCardBody.removeChild(task);
 
-    tasksCardBody.removeChild(task);
-    //TODO: Have a string marked as complete
+    //marks task as complete and refreshes page
+    firebaseRef.child(`Projects/${task.getAttribute("data-projectname")}/Tasks/${taskName}`).update({Completed: 1});
+    displayConfirmAlert("Task completed and archived!");
+    location.reload()
 }
 
 

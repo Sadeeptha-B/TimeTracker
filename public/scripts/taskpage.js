@@ -109,8 +109,9 @@ function updateTaskPage(username, role) {
     // Remove time input button for teachers but show for students
     firebaseRef.child(`Projects/${localStorage.getItem("projectName")}`).once('value').then(function(snapshot) {
         var deleted = snapshot.child('Deleted').val()
+        var completed = snapshot.child('Completed').val()
             userIsAssignedToTask = snapshot.child(`Tasks/${localStorage.getItem("taskName")}/AssignedTo/${username}`).val()
-
+        
         if (editTaskDescriptionButton && submitTimeButton) {
             if (role === 'Teacher') {
                 markCompltBtn.style.display="inline-block";
@@ -120,7 +121,7 @@ function updateTaskPage(username, role) {
                 submitTimeButton.style.display = "none"
             }
             else if (role === 'Student') {
-                if (userIsAssignedToTask && !deleted) {
+                if (userIsAssignedToTask && !deleted && !completed) {
                     markCompltBtn.style.display="inline-block";
                     newLogBtn.style.display = "inline-block"
                     planPctageBtn.style.display="inline-block"
