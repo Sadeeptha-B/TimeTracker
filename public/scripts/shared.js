@@ -226,7 +226,7 @@ function addProjectsEventListener(project){
 			localStorage.setItem("projectName", projectName)
 			localStorage.setItem("description", description)
 			localStorage.setItem("members", JSON.stringify(members))
-			window.location.href = "../html/projectpage.html"
+			window.location.href = "projectpage.html"
 		})
 	});
 }
@@ -268,7 +268,7 @@ function addTasksEventListener(project, task){
 		})
 		.then(function() {
 			// Move to the task page once data has been stored
-			window.location.href = "../html/taskpage.html"
+			window.location.href = "taskpage.html"
 		})
 	});
 }
@@ -341,12 +341,12 @@ function addProject(project, projectData, role) {
 		*/
 
 		imgDelete.type="image"
-		imgDelete.src="../imgs/delete-16.png"
+		imgDelete.src="imgs/delete-16.png"
 		imgDelete.id="delete_task"
 		imgDelete.className="std_component"
 
 		imgComplete.type="image"
-        imgComplete.src="../imgs/check-mark-12-24.png"
+        imgComplete.src="imgs/check-mark-12-24.png"
         imgComplete.id="mark_cmplt_task"
         imgComplete.className="std_component mark_cmplt_size"
         imgComplete.onclick = `markProjectAsComplete(${projectName})`

@@ -2,12 +2,15 @@
 
 <head>
     <title>TimeTracker - Login</title>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <link rel=icon href=imgs/favicon.png>
     <link rel="stylesheet" href="generic_style.css"></link>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
 </head>
 
 <body>
-
+    <img class="wave" src="imgs/wave.svg" alt="">
     <div class="header">
         <div class="header_content_wrapper">
             <div class="header_word_wrapper">
@@ -17,12 +20,44 @@
     </div>
 
     <div class="body">
+        <img src="imgs/wave.svg" alt="" class="wave">
+        <div class="flex-container">
+            <div class="deco_img">
+                <img src="imgs/undraw_all_the_data_h4ki.svg" alt="" class="left_deco_img">
+            </div>
+                <div class="login_container">     
+                    <div class="form_login">
+                        <div class="header_login">
+                            <h3>Login</h3>
+                        </div>
+                        <div class="input_div">
+                                <h5>Email</h5>
+                                <input type="text" class="input_field" name="email" id = "userEmail">      
+                        </div>
+                        <div class="input_div">
+                                <h5>Password</h5>
+                                <input type="password" class="input_field" name="Password" id = "userPass">
+                        </div>
+                        <div class="form_submit_action_container">
+                            <button id="signin_button" class="button_generic" onclick="login()">Login</button>
+                            <a href="signup.html"><button class="button_generic">Sign Up</button></a>
+                        </div>
+                    </div>
+                    
+                </div>
+               
+        </div>
+      
+
+
+    
+<!--
         <div class="form_login_signup">
 
             <div class="form_header">
                 <h2 class="form_header">Login</h2>
             </div>
-
+            
             <div id = "main-div" class="form_centered_container">
 
                 <table class="form_login_body">
@@ -38,26 +73,23 @@
 
                 <div class="form_submit_action_container">
                     <button id="signin_button" class="button_generic" onclick="login()">Login</button>
-                    <a href="html/signup.html"><button class="button_generic">Sign Up</button></a>
+                    <a href="signup.html"><button class="button_generic">Sign Up</button></a>
                 </div>
                 
             </div>
-            <div class = "alert error_alert hide">
-                <span class ="fas fa-exclamation-circle"></span>
-                <span class="msg" id="error_msg"> Warning: This is a warning alert </span>
-                <div class="close generic_popup_close" onclick=closeAlert()>+</div>
-            </div>
+        </div>
+    -->
+        
+        <div class = "alert error_alert hide">
+            <span class ="fas fa-exclamation-circle"></span>
+            <span class="msg" id="error_msg"> Warning: This is a warning alert </span>
+            <div class="close generic_popup_close" onclick=closeAlert()>+</div>
+        </div>
 
-            <div class = "alert confirmation_alert hide">
-                <span class="fas fa-check"></span>
-                <span class="msg" id="confirm_msg"> Confirmation message </span>
-                <div class="close  generic_popup_close" onclick=closeAlert()>+</div>
-            </div>
-
-
-
-
-
+        <div class = "alert confirmation_alert hide">
+            <span class="fas fa-check"></span>
+            <span class="msg" id="confirm_msg"> Confirmation message </span>
+            <div class="close  generic_popup_close" onclick=closeAlert()>+</div>
         </div>
     </div>
 

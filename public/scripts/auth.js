@@ -22,7 +22,7 @@ function logout(){
 	firebase.auth().signOut()
 	.then(function() {
 		removeLocalStorageItem()
-		window.location.href = "../index.html";
+		window.location.href = "index.html";
 	})
 	.catch(function(error) {
 		displayErrorAlert("Sign Out Error" + error);
@@ -70,16 +70,18 @@ async function getHomePage() {
 		const role = snapshot.child("Role").val()
 
 		if (role === 'Admin') {
-			window.location.href = "html/home-adminview.html"
+			window.location.href = "home-adminview.html"
 		}
 		else {
-			window.location.href = "html/home.html"
+			window.location.href = "home.html"
 		}
 
    })
-
    removeLocalStorageItem()
 }
+
+
+
 
 
 function removeLocalStorageItem() {
@@ -110,12 +112,12 @@ function createAccount(userEmail, userPass, userRole) {
 					firebase.auth().signInWithEmailAndPassword('timetracker999@gmail.com', 'admin123!')
 					.then(function() {
 						// Bring admin back to the home page after successful sign up of teacher
-						window.location.href = "../html/home-adminview.html";
+						window.location.href = "home-adminview.html";
 					})
 				}
 				else {
 					// Bring the student back to the login page after successful sign up to log in
-					window.location.href = "../index.html";
+					window.location.href = "index.html";
 				}
 			})
 		})
