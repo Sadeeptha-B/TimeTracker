@@ -556,12 +556,12 @@ div.dash_project{
 
 h2.dash_project_head{
     color: white;
-    font: bold 22px;
+    font: bold 22px "Arial";
 }
 
 p.project_summary{
     color: white;
-    font: 14px;
+    font: 14px "Arial";
 }
 
 

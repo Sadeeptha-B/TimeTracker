@@ -44,8 +44,8 @@ firebase.auth().onAuthStateChanged(function(user) {
 		})
 	}
 	else {
-	  // No user is signed in.
-	}
+        window.location.href="index.html"
+    }
 });
 
 // FUNCTION TO UPDATE PROJECT PAGE
@@ -115,12 +115,18 @@ function populateTasks(projectName){
         const tasks = snapshot.val();
         if (tasks) {
             Object.entries(tasks).forEach(task => populateTask(projectName, task[1].TaskName));
+        } else{
+            document.getElementById("no_tasks").setAttribute("style", "display:flex");
+            document.getElementById("assign_task_button").setAttribute("style", "display:none");
         }
     })
 }
 
 /* Code to display a new task addition (Display only!) */
 function populateTask(projectName, taskName){
+    document.getElementById("no_tasks").setAttribute("style", "display:none");
+    document.getElementById("assign_task_button").setAttribute("style", "display:inline-block");
+
     myNameSpace.taskCount += 1;
     var taskID = myNameSpace.taskCount;
 
@@ -280,11 +286,16 @@ function displayStudentList() {
 function deleteTask(index){
     event.stopPropagation();       // Check if there is a better way to make an element clickable within a clickable div
     var task = document.getElementById("task_" + index);
+    window.myNameSpace.taskCount -= 1
+
 
     /* Delete from backend */
     firebaseRef.child(`Projects/${task.getAttribute("data-projectname")}/Tasks/${task.getAttribute("data-taskname")}`).remove()
-
     tasksCardBody.removeChild(task);
+    if(window.myNameSpace.taskCount == 0){
+        document.getElementById("no_tasks").setAttribute("style", "display:flex");
+        document.getElementById("assign_task_button").setAttribute("style", "display:none");
+    }
 }
 
 
