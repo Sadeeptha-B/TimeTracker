@@ -10,7 +10,7 @@ Please sign in with your Monash account to access.
 #### Project Inception
 
 * [Project Plan](https://docs.google.com/document/d/1BwLIEd7rcvceyftN4iwm0YjWylxMY_d2wVrqJr_yUS0/edit?usp=sharing)  
-  *Last Formal Update : Oct 15, 2020*
+  *Last Formal Update : Oct 29, 2020*
 
 * [Analysis of Alternatives](https://docs.google.com/document/d/1Ezdh2du36q2G104V_cDbhJJVxDyol1LbZicQuRwac-U/edit?usp=sharing)  
  *Last Formal Update : Sep 4, 2020*
