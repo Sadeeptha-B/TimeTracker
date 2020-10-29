@@ -174,8 +174,11 @@ catch {;}
 function markProjectAsComplete(projectName) {
     var project = document.getElementById(projectName);
 	
-	//TODO
+	
 	firebaseRef.child(`Projects/${ProjectName}`).update({Completed: 1});
+	//appends a "completed" object with value 1 into database
 	window.alert("Project completed and archived!");
+	//alert user that the project was completed
 	location.reload()
+	//reloads the current page
 }
