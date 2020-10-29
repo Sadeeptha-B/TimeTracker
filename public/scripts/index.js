@@ -45,15 +45,17 @@ function populateProjectsToHome(username) {
 		const projects = snapshot.child('Projects').val(),
 			  role = snapshot.child('Role').val()
 
-		Object.entries(projects).forEach(project => {
-			firebaseRef.child(`Projects/${project[1].ProjectName}`).once("value").then(function(snapshot) {
-				var projectData = snapshot.val()
-
-				if (!projectData.Completed && !projectData.Deleted) {
-					addProject(project, projectData, role)
-				}
+		if (projects) {
+			Object.entries(projects).forEach(project => {
+				firebaseRef.child(`Projects/${project[1].ProjectName}`).once("value").then(function(snapshot) {
+					var projectData = snapshot.val()
+	
+					if (!projectData.Completed && !projectData.Deleted) {
+						addProject(project, projectData, role)
+					}
+				})
 			})
-		})
+		}
 	})
 }
 
@@ -121,7 +123,7 @@ async function createProject(){
 	displayConfirmAlert("Project Created!")
 	setTimeout(function() {
 			getHomePage();
-	},5000);
+	},2500);
 }
 
 
@@ -171,14 +173,14 @@ try {
 }
 catch {;}
 
-function markProjectAsComplete(projectName) {
-    var project = document.getElementById(projectName);
+async function markProjectAsComplete(projectName) {
 	
-	
-	firebaseRef.child(`Projects/${ProjectName}`).update({Completed: 1});
 	//appends a "completed" object with value 1 into database
-	displayConfirmAlert("Project completed and archived!");
+	firebaseRef.child(`Projects/${projectName}`).update({Completed: 1});
+
 	//alert user that the project was completed
+	displayConfirmAlert("Project completed and archived!");
+	
 	location.reload()
 	//reloads the current page
 }

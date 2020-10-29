@@ -95,7 +95,7 @@ function updateTaskPage(username, role) {
 		  descriptionField = document.getElementById("description"),
 		  editTaskDescriptionButton = document.getElementById("edit_task_desc"),
 		  submitTimeButton = document.getElementById("save_time_log"),
-          planContBtn = document.getElementById("plan_cont_btn"),
+        //   planContBtn = document.getElementById("plan_cont_btn"),
           planPctageBtn = document.getElementById("plan_pctage_btn"),
 		  newLogBtn   = document.getElementById("new_log_btn"),
 		  markCompltBtn = document.getElementById("mark_complt_btn")
@@ -108,33 +108,32 @@ function updateTaskPage(username, role) {
 	// Remove task description button for teachers but show for students
     // Remove time input button for teachers but show for students
     firebaseRef.child(`Projects/${localStorage.getItem("projectName")}`).once('value').then(function(snapshot) {
-        var deleted = snapshot.child('Deleted').val()
-        var completed = snapshot.child('Completed').val()
+        var deleted = snapshot.child('Deleted').val(),
+            completed = snapshot.child('Completed').val(),
+            taskCompleted = snapshot.child(`Tasks/${localStorage.getItem("taskName")}/Completed`).val(),
             userIsAssignedToTask = snapshot.child(`Tasks/${localStorage.getItem("taskName")}/AssignedTo/${username}`).val()
         
         if (editTaskDescriptionButton && submitTimeButton) {
-            if (role === 'Teacher') {
+            if (role === 'Teacher' && !deleted && !completed && !taskCompleted) {
                 markCompltBtn.style.display="inline-block";
                 planPctageBtn.style.display = "none"
                 newLogBtn.style.display = "none"
                 editTaskDescriptionButton.style.display = "none"
                 submitTimeButton.style.display = "none"
             }
-            else if (role === 'Student') {
-                if (userIsAssignedToTask && !deleted && !completed) {
-                    markCompltBtn.style.display="inline-block";
-                    newLogBtn.style.display = "inline-block"
-                    planPctageBtn.style.display="inline-block"
-                    editTaskDescriptionButton.style.display = "inline-block"
-                    submitTimeButton.style.display = "inline-block"
-                }
-                else {
-                    markCompltBtn.style.display="none";
-                    newLogBtn.style.display = "none"
-                    planPctageBtn.style.display="none"
-                    editTaskDescriptionButton.style.display = "none"
-                    submitTimeButton.style.display = "none"
-                }
+            else if (role === 'Student' && userIsAssignedToTask && !deleted && !completed && !taskCompleted) {
+                markCompltBtn.style.display="inline-block";
+                newLogBtn.style.display = "inline-block"
+                planPctageBtn.style.display="inline-block"
+                editTaskDescriptionButton.style.display = "inline-block"
+                submitTimeButton.style.display = "inline-block"
+            }
+            else {
+                markCompltBtn.style.display="none";
+                newLogBtn.style.display = "none"
+                planPctageBtn.style.display="none"
+                editTaskDescriptionButton.style.display = "none"
+                submitTimeButton.style.display = "none"
             }
         }
     })
@@ -178,7 +177,7 @@ async function updateVisuals() {
 
             window.taskPageNameSpace.commentCount = commentCount;
 
-            if (!haveAddedComments) {
+            if (!haveAddedComments && comments) {
                 Object.entries(comments).forEach(comment=>{
                     var commenter = comment[1].commenter,
                         content = comment[1].content,
@@ -868,11 +867,14 @@ document.getElementById("save_desc").addEventListener("click", async function(){
 
 
 document.getElementById("mark_complt_btn").addEventListener('click', function(){
-    document.getElementById("marked_cmplt").style.display = "flex";   // This must be grid
-    document.getElementById("mark_complt_btn").style.display = "none";   
-    document.getElementById("new_log_btn").style.display="none";
-    document.getElementById("plan_cont_btn").style.display="none"
-    document.getElementById("set_active_btn").style.display = "flex";
+    // document.getElementById("marked_cmplt").style.display = "flex";   // This must be grid
+    // document.getElementById("mark_complt_btn").style.display = "none";   
+    // document.getElementById("new_log_btn").style.display="none";
+    // document.getElementById("plan_cont_btn").style.display="none"
+    // document.getElementById("set_active_btn").style.display = "flex";
+    firebaseRef.child(`Projects/${localStorage.getItem("projectName")}/Tasks/${localStorage.getItem("taskName")}`).update({Completed: 1});
+    displayConfirmAlert("Task completed and archived!");
+    location.reload()
 });
 
 document.getElementById("set_active_btn").addEventListener('click', function(){
