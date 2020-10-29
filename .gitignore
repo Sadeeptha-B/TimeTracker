@@ -1,0 +1,6 @@
+*.log
+.firebase
+firebase.json
+database.rules.json
+.firebasesrc
+h

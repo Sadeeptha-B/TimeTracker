@@ -1,0 +1,120 @@
+<html>
+<head>
+    <title>TimeTracker - Archived Projects</title>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <link rel=icon href=imgs/favicon.png>
+    <link rel="stylesheet" href="generic_style.css"></link>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="header">
+        <div class="header_content_wrapper">
+            <div class="header_word_wrapper">
+                <h1>TimeTracker</h1>
+            </div>
+        </div>
+        <div class="header_links_wrapper">
+            <a><button class="button_generic" id="homepage_button" onclick="getHomePage()">Home Page</button></a>
+            <a href="index.html"><button id="signout_button" class="button_generic" onclick="logout()">Log Out</button></a>
+        </div>
+    </div>
+    <div class="body">
+        <div class="welcome_pane">
+            <h2 id="welcome_text" class="welcome_text">Welcome, ...</h2>
+        </div>
+        <div class="dashboard">
+            <div class="dashboard_header">
+                <h2 class="dashboard_header">Archived Projects</h2>
+                <!--
+                <a href="newproject.html">
+                    <button id="new_project_button" class="button_standard" style="display: none">New Project</button>
+                </a>
+                -->
+               
+            </div>
+            <div id="dash_container" class="dash_container">
+
+
+             </div> 
+                <!-- THIS SECTION IS AUTO GENERATED HTML -->
+                <!-- <a id="dash_project" class="dash_project" href="projectpage.html">
+                </a> -->
+                <!-- END OF AUTO GENERATED HTML SECTION -->
+            </div>
+        </div>
+
+        <!-- Modals (popups) -->
+        <!-- Popup for editing project -->
+        <!-- Will we need these functions for archived projects? -->
+        <div class="bg-modal" id="proj_edit_overlay">
+            <div class="modal-content">
+                <div class="close generic_popup_close" onclick="closeModal(proj_edit_overlay)">+</div>
+                <div class = "input_form">
+                    <h3>Edit description</h3>
+                    <label class="field_elements" for="project_name">Project Name : </label>
+                    <input type="text" class="project_name" name="Project Name" id ="project_name" required>
+                    <label class="field_elements" for="desc_field">Description : </label><br>
+                    <textarea id = "desc_field" rows="14" cols="120" class="input_field"></textarea>
+                    <label class="field_elements">Start date :</label><br>
+                        <!-- ZS: This is the format for now, maybe there will be a better format coming along? -->
+                        <!-- Time input now includes am/pm option, which is in the ID 'start_period' and 'end_period'-->
+                        <input type="number" width="20px" class="start_day" name="Start Day" id = "start_day"
+                            min="1" max="31" value="1" required>
+                        <select name="start_month" class="start_month" id = "start_month">
+                            <option value="1">January</option>
+                            <option value="2">February</option>
+                            <option value="3">March</option>
+                            <option value="4">April</option>
+                            <option value="5">May</option>
+                            <option value="6">June</option>
+                            <option value="7">July</option>
+                            <option value="8">August</option>
+                            <option value="9">September</option>
+                            <option value="10">October</option>
+                            <option value="11">November</option>
+                            <option value="12">December</option>
+                        </select>
+                        <input type="number" width="40px" class="start_year" name="Start Year" id = "start_year"
+                            min="2020" max="2099" value="2020" required><br>
+
+                        <label class="field_elements">End time :</label><br>
+                        <input type="number" width="20px" class="end_day" name="End Day" id = "end_day"
+                            min="1" max="31" value="1" required>
+                        <select name="End Month" class="end_month" id = "end_month">
+                            <option value="1">January</option>
+                            <option value="2">February</option>
+                            <option value="3">March</option>
+                            <option value="4">April</option>
+                            <option value="5">May</option>
+                            <option value="6">June</option>
+                            <option value="7">July</option>
+                            <option value="8">August</option>
+                            <option value="9">September</option>
+                            <option value="10">October</option>
+                            <option value="11">November</option>
+                            <option value="12">December</option>
+                        </select>
+                        <input type="number" width="40px" class="end_year" name="End Year" id = "end_year"
+                            min="2020" max="2099" value="2020" required><br>
+
+                </div>
+                <div class= "desc_footer">
+                    <button href="#" class="blue_curve_button" id="save_proj"> Save </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    
+
+    <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-database.js"></script>
+    <script src="scripts/shared.js"></script>
+    <script src="scripts/auth.js"></script>
+    <script src="scripts/archivespage.js"></script>
+
+</body>
+</html>
