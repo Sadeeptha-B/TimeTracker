@@ -19,7 +19,8 @@ Further, it must also provide an intuitive interface for the students to input d
 
 ### 1.2. Vision statement
 
-We will create a student task/time tracking system for teachers who need to mark group work fairly to monitor their students’ progress online. Unlike most other products, our product uses a simplistic, intuitive user interface for optimal user experience.
+We will create a student task/time tracking system for teachers who need to mark group work fairly to monitor their students’ progress online. Unlike most other products,  our product aims to provide students with the tools to plan out their projects and track actual vs planned progress, while using a simplistic, intuitive user interface for optimal user experience.
+
 
 
 ## 2.0. Process Model
@@ -37,7 +38,7 @@ A product owner and scrum master have been chosen from within the team and are p
 
 1. Work will be done in sprints, with a sprint planning meeting at the start of the sprint and a sprint retrospective and a product review, at the end of it
 2. A sprint backlog and a product backlog is maintained, with the usual workflow of moving items from the sprint backlog to the product backlog at the start of each sprint at the sprint planning meeting
-3. Requirements are gauged in the form of user stories, as is followed by most agile practices, allowing the developer to think of the software from the perspective of a client and 
+3. Requirements are gauged in the form of user stories, as is followed by most agile practices, allowing the developer to think of the software from the perspective of a client
 4. Backlog items/user stories will be under constant review, and will be refined as needed, as the project grows.
 5. At the end of each sprint, it is sought to provide the client with a working iteration of the product. 
 6. Team members will help each other in development and will share knowledge and will not be limited to a certain domain of work and instead will focus on working together as a team.
@@ -329,6 +330,51 @@ Development will be done using Git for version control. A short discussion on th
 
 ### 4.2. Git Branching Model
 
+#### 4.2.1. Current Branching Model
+
+The current branching model used by the team involves 
+
+
+
+1. A master branch        
+2. A develop branch 
+3. A separate branch for each developer
+4. Hotfix branches
+
+###### Master
+
+The master branch represents the main codebase of the system, and all features merged in the master, are generally considered to be ready for deployment. The code in this branch must mostly be free of bugs and is meant to be presented to the client
+
+###### Developer Branches
+
+Each developer has a separate branch, which will act as the base branch which the developer will use, to develop the features assigned to him/her.  
+
+Each developer is free to make as many branches within the namespace of their branch, while they can collaborate on one of the members’ branches, when needed.
+
+Incremental changes in development are expected to be committed into these branches.
+
+###### Develop Branch 
+
+The develop branch is the active development branch where the developers would work on shared code. 
+
+Developers are expected to pull the latest code involving the contributions of other team members to their respective branches, from the develop branch.
+
+This must be done frequently, to ensure that each developer is working on the latest version of the code. 
+
+Incremental changes are not expected to be committed directly to the develop branch, it is expected that incremental changes are initially committed to the respective developer branches. Once a feature is complete, the features can be merged to develop, to reflect the addition of a new feature.
+
+###### Hotfix branch
+
+The hotfix branch is meant to be used for critical bug fixes, if they occur. These bugs can be bugs within confirmed features in the develop branch, or bugs within the master itself. The hotfix branch is not intended to reflect the current state of the project, and can be overwritten or pulled back, as needed.
+
+Developers are free to create debugging branches within their own namespace branches.
+
+
+#### 4.2.2. Initial Branching model
+
+**This section outlines the branching model used in Sprint 1 and 2. This has been discontinued in Sprint 3 in favor of the branching model explained above.**
+
+
 The team has decided to use a git branching model with a master branch and a develop branch mainly. The master branch will contain the main codebase, which is the product that will be deployed to the client. The develop branch is the main development branch, on which all members will commit. 
 
 Different branches will be made for different functionalities, if they involve rather large changes to the codebase at large. 
@@ -372,6 +418,12 @@ For a task to be considered done,
 *   Needs to be approved by a Merge Request (preferably by a teammate who is responsible for the relevant backlog items)
 
 While the above is the definition of done, in general, we expect the following criteria to be met, to consider a particular task as done.
+
+The definition of done will be revised according to the requirements of a specific sprint.
+The below shows a general overview of what would comprise the definition of done. 
+
+The definition of done for each user story devised for a sprint is available on trello, under each specific backlog item.
+
 
 
 <table>
