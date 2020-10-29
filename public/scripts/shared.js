@@ -325,7 +325,7 @@ function addProject(project, projectData, role) {
 	newP.textContent = `Lecturer: ${teacher} | Start: ${startDate} | End: ${endDate}`
 
 	// Only teachers has acccess to delete project button
-	if (role === 'Teacher') {
+	if (role === 'Teacher' && (!completed && !deleted)) {
 		newDiv.appendChild(footerDiv)
 		newDiv.appendChild(clr)
 		//footerDiv.appendChild(imgEdit)
@@ -349,7 +349,9 @@ function addProject(project, projectData, role) {
         imgComplete.src="imgs/check-mark-12-24.png"
         imgComplete.id="mark_cmplt_task"
         imgComplete.className="std_component mark_cmplt_size"
-        imgComplete.onclick = `markProjectAsComplete(${projectName})`
+        imgComplete.onclick = function() {
+			markProjectAsComplete(projectName)
+		}
 
 		clr.className = "clr"
 	}

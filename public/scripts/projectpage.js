@@ -131,15 +131,20 @@ function populateTask(projectName, taskName){
               endDate = snapshot.child(`Tasks/${taskName}/EndDate`).val(),
               assignedTo = snapshot.child(`Tasks/${taskName}/AssignedTo`).val(),
               project = snapshot.child(`Tasks/${taskName}/Project`).val(),
-              deleted = snapshot.child(`Deleted`).val(),
-              completed = snapshot.child('Completed').val()
+              taskCompleted = snapshot.child(`Tasks/${taskName}/Completed`).val(),
+              projectDeleted = snapshot.child(`Deleted`).val(),
+              projectCompleted = snapshot.child('Completed').val()
 
         var taskHeading = document.getElementById("task_heading"),
             taskStartDate = document.getElementById("task_start_date"),
             taskEndDate = document.getElementById("task_end_date")
         
-        if (completed)      {taskHeading.innerHTML = name + " - Completed";}
-        else                {taskHeading.innerHTML = name;}
+        if (taskCompleted || projectCompleted || projectDeleted) {
+            taskHeading.innerHTML = name + " - Completed";
+        }
+        else {
+            taskHeading.innerHTML = name;
+        }
 
         taskStartDate.innerHTML = startDate;
         taskEndDate.innerHTML = endDate;
@@ -160,10 +165,11 @@ function populateTask(projectName, taskName){
         var editButton = document.getElementById("edit_task");
         var markAsCmpltBtn = document.getElementById("mark_cmplt_task");
 
-        if (deleted) {
+        if (taskCompleted || projectCompleted || projectDeleted) {
             document.getElementById("action_pane").style.display = 'none'
         }
         else {
+            document.getElementById("action_pane").style.display = 'block'
             deleteButton.setAttribute("onclick","deleteTask("+taskID+")");
             editButton.setAttribute("onclick", "editTask("+taskID+")")
             markAsCmpltBtn.setAttribute("onclick", "markTaskAsComplete("+taskID+")")

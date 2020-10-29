@@ -47,6 +47,7 @@ async function signup() {
 			}
 		}
 		catch(err) {
+			// console.log("here")
 			displayErrorAlert(err)
 			location.reload()
 		}
@@ -79,10 +80,6 @@ async function getHomePage() {
    })
    removeLocalStorageItem()
 }
-
-
-
-
 
 function removeLocalStorageItem() {
 	localStorage.removeItem("projectName")
